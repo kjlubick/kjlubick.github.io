@@ -1,59 +1,48 @@
-App = Ember.Application.create({});
-
-var posts = [{
+var contextPosts = {posts:[{
   id: '1',
-  title: "Rails is Omakase",
-  author: { name: "d2h" },
+  title: "Post the First",
+  author: { name: "Kevin Lubick" },
   date: new Date('12-27-2012'),
   excerpt: "There are lots of à la carte software environments in this world. Places where in order to eat, you must first carefully look over the menu of options to order exactly what you want.",
-  body: "I want this for my ORM, I want that for my template language, and let's finish it off with this routing library. Of course, you're going to have to know what you want, and you'll rarely have your horizon expanded if you always order the same thing, but there it is. It's a very popular way of consuming software.\n\nRails is not that. Rails is omakase."
+  bodyArr: ["<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam condimentum faucibus mi a tincidunt. Integer luctus purus vel felis pharetra, mollis interdum justo porttitor. Integer suscipit ligula vitae fermentum vulputate. Nam a nisi malesuada, cursus urna at, dapibus lacus. Sed vitae libero ornare, auctor nisi non, eleifend lacus. Morbi facilisis quis nibh sit amet sagittis. Aliquam a sapien sed felis scelerisque venenatis. Donec orci odio, laoreet eget congue quis, viverra quis nisl. Duis feugiat, sapien sed blandit cursus, enim diam dignissim ante, quis fermentum nibh lorem non massa. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>",
+"<p>In eu ultricies magna. Morbi quis erat laoreet, auctor turpis ut, pellentesque felis. Donec tristique purus id leo condimentum, in laoreet sapien sodales. Sed ut lacus quis ipsum dapibus lobortis faucibus tincidunt erat. Nam eget arcu volutpat, congue turpis at, tincidunt massa. Vivamus massa mauris, congue quis cursus sit amet, elementum a ante. Curabitur et molestie elit. Aliquam urna eros, rutrum non lacus et, pretium mollis dui. Sed vulputate dapibus tincidunt. Quisque massa tellus, volutpat id tempor a, eleifend quis ligula. Nullam ut commodo augue. Morbi ornare sagittis urna varius auctor.</p>",
+"<p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque condimentum, velit sed egestas rutrum, dolor diam posuere dolor, non lacinia risus justo vel nisi. Sed eu leo faucibus, imperdiet quam sit amet, pretium lorem. Nullam turpis lacus, gravida eget tempor sed, gravida sit amet velit. Morbi fringilla pulvinar placerat. Nulla arcu libero, vulputate eu mollis eget, commodo vel erat. Praesent nec ultricies nisl. Fusce consequat convallis ultrices. Vivamus dictum at nisi id sagittis. Nam aliquam erat suscipit mi viverra rhoncus. Nam pellentesque tincidunt justo quis commodo.</p>"]
 }, {
   id: '2',
-  title: "The Parley Letter",
-  author: { name: "d2h" },
+  title: "Post the Second",
+  author: { name: "Kevin Lubick"  },
   date: new Date('12-24-2012'),
   excerpt: "My [appearance on the Ruby Rogues podcast](http://rubyrogues.com/056-rr-david-heinemeier-hansson/) recently came up for discussion again on the private Parley mailing list.",
-  body: "A long list of topics were raised and I took a time to ramble at large about all of them at once. Apologies for not taking the time to be more succinct, but at least each topic has a header so you can skip stuff you don't care about.\n\n### Maintainability\n\nIt's simply not true to say that I don't care about maintainability. I still work on the oldest Rails app in the world."  
-}];
+  bodyArr: ["<p>In eu ultricies magna. Morbi quis erat laoreet, auctor turpis ut, pellentesque felis. Donec tristique purus id leo condimentum, in laoreet sapien sodales. Sed ut lacus quis ipsum dapibus lobortis faucibus tincidunt erat. Nam eget arcu volutpat, congue turpis at, tincidunt massa. Vivamus massa mauris, congue quis cursus sit amet, elementum a ante. Curabitur et molestie elit. Aliquam urna eros, rutrum non lacus et, pretium mollis dui. Sed vulputate dapibus tincidunt. Quisque massa tellus, volutpat id tempor a, eleifend quis ligula. Nullam ut commodo augue. Morbi ornare sagittis urna varius auctor.</p>",
+"<p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque condimentum, velit sed egestas rutrum, dolor diam posuere dolor, non lacinia risus justo vel nisi. Sed eu leo faucibus, imperdiet quam sit amet, pretium lorem. Nullam turpis lacus, gravida eget tempor sed, gravida sit amet velit. Morbi fringilla pulvinar placerat. Nulla arcu libero, vulputate eu mollis eget, commodo vel erat. Praesent nec ultricies nisl. Fusce consequat convallis ultrices. Vivamus dictum at nisi id sagittis. Nam aliquam erat suscipit mi viverra rhoncus. Nam pellentesque tincidunt justo quis commodo.</p>"]
+}]};
 
-App.Router.map(function() {
-  this.resource('about');
-  this.resource('posts', function() {
-    this.resource('post', { path: ':post_id' });
-  });
-});
 
-App.PostsRoute = Ember.Route.extend({
-  model: function() {
-    return posts;
+var entryTemplateSource;
+var entryTemplate; 
+
+Handlebars.registerHelper('each', function(context, options) {
+  var ret = "", postBody;
+
+  for(var i=0, j=context.length; i<j; i++) {
+	context[i].body = context[i].bodyArr.join("");
+    ret = ret + entryTemplate(context[i]);
   }
+
+  return new Handlebars.SafeString(ret);
 });
 
-App.PostRoute = Ember.Route.extend({
-  model: function(params) {
-    return posts.findBy('id', params.post_id);
-  }
-});
 
-App.PostController = Ember.ObjectController.extend({
-  isEditing: false,
+$(document).ready(new function() {
+	
+	entryTemplateSource = $("#entry-template").html();
+	entryTemplate = Handlebars.compile(entryTemplateSource);
+	
+	var source = $("#posts-template").html();
+	var template = Handlebars.compile(source);
+	var html = template(contextPosts);
 
-  edit: function() {
-    this.set('isEditing', true);
-  },
-
-  doneEditing: function() {
-    this.set('isEditing', false);
-    this.get('store').commit();
-  }
-});
-
-var showdown = new Showdown.converter();
-
-Ember.Handlebars.helper('format-markdown', function(input) {
-  return new Handlebars.SafeString(showdown.makeHtml(input));
-});
-
-Ember.Handlebars.helper('format-date', function(date) {
-  return moment(date).fromNow();
+	console.log(html);
+	
+	$("#main").html(html);
 });
