@@ -2,7 +2,7 @@
 var entryTemplateSource;
 var entryTemplate; 
 
-Handlebars.registerHelper('each', function(context, options) {
+Handlebars.registerHelper('each', function(context) {
   var ret = "", postBody;
 
   for(var i=0, j=context.length; i<j; i++) {
@@ -11,6 +11,14 @@ Handlebars.registerHelper('each', function(context, options) {
   }
 
   return new Handlebars.SafeString(ret);
+});
+
+Handlebars.registerHelper('format-relative-date', function(date) {
+  return moment(date).fromNow();
+});
+
+Handlebars.registerHelper('format-full-date', function(date) {
+  return moment(date).format("MMM Do YYYY");
 });
 
 

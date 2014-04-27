@@ -1,0 +1,10 @@
+/* Put your CSS here */
+html, body {
+    margin: 20px;
+}
+
+.post-date{
+	display: block;
+	margin: -10px 0 10px;
+	color: #bbb;
+}
