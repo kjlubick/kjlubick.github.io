@@ -18,7 +18,7 @@ Handlebars.registerHelper('format-relative-date', function(date) {
 });
 
 Handlebars.registerHelper('format-full-date', function(date) {
-  return moment(date).format("MMM Do YYYY");
+  return moment(date).format("MMM Do YYYY H:mm:ss");
 });
 
 

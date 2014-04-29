@@ -18,7 +18,7 @@ var contextPosts = {
         id: '1',
         title: "Building my First Findbugs Detector",
         author: { name: "Kevin Lubick" },
-        date: new Date('4-28-2014'),
+        date: new Date('4-28-2014 13:00:00'),
         excerpt: "My less-than-legendary, yet successful story of building a <a href='http://findbugs.sourceforge.net/'>FindBugs</a> plugin to detect ExecutorServices that have not been properly shutdown.  <a href='https://github.com/mebigfatguy/fb-contrib/pull/14'>End result</a>.",
         bodyArr: [
 	"<pre><code class='language-java'>",
@@ -27,6 +27,8 @@ var contextPosts = {
 	"\tSystem.exit(0);\n",
 	"}\n",
 	"</code></pre>",
+	
+	"<p class='log'>Code log entry 084: After roughly 187 minutes of analyzing using the <a href = 'http://docs.oracle.com/javase/6/docs/technotes/tools/share/jvisualvm.html'>Java Visual VM</a>, the cause of the non-terminating program was found.  A lone ExecutorService was found to have never been shutdown(), and the internal thread pool had been keeping the JVM from terminating.  A proper call to shutdown() was added to the offending class's stop() method, resolving the issue.</p>",
 	
     "<p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque condimentum, velit sed egestas rutrum, dolor diam posuere dolor, non lacinia risus justo vel nisi. Sed eu leo faucibus, imperdiet quam sit amet, pretium lorem. Nullam turpis lacus, gravida eget tempor sed, gravida sit amet velit. Morbi fringilla pulvinar placerat. Nulla arcu libero, vulputate eu mollis eget, commodo vel erat. Praesent nec ultricies nisl. Fusce consequat convallis ultrices. Vivamus dictum at nisi id sagittis. Nam aliquam erat suscipit mi viverra rhoncus. Nam pellentesque tincidunt justo quis commodo.</p>"]
     }]
