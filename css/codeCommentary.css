@@ -1,0 +1,27 @@
+.codeComment {
+	width:20%;
+	
+}
+
+.codeComment div{
+	border:1px solid #ccc;
+	background:#f5f2f0;
+	
+	height:100%;
+	overflow: auto;
+	border-radius:4px;
+	border-top-left-radius:0;
+	border-bottom-left-radius:0;
+}
+
+.codeTable {
+	min-width:90%;
+}
+
+.codeTable pre {
+	border-top-right-radius:0;
+	border-bottom-right-radius:0;
+	
+	padding:9.5px;
+	margin:0px;
+}

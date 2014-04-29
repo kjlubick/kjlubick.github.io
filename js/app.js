@@ -35,8 +35,10 @@ $(document).ready(new function() {
 	});
 	
 	var html = template(contextPosts);
-
-	console.log(html);
 	
-	$("#main").html(html);
+	
+
+	//console.log(html);
+	
+	//$("#main").html(html);
 });
