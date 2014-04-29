@@ -8,6 +8,10 @@
 	height:94%;
 }
 
+.codeContainer pre{
+	padding-right:22%;
+}
+
 .codeContainer{
 	position:relative;
 }
