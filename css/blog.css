@@ -18,3 +18,11 @@ html, body {
 .log a {
 	color: #f6f972;
 }
+
+.recipe dl, dt, dd {
+	display:inline-block;
+}
+
+.recipe dd {
+	margin-right:10px;
+}

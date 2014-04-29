@@ -30,6 +30,32 @@ var contextPosts = {
 	
 	"<p class='log'>Code log entry 084: After roughly 187 minutes of analyzing using the <a href = 'http://docs.oracle.com/javase/6/docs/technotes/tools/share/jvisualvm.html'>Java Visual VM</a>, the cause of the non-terminating program was found.  A lone ExecutorService was found to have never been shutdown(), and the internal thread pool had been keeping the JVM from terminating.  A proper call to shutdown() was added to the offending class's stop() method, resolving the issue.</p>",
 	
-    "<p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque condimentum, velit sed egestas rutrum, dolor diam posuere dolor, non lacinia risus justo vel nisi. Sed eu leo faucibus, imperdiet quam sit amet, pretium lorem. Nullam turpis lacus, gravida eget tempor sed, gravida sit amet velit. Morbi fringilla pulvinar placerat. Nulla arcu libero, vulputate eu mollis eget, commodo vel erat. Praesent nec ultricies nisl. Fusce consequat convallis ultrices. Vivamus dictum at nisi id sagittis. Nam aliquam erat suscipit mi viverra rhoncus. Nam pellentesque tincidunt justo quis commodo.</p>"]
+	"<p>The problem I ran into above was a painful one to track down, but my intuition said the problem would make for a great <a href='http://findbugs.sourceforge.net/'>FindBugs</a> detector because it dealt with omission of code, which is easy for static analysis to detect and generally time-consuming for humans to detect.</p>",
+	
+	"<p>What follows is how I designed a detector to hopefully make the struggles detailed in entry 084 obsolete.  It is meant for readers who have not yet implemented a FindBugs detector, but are curious at what it entails and what a sample workflow might be.</p>",
+	
+	"<h2>Recipe for FindBugs Detector</h2>",
+	
+	"<div class='recipe'><dl><dt>Preparation time</dt> <dd>30m</dd><dt>Coding time</dt> <dd>1h</dd><dt>Difficulty</dt> <dd>Derived from existing detector</dd><dt>Serves</dt> <dd>the purpose of a nice, easy introduction</dd></dl></div>",
+	
+    "<p>This recipe assumes the following conditions: <ul>",
+	"<li>You have the source code for both FindBugs and <a href='https://github.com/mebigfatguy/fb-contrib'>fb-contrib</a> downloaded and ready to build (I recommend Eclipse)</li>",
+	"<li>You have read Chris Grindstaff's <a href = 'https://www.ibm.com/developerworks/library/j-findbug2/'>high level overview</a> at least once.  Don't worry if you don't understand everything, we'll be covering a lot of the topics and, trust me, things get much clearer when you do them yourself.</li>",
+	"<li>You've read the <a href='http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Executors.html'>JavaDoc</a> for Executors (the protagonist of our story) and perhaps browsed <a href='http://www.javacodegeeks.com/2013/01/java-thread-pool-example-using-executors-and-threadpoolexecutor.html'>this sample code</a> to get a feel for things.</li></ul></p>",
+	
+	"<p>When I implemented this detector, I contributed it to fb-contrib.  Pedagogically, if you don't have to worry about messing up the actual FindBugs code, you can focus more on the detector and less on screwing up already working code, so I recommend doing the same for your first detector.</p>",
+	
+	"<h3>Setting up our TestBed</h3>",
+	
+	"<h3>Finding some code to work with</h3>",
+	
+	"<h3>Detecting no shutdown() calls</h3>",
+	
+	"<h3>Detecting local ExecutorServices</h3>",
+	
+	"<h3>Detecting the replacement of an ExecutorService</h3>",
+	
+	"<h3>Merging in my contribution</h3>"
+	]
     }]
 };
