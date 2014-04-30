@@ -1,25 +1,22 @@
-function highlightLines(pre, lines, classes) {
-    var ranges = lines.replace(/\s+/g, '').split(','),
-        offset = +pre.getAttribute('data-line-offset') || 0,
-        lineHeight = parseFloat(getComputedStyle(pre).lineHeight), i, start, line, range;
+function highlightLines(pre, yOffset) {
+    var i, start, line, range, lineHeight = parseFloat(pre.css("line-height"));
 
-    for (i = 0; range = ranges[i++];) {
-        range = range.split('-');
+	start = Math.floor(yOffset / lineHeight);
+   
+    line = pre.find(".line-highlight");
+    line.show();
 
-        start = +range[0];
 
-        line = $(pre).find(".line-highlight");
-        line.show();
-    }
-
-    line.css("top", (start - offset - 1) * lineHeight + 'px');
+    line.css("top", start * Math.floor(lineHeight) + 'px');
 }
 
 
 
 $(document).ready(function () {
     console.log("codeCommentary.js");
-    $(".codeContainer").on("mouseenter", "pre", function (e) {
-        highlightLines(e.currentTarget, "2");
+    $(".codeContainer").on("mousemove", "pre", function (e) {
+		var y = e.offsetY==undefined?e.layerY:e.offsetY;
+		//console.log(y);
+        highlightLines($(e.currentTarget), y);
     });
 });
