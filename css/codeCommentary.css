@@ -22,3 +22,7 @@
 .codeContainer{
 	position:relative;
 }
+
+.line-highlight {
+	display:none;
+}
