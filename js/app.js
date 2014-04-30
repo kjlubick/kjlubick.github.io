@@ -36,7 +36,7 @@ $(document).ready(new function() {
 	
 	var html = template(contextPosts);
 	
-	
+	console.log("app.js");
 
 	//console.log(html);
 	
