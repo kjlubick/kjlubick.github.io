@@ -10,7 +10,11 @@
 
 .codeContainer pre{
 	padding-right:22%;
+	white-space:nowrap;
+	overflow-wrap:normal;
 }
+
+
 
 .codeContainer{
 	position:relative;
