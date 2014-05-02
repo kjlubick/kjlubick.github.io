@@ -41,7 +41,9 @@ $(document).ready(function () {
 		
 		comments = $(this).closest(".codeContainer").find(".mouseComment");
 		
+		comments.each(function(i, element) {
 		
+		});
 		
         selectedLine = highlightLines($(this), selectedLine);
 		
