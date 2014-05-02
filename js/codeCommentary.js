@@ -1,22 +1,50 @@
-function highlightLines(pre, yOffset) {
-    var i, start, line, range, lineHeight = parseFloat(pre.css("line-height"));
+function highlightLines(pre, lineNumber, secondLineNumber, connected) {
+    var lineNumber, line, secondLine, lineHeight = parseFloat(pre.css("line-height"));
 
-	start = Math.floor(yOffset / lineHeight);
-   
-    line = pre.find(".line-highlight");
+    line = pre.find(".line-highlight").eq(0);
+	secondLine = pre.find(".line-highlight").eq(1);
     line.show();
 
 
-    line.css("top", start * Math.floor(lineHeight) + 'px');
+    line.css("top", lineNumber * Math.floor(lineHeight) + 'px');
+	
+	if (connected === true) {
+	//create a bunch of new lines, which will cause this to highlight multiple lines
+		line.text(Array(secondLineNumber - lineNumber + 2).join(' \r\n'));
+		secondLine.hide();
+	} else if (secondLineNumber !== undefined) {
+		secondLine.css("top", secondLineNumber * Math.floor(lineHeight) + 'px');
+		secondLine.show();
+	} else {
+		line.text("\r\n");
+		secondLine.hide();
+	}
+	
+	return lineNumber
 }
 
+
+function getMouseOverLine(pre, yOffset) {
+	var lineHeight = parseFloat(pre.css("line-height"));
+	return Math.floor((yOffset-5) / lineHeight);
+}
 
 
 $(document).ready(function () {
     console.log("codeCommentary.js");
     $(".codeContainer").on("mousemove", "pre", function (e) {
-		var y = e.offsetY==undefined?e.layerY:e.offsetY;
-		//console.log(y);
-        highlightLines($(e.currentTarget), y);
+		var selectedLine, y, comments;
+
+		y = e.offsetY==undefined?e.layerY:e.offsetY;
+		
+		selectedLine = getMouseOverLine($(this), y);
+		
+		comments = $(this).closest(".codeContainer").find(".mouseComment");
+		
+		
+		
+        selectedLine = highlightLines($(this), selectedLine);
+		
+		
     });
 });

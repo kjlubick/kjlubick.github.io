@@ -9,6 +9,11 @@
 	border-radius:8px;
 	height:94%;
 	max-height:300px;
+	padding:5px;
+}
+
+.mouseComment {
+	display:none;
 }
 
 .codeContainer pre{
@@ -21,7 +26,9 @@
 
 .codeContainer{
 	position:relative;
+	
 }
+
 
 .line-highlight {
 	display:none;
