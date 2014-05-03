@@ -1,7 +1,12 @@
 
+var highlightCorrection = -1
+
 function highlightLines(jPre, lineNumber, secondLineNumber, connected) {
     var line, secondLine, lineHeight = parseFloat(jPre.css("line-height"));
 
+	lineNumber = lineNumber + highlightCorrection;
+	secondLineNumber = secondLineNumber + highlightCorrection;
+	
     line = jPre.find(".line-highlight").eq(0);
     secondLine = jPre.find(".line-highlight").eq(1);
     line.show();
@@ -14,6 +19,7 @@ function highlightLines(jPre, lineNumber, secondLineNumber, connected) {
         line.text(new Array(secondLineNumber - lineNumber + 2).join(' \r\n'));
         secondLine.hide();
     } else if (secondLineNumber !== undefined) {
+		line.text("\r\n");
         secondLine.css("top", secondLineNumber * Math.floor(lineHeight) + 'px');
         secondLine.show();
     } else {
@@ -25,29 +31,55 @@ function highlightLines(jPre, lineNumber, secondLineNumber, connected) {
 
 function getMouseOverLine(jPre, yOffset) {
     var lineHeight = parseFloat(jPre.css("line-height"));
-    return Math.floor((yOffset - 5) / lineHeight);
+    return Math.floor((yOffset - 5) / lineHeight) + 1;		//+1 to account for the top buffer zone
 }
 
+function checkEndPointsForNum(first, second, test) {
+    if (test === parseInt(first, 10) || test === parseInt(second, 10)) {
+        return true;
+    }
+    return false;
+}
+
+function checkRangeForNum(first, second, test) {
+    if (test >= parseInt(first, 10) && test <= parseInt(second, 10)) {
+        return true;
+    }
+    return false;
+}
+
+//returns true if this comment is relevent to the selected line
 function handleHighlightsAndComment(jComment, selectedLine, enclosingObject) {
-    var dataString = jComment.data("show");
+    var dataString = jComment.data("show"), splits;
+    //selectedLine = selectedLine + 1;
     if (typeof (dataString) == "string") {
         if (dataString.indexOf("-") != -1) {
-
+            splits = dataString.split("-");
+            if (checkRangeForNum(splits[0], splits[1], selectedLine)) {
+                jComment.show();
+                highlightLines(enclosingObject, parseInt(splits[0], 10), parseInt(splits[1], 10), true);
+                return true;
+            }
         } else if (dataString.indexOf("+") != -1) {
-
+            splits = dataString.split("+");
+            if (checkEndPointsForNum(splits[0], splits[1], selectedLine)) {
+                jComment.show();
+                highlightLines(enclosingObject, parseInt(splits[0], 10), parseInt(splits[1], 10));
+                return true;
+            }
         }
         else {
             console.log("not supported data string " + dataString);
         }
     }
     else {
-        if (selectedLine == (dataString - 1)) {
+        if (selectedLine == dataString) {
             jComment.show();
             highlightLines(enclosingObject, selectedLine);
             return true;
         }
     }
-	highlightLines(enclosingObject, selectedLine);
+    highlightLines(enclosingObject, selectedLine);
     return false;
 }
 
