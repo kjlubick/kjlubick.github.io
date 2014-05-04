@@ -5,7 +5,9 @@ function highlightLines(jPre, lineNumber, secondLineNumber, connected) {
     var line, secondLine, lineHeight = parseFloat(jPre.css("line-height"));
 
 	lineNumber = lineNumber + highlightCorrection;
-	secondLineNumber = secondLineNumber + highlightCorrection;
+	if (secondLineNumber !== undefined) {
+		secondLineNumber = secondLineNumber + highlightCorrection;
+	}
 	
     line = jPre.find(".line-highlight").eq(0);
     secondLine = jPre.find(".line-highlight").eq(1);
