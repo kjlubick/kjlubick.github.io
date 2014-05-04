@@ -85,6 +85,27 @@ function handleHighlightsAndComment(jComment, selectedLine, enclosingObject) {
     return false;
 }
 
+var isAnimating = false;
+
+function adjustCodeCommentBoxForMousePosition(codeComment, y) {
+	var height = parseInt(codeComment.css("height"),10), currTop = parseInt(codeComment.css("top"),10), newTop;
+	
+	if (!isAnimating && currTop + .8 * height < y) {
+		//newTop = Math.max(
+		codeComment.animate({top: (y - (.7 * height))}, 150);
+		isAnimating = true;
+		setTimeout(function() { isAnimating = false;}, 150);
+	}
+	
+	if (!isAnimating && currTop + .2 * height > y) {
+		newTop = Math.max(y - (.3 * height), 10);
+		codeComment.animate({top: newTop}, 150);
+		isAnimating = true;
+		setTimeout(function() { isAnimating = false;}, 150);
+	}
+}
+
+
 $(document).ready(function () {
     console.log("codeCommentary.js");
     $(".codeContainer").on("mousemove", "pre", function (e) {
@@ -104,7 +125,7 @@ $(document).ready(function () {
             }
         });
 
-
+		adjustCodeCommentBoxForMousePosition(enclosingObject.closest(".codeContainer").find(".codeComment"), y);
 
 
     });
