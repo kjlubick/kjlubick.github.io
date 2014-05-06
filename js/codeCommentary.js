@@ -92,6 +92,7 @@ function adjustCodeCommentBoxForMousePosition(codeComment, y) {
 	
 	if (!isAnimating && currTop + .8 * height < y) {
 		//newTop = Math.max(
+		console.log(codeComment.position());
 		codeComment.animate({top: (y - (.7 * height))}, 150);
 		isAnimating = true;
 		setTimeout(function() { isAnimating = false;}, 150);
