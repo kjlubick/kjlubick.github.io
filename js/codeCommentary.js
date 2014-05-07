@@ -101,7 +101,7 @@ function adjustCodeCommentBoxForMousePosition(codeComment, y) {
 	
 	if (!isAnimating && currTop + .2 * height > y) {
 		console.log("Window margin" + windowMargin);
-		newTop = Math.max(y - (.3 * height), 10, currTop - (windowMargin-50) );
+		newTop = Math.max(y - (.3 * height), 10, currTop - (windowMargin-60) );
 		codeComment.animate({top: newTop}, 150);
 		isAnimating = true;
 		setTimeout(function() { isAnimating = false;}, 150);
