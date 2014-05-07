@@ -89,19 +89,19 @@ var isAnimating = false;
 
 function adjustCodeCommentBoxForMousePosition(codeComment, y) {
 	var height = parseInt(codeComment.css("height"),10), currTop = parseInt(codeComment.css("top"),10), newTop,
-	windowMargin = codeComment.get(0).getBoundingClientRect().top;
+	window = codeComment.get(0).getBoundingClientRect();  //, windowTopMargin, windowBottomMargin;
 	
 	if (!isAnimating && currTop + .8 * height < y) {
-		//newTop = Math.max(
-		console.log(codeComment.get(0).getBoundingClientRect().top);
+		console.log("Window Bottom margin" + window.bottom);
+		newTop = Math.max(y - (.3 * height), 10, currTop - (window.bottom - 60) );
 		codeComment.animate({top: (y - (.7 * height))}, 150);
 		isAnimating = true;
 		setTimeout(function() { isAnimating = false;}, 150);
 	}
 	
 	if (!isAnimating && currTop + .2 * height > y) {
-		console.log("Window margin" + windowMargin);
-		newTop = Math.max(y - (.3 * height), 10, currTop - (windowMargin-60) );
+		console.log("Window Top margin" + window.top);
+		newTop = Math.max(y - (.3 * height), 10, currTop - (window.top - 60) );
 		codeComment.animate({top: newTop}, 150);
 		isAnimating = true;
 		setTimeout(function() { isAnimating = false;}, 150);
