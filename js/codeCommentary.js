@@ -1,14 +1,14 @@
 
-var highlightCorrection = -1
+var highlightCorrection = -1;
 
 function highlightLines(jPre, lineNumber, secondLineNumber, connected) {
     var line, secondLine, lineHeight = parseFloat(jPre.css("line-height"));
 
-	lineNumber = lineNumber + highlightCorrection;
-	if (secondLineNumber !== undefined) {
-		secondLineNumber = secondLineNumber + highlightCorrection;
-	}
-	
+    lineNumber = lineNumber + highlightCorrection;
+    if (secondLineNumber !== undefined) {
+        secondLineNumber = secondLineNumber + highlightCorrection;
+    }
+
     line = jPre.find(".line-highlight").eq(0);
     secondLine = jPre.find(".line-highlight").eq(1);
     line.show();
@@ -21,7 +21,7 @@ function highlightLines(jPre, lineNumber, secondLineNumber, connected) {
         line.text(new Array(secondLineNumber - lineNumber + 2).join(' \r\n'));
         secondLine.hide();
     } else if (secondLineNumber !== undefined) {
-		line.text("\r\n");
+        line.text("\r\n");
         secondLine.css("top", secondLineNumber * Math.floor(lineHeight) + 'px');
         secondLine.show();
     } else {
@@ -88,31 +88,30 @@ function handleHighlightsAndComment(jComment, selectedLine, enclosingObject) {
 var isAnimating = false;
 
 function adjustCodeCommentBoxForMousePosition(codeComment, y) {
-	var height = parseInt(codeComment.css("height"),10), currTop = parseInt(codeComment.css("top"),10), newTop,
-	window = codeComment.get(0).getBoundingClientRect(), parent, parentHeight; 
-	
-	parent = codeComment.closest(".codeContainer");
-	
-	
-	if (!isAnimating && currTop + .2 * height > y) {
-	//scroll up
-		console.log("Window Top margin" + window.top);
-		newTop = Math.max(y - (.3 * height), 10, currTop - (window.top - 60) );
-		codeComment.animate({top: newTop}, 150);
-		isAnimating = true;
-		setTimeout(function() { isAnimating = false;}, 150);
-	}
-	
-	else if (!isAnimating && currTop + .8 * height < y) {
-	//scroll down
-		parentHeight = parseInt(parent.css("height"));
-		console.log("Window Bottom margin" + window.bottom);
-		//the top should never be less than 10, but we don't want it to scroll down off the edge (10px margin)
-		newTop = Math.max(10,Math.min((y - (.7 * height)), parentHeight-(height+10)));
-		codeComment.animate({top: newTop}, 150);
-		isAnimating = true;
-		setTimeout(function() { isAnimating = false;}, 150);
-	}
+    var height = parseInt(codeComment.css("height"), 10), currTop = parseInt(codeComment.css("top"), 10), newTop,
+	//rect is the code comment's rectangle relative to the viewport
+	rect = codeComment.get(0).getBoundingClientRect(), parent, parentHeight;
+
+    parent = codeComment.closest(".codeContainer");
+
+
+    if (!isAnimating && currTop + 0.2 * height > y) {
+        //scroll up
+        newTop = Math.max(y - (0.3 * height), 10, currTop - (rect.top - 60));	//-60 because the nav bar's height is 50 and I want some space
+        codeComment.animate({ top: newTop }, 150);
+        isAnimating = true;
+        setTimeout(function () { isAnimating = false; }, 150);
+    }
+
+    else if (!isAnimating && currTop + 0.8 * height < y) {
+        //scroll down
+        parentHeight = parseInt(parent.css("height"), 10);
+        //the top should never be less than 10, but we don't want it to scroll down off the edge (10px margin)
+        newTop = Math.max(10, Math.min((y - (0.7 * height)), parentHeight - (height + 10), currTop + (window.innerHeight - rect.bottom) - 10));
+        codeComment.animate({ top: newTop }, 150);
+        isAnimating = true;
+        setTimeout(function () { isAnimating = false; }, 150);
+    }
 }
 
 
@@ -127,7 +126,7 @@ $(document).ready(function () {
 
         comments = enclosingObject.closest(".codeContainer").find(".mouseComment");
         comments.hide();
- 
+
         comments.each(function (i, element) {
             if (handleHighlightsAndComment($(element), selectedLine, enclosingObject)) {
                 //break
@@ -135,7 +134,7 @@ $(document).ready(function () {
             }
         });
 
-		adjustCodeCommentBoxForMousePosition(enclosingObject.closest(".codeContainer").find(".codeComment"), y);
+        adjustCodeCommentBoxForMousePosition(enclosingObject.closest(".codeContainer").find(".codeComment"), y);
 
 
     });
