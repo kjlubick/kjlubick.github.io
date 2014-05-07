@@ -89,19 +89,26 @@ var isAnimating = false;
 
 function adjustCodeCommentBoxForMousePosition(codeComment, y) {
 	var height = parseInt(codeComment.css("height"),10), currTop = parseInt(codeComment.css("top"),10), newTop,
-	window = codeComment.get(0).getBoundingClientRect();  //, windowTopMargin, windowBottomMargin;
+	window = codeComment.get(0).getBoundingClientRect(), parent, parentHeight; 
 	
-	if (!isAnimating && currTop + .8 * height < y) {
-		console.log("Window Bottom margin" + window.bottom);
-		newTop = Math.max(y - (.3 * height), 10, currTop - (window.bottom - 60) );
-		codeComment.animate({top: (y - (.7 * height))}, 150);
+	parent = codeComment.closest(".codeContainer");
+	
+	
+	if (!isAnimating && currTop + .2 * height > y) {
+	//scroll up
+		console.log("Window Top margin" + window.top);
+		newTop = Math.max(y - (.3 * height), 10, currTop - (window.top - 60) );
+		codeComment.animate({top: newTop}, 150);
 		isAnimating = true;
 		setTimeout(function() { isAnimating = false;}, 150);
 	}
 	
-	if (!isAnimating && currTop + .2 * height > y) {
-		console.log("Window Top margin" + window.top);
-		newTop = Math.max(y - (.3 * height), 10, currTop - (window.top - 60) );
+	else if (!isAnimating && currTop + .8 * height < y) {
+	//scroll down
+		parentHeight = parseInt(parent.css("height"));
+		console.log("Window Bottom margin" + window.bottom);
+		//the top should never be less than 10, but we don't want it to scroll down off the edge (10px margin)
+		newTop = Math.max(10,Math.min((y - (.7 * height)), parentHeight-(height+10)));
 		codeComment.animate({top: newTop}, 150);
 		isAnimating = true;
 		setTimeout(function() { isAnimating = false;}, 150);
@@ -120,7 +127,7 @@ $(document).ready(function () {
 
         comments = enclosingObject.closest(".codeContainer").find(".mouseComment");
         comments.hide();
-
+ 
         comments.each(function (i, element) {
             if (handleHighlightsAndComment($(element), selectedLine, enclosingObject)) {
                 //break
