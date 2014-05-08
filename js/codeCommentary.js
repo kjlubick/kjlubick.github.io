@@ -114,8 +114,16 @@ function adjustCodeCommentBoxForMousePosition(codeComment, y) {
     }
 }
 
+Prism.hooks.add('after-highlight', function() {
+	$(".codeContainer").each(function(i, cc) {
+		var numbers = $(cc).find(".line-numbers-rows span");
+		numbers.each(function(j, n){
+			n.setAttribute("data-comment","*");
+		});
+	});
+});
 
-$(document).ready(function () {
+$(window).load(function () {
     console.log("codeCommentary.js");
     $(".codeContainer").on("mousemove", "pre", function (e) {
         var selectedLine, y, comments, enclosingObject = $(this);
@@ -135,7 +143,8 @@ $(document).ready(function () {
         });
 
         adjustCodeCommentBoxForMousePosition(enclosingObject.closest(".codeContainer").find(".codeComment"), y);
-
-
     });
+	
+	
+	
 });
