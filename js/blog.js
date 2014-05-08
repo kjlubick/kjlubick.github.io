@@ -21,22 +21,18 @@ Handlebars.registerHelper('format-full-date', function (date) {
     return moment(date).format("MMM Do YYYY H:mm:ss");
 });
 
+//Used to be in a ready function, but that makes the blog posts load too late
+var source, template, html;
+entryTemplateSource = $("#entry-template").html();
+entryTemplate = Handlebars.compile(entryTemplateSource);
 
-$(document).ready(function () {
-    var source, template, html;
-    entryTemplateSource = $("#entry-template").html();
-    entryTemplate = Handlebars.compile(entryTemplateSource);
+source = $("#posts-template").html();
+template = Handlebars.compile(source);
 
-    source = $("#posts-template").html();
-    template = Handlebars.compile(source);
-
-    contextPosts.posts.sort(function (a, b) {
-        return parseInt(b.id, 10) - parseInt(a.id, 10);		//higher id numbers are at the top
-    });
-
-    html = template(contextPosts);
-
-   // console.log(html);
-
-   // $("#main").html(html);
+contextPosts.posts.sort(function (a, b) {
+	return parseInt(b.id, 10) - parseInt(a.id, 10);		//higher id numbers are at the top
 });
+
+html = template(contextPosts);
+
+$("#main").html(html);
