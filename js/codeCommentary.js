@@ -1,4 +1,4 @@
-
+/*global Prism*/
 var highlightCorrection = -1;
 
 function highlightLines(jPre, lineNumber, secondLineNumber, connected) {
@@ -52,8 +52,12 @@ function checkRangeForNum(first, second, test) {
 
 //returns true if this comment is relevent to the selected line
 function handleHighlightsAndComment(jComment, selectedLine, enclosingObject) {
-    var dataString = jComment.data("show"), splits;
-    //selectedLine = selectedLine + 1;
+    var dataString, splits;
+    
+	if (jComment !== undefined) {
+		dataString = jComment.data("show")
+	}
+	
     if (typeof (dataString) == "string") {
         if (dataString.indexOf("-") != -1) {
             splits = dataString.split("-");
@@ -114,16 +118,31 @@ function adjustCodeCommentBoxForMousePosition(codeComment, y) {
     }
 }
 
-Prism.hooks.add('after-highlight', function() {
-	$(".codeContainer").each(function(i, cc) {
-		var numbers = $(cc).find(".line-numbers-rows span");
-		numbers.each(function(j, n){
-			n.setAttribute("data-comment","*");
-		});
-	});
+Prism.hooks.add('after-highlight', function (env) {
+    var numbersToHighlight, lineNumbers, container, mouseComments, lines;
+	if (env.code == "Loading…") {
+		return;
+	}
+	console.log("call ");
+	console.log(env);
+    $(".codeContainer").each(function (i, cc) {
+        container = $(cc);
+
+        mouseComments = container.find(".mouseComment");
+        mouseComments.each(function (j, mc) {
+			lines = mc.getAttribute("data-show").split(/[\+\-]/);
+			console.log(lines);
+        });
+
+        lineNumbers = container.find(".line-numbers-rows span");
+        lineNumbers.each(function (j, n) {
+
+            n.setAttribute("data-comment", "*");
+        });
+    });
 });
 
-$(window).load(function () {
+$(document).ready(function () {
     console.log("codeCommentary.js");
     $(".codeContainer").on("mousemove", "pre", function (e) {
         var selectedLine, y, comments, enclosingObject = $(this);
@@ -135,16 +154,19 @@ $(window).load(function () {
         comments = enclosingObject.closest(".codeContainer").find(".mouseComment");
         comments.hide();
 
-        comments.each(function (i, element) {
-            if (handleHighlightsAndComment($(element), selectedLine, enclosingObject)) {
-                //break
-                return false;
-            }
-        });
-
+		if (comments.size() > 0) {
+			comments.each(function (i, element) {
+				if (handleHighlightsAndComment($(element), selectedLine, enclosingObject)) {
+					//break
+					return false;
+				}
+			});
+		} else {
+			handleHighlightsAndComment(undefined, selectedLine, enclosingObject)
+		}
         adjustCodeCommentBoxForMousePosition(enclosingObject.closest(".codeContainer").find(".codeComment"), y);
     });
-	
-	
-	
+
+
+
 });
