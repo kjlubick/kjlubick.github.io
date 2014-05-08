@@ -12,9 +12,21 @@
 	padding:5px;
 }
 
+/* overriding from prism.js for starring and bolding */
+.line-numbers-rows {
+	color: #999;
+}
+
+/* overriding from prism.js for starring and bolding */
 .line-numbers-rows > span:before {
-	content: counter(linenumber) attr(data-comment);
+	content: attr(data-comment) counter(linenumber);
 	font-weight: inherit;
+	color:inherit;
+}
+
+.starredBolded {
+	font-weight: 900;
+	color: #777;
 }
 
 .mouseComment {

@@ -155,6 +155,7 @@ Prism.hooks.add('after-highlight', function (env) {
         lineNumbers.each(function (j, n) {
             if (-1 !== numbersToHighlight.indexOf(j)) {
                 n.setAttribute("data-comment", "*");
+                n.className = "starredBolded";
             }
         });
     }
