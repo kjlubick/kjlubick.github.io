@@ -36,7 +36,7 @@ $(document).ready(function () {
 
     html = template(contextPosts);
 
-    console.log(html);
+   // console.log(html);
 
-    $("#main").html(html);
+   // $("#main").html(html);
 });
