@@ -143,7 +143,7 @@ Prism.hooks.add('after-highlight', function (env) {
             }
         } else {
             for (i = 0; i < lines.length; i++) {
-                numbersToHighlight.push(parseInt(lines[i], 10)-1);		//subtract 1 because these lines are 1 indexed, not 0-indexed
+                numbersToHighlight.push(parseInt(lines[i], 10) - 1);		//subtract 1 because these lines are 1 indexed, not 0-indexed
             }
         }
     });
