@@ -53,11 +53,11 @@ function checkRangeForNum(first, second, test) {
 //returns true if this comment is relevent to the selected line
 function handleHighlightsAndComment(jComment, selectedLine, enclosingObject) {
     var dataString, splits;
-    
-	if (jComment !== undefined) {
-		dataString = jComment.data("show")
-	}
-	
+
+    if (jComment !== undefined) {
+        dataString = jComment.data("show");
+    }
+
     if (typeof (dataString) == "string") {
         if (dataString.indexOf("-") != -1) {
             splits = dataString.split("-");
@@ -119,26 +119,45 @@ function adjustCodeCommentBoxForMousePosition(codeComment, y) {
 }
 
 Prism.hooks.add('after-highlight', function (env) {
-    var numbersToHighlight, lineNumbers, container, mouseComments, lines;
-	if (env.code == "Loading…") {
-		return;
-	}
-	console.log("call ");
-	console.log(env);
+    var numbersToHighlight, lineNumbers, container, mouseComments;
+    if (env.code == "Loading…") {
+        return;
+    }
+    numbersToHighlight = [];
+    console.log("call ");
+    console.log(env);
 
-	container = $(env.element).closest(".codeContainer");
+    container = $(env.element).closest(".codeContainer");
 
-	mouseComments = container.find(".mouseComment");
-	mouseComments.each(function (j, mc) {
-		lines = mc.getAttribute("data-show").split(/[\+\-]/);
-		console.log(lines);
-	});
+    mouseComments = container.find(".mouseComment");
+    mouseComments.each(function (j, mc) {
+        var i, show, range = false, lines;
+        show = mc.getAttribute("data-show");
+        lines = show.split(/[\+\-]/);
+        if (show.indexOf("+") === -1) {
+            range = true;
+        }
+        if (range && lines.length > 1) {
+            for (i = parseInt(lines[0], 10) ; i <= parseInt(lines[1], 10) ; i++) {
+                numbersToHighlight.push(i);
+            }
+        } else {
+            for (i = 0; i < lines.length; i++) {
+                numbersToHighlight.push(parseInt(lines[i], 10));
+            }
+        }
+    });
 
-	lineNumbers = container.find(".line-numbers-rows span");
-	lineNumbers.each(function (j, n) {
+    console.log(numbersToHighlight);
 
-		n.setAttribute("data-comment", "*");
-	});
+    if (numbersToHighlight.length > 0) {
+        lineNumbers = container.find(".line-numbers-rows span");
+        lineNumbers.each(function (j, n) {
+            if (-1 !== numbersToHighlight.indexOf(j)) {
+                n.setAttribute("data-comment", "*");
+            }
+        });
+    }
 });
 
 $(document).ready(function () {
@@ -153,16 +172,16 @@ $(document).ready(function () {
         comments = enclosingObject.closest(".codeContainer").find(".mouseComment");
         comments.hide();
 
-		if (comments.size() > 0) {
-			comments.each(function (i, element) {
-				if (handleHighlightsAndComment($(element), selectedLine, enclosingObject)) {
-					//break
-					return false;
-				}
-			});
-		} else {
-			handleHighlightsAndComment(undefined, selectedLine, enclosingObject)
-		}
+        if (comments.size() > 0) {
+            comments.each(function (i, element) {
+                if (handleHighlightsAndComment($(element), selectedLine, enclosingObject)) {
+                    //break
+                    return false;
+                }
+            });
+        } else {
+            handleHighlightsAndComment(undefined, selectedLine, enclosingObject);
+        }
         adjustCodeCommentBoxForMousePosition(enclosingObject.closest(".codeContainer").find(".codeComment"), y);
     });
 
