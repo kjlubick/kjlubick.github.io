@@ -139,11 +139,11 @@ Prism.hooks.add('after-highlight', function (env) {
         }
         if (range && lines.length > 1) {
             for (i = parseInt(lines[0], 10) ; i <= parseInt(lines[1], 10) ; i++) {
-                numbersToHighlight.push(i);
+                numbersToHighlight.push(i - 1);
             }
         } else {
             for (i = 0; i < lines.length; i++) {
-                numbersToHighlight.push(parseInt(lines[i], 10));
+                numbersToHighlight.push(parseInt(lines[i], 10)-1);		//subtract 1 because these lines are 1 indexed, not 0-indexed
             }
         }
     });
