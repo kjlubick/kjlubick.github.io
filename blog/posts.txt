@@ -21,10 +21,6 @@ var contextPosts = {
         date: new Date('4-28-2014 13:00:00'),
         excerpt: "My less-than-legendary, yet successful story of building a <a href='http://findbugs.sourceforge.net/'>FindBugs</a> plugin to detect ExecutorServices that have not been properly shutdown.  <a href='https://github.com/mebigfatguy/fb-contrib/pull/14'>End result</a>.",
         bodyArr: [
-	'<div class="codeContainer"><pre data-src="blog/sample.java" class="line-numbers" data-line="1,3"></pre>',
-    '<div class="codeComment"><span class="mouseComment" data-show="1">Line 1: I am a code comment. I am a code comment. I am a code comment. I am a code comment.</span></div>',
-	'</div>',
-	
 	"<p class='log'>Code log entry 084: After roughly 187 minutes of analyzing using the <a href = 'http://docs.oracle.com/javase/6/docs/technotes/tools/share/jvisualvm.html'>Java Visual VM</a>, the cause of the non-terminating program was found.  A lone ExecutorService was found to have never been shutdown(), and the internal thread pool had been keeping the JVM from terminating.  A proper call to shutdown() was added to the offending class's stop() method, resolving the issue.</p>",
 	
 	"<p>The problem I ran into above was a painful one to track down, but my intuition said the problem would make for a great <a href='http://findbugs.sourceforge.net/'>FindBugs</a> detector because it dealt with omission of code, which is easy for static analysis to detect and generally time-consuming for humans to detect.</p>",
@@ -40,11 +36,20 @@ var contextPosts = {
     "<p>This recipe assumes the following conditions: <ul>",
 	"<li>You have the source code for both FindBugs and <a href='https://github.com/mebigfatguy/fb-contrib'>fb-contrib</a> downloaded and ready to build (I recommend Eclipse)</li>",
 	"<li>You have read (or at least skimmed) Chris Grindstaff's <a href = 'https://www.ibm.com/developerworks/library/j-findbug2/'>high level overview</a> of building a FindBugs detector at least once.  Don't worry if you don't understand everything, we'll be covering a lot of the topics and, trust me, things get much clearer when you do them yourself.</li>",
-	"<li>You've read the <a href='http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Executors.html'>JavaDoc</a> for Executors (the protagonist of our story) and perhaps browsed <a href='http://www.javacodegeeks.com/2013/01/java-thread-pool-example-using-executors-and-threadpoolexecutor.html'>this sample code</a> to get a feel for things.</li></ul></p>",
+	"<li>You've read the <a href='http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Executors.html'>JavaDoc</a> for Executors (the protagonist of our story) and perhaps browsed <a href='http://www.javacodegeeks.com/2013/01/java-thread-pool-example-using-executors-and-threadpoolexecutor.html'>this sample code</a> to get a feel for things.</li>",
+	"<li>You have a JDK installed, and a reference to it in your path.</li></ul></p>",
 	
 	"<h3>Setting up our TestBed</h3>",
+	'<p>If you have ever done Test Driven Development, writing your test code first is not a new idea.  For building FindBugs detectors, it is even more important because we need the source code to generate the Java bytecode that FindBugs scans.  I haven\'t found a way to make FindBugs operate in a unit test scenario (i.e. run tests and watch a green bar as they pass), but I still write test cases that should and should not work.</p>',
 	
-	"<h3>Finding some code to work with</h3>",
+	"<p>Let's make a file, called HES_Sample.java, that will contain some buggy code.  I immediately replicated (and simplified) the case that caused me 3 hours of debugging to track down, as well as the fixed version:</p>",
+	'<div class="codeContainer"><pre data-src="blog/code/first_detector_oneUnitTest.java" class="line-numbers" data-line="1,3"></pre>',
+    '<div class="codeComment"><span class="mouseComment" data-show="5+19">Lines 5 and 19: I tend to use this //tag and //notag notation to indicate that FindBugs should put a notification on the next line.  </span>',
+	'<span class="mouseComment" data-show="30">Line 30: This call to shutdown() is what we will look for to determine if an ExecutorService has to the potential to ever be shutdown, or not (like the example above)</span>',
+	'<span class="mouseComment" data-show="34">Line 34: I made a dummy class to save on typing lots of anonymous classes. </span>',
+	'</div></div>',
+	
+	"<h3>Finding some detector code to work with</h3>",
 	
 	"<h3>Detecting no shutdown() calls</h3>",
 	
