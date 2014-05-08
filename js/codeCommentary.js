@@ -125,21 +125,20 @@ Prism.hooks.add('after-highlight', function (env) {
 	}
 	console.log("call ");
 	console.log(env);
-    $(".codeContainer").each(function (i, cc) {
-        container = $(cc);
 
-        mouseComments = container.find(".mouseComment");
-        mouseComments.each(function (j, mc) {
-			lines = mc.getAttribute("data-show").split(/[\+\-]/);
-			console.log(lines);
-        });
+	container = $(env.element).closest(".codeContainer");
 
-        lineNumbers = container.find(".line-numbers-rows span");
-        lineNumbers.each(function (j, n) {
+	mouseComments = container.find(".mouseComment");
+	mouseComments.each(function (j, mc) {
+		lines = mc.getAttribute("data-show").split(/[\+\-]/);
+		console.log(lines);
+	});
 
-            n.setAttribute("data-comment", "*");
-        });
-    });
+	lineNumbers = container.find(".line-numbers-rows span");
+	lineNumbers.each(function (j, n) {
+
+		n.setAttribute("data-comment", "*");
+	});
 });
 
 $(document).ready(function () {
