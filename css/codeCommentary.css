@@ -12,6 +12,11 @@
 	padding:5px;
 }
 
+.line-numbers-rows > span:before {
+	content: counter(linenumber) attr(data-comment);
+	font-weight: inherit;
+}
+
 .mouseComment {
 	display:none;
 }
