@@ -38,102 +38,29 @@ public class PossibleMemoryBloat extends BytecodeScanningDetector
 
 	@Override
 	public void visitClassContext(ClassContext classContext) {
-		try {
-			bloatableFields = new HashMap<XField, SourceLineAnnotation>();
-			JavaClass cls = classContext.getJavaClass();
-			Field[] fields = cls.getFields();
-			for (Field f : fields) {
-				if (f.isStatic()) {
-					String sig = f.getSignature();
-					if (bloatableSigs.contains(sig)) {
-						bloatableFields.put(XFactory.createXField(cls.getClassName(), f.getName(), f.getSignature(), f.isStatic()), null);
-					}
-				} else if ("Ljava/lang/ThreadLocal;".equals(f.getSignature())) {
-					bugReporter.reportBug(new BugInstance(this, "PMB_INSTANCE_BASED_THREAD_LOCAL", NORMAL_PRIORITY)
-					.addClass(this)
-					.addField(XFactory.createXField(cls.getClassName(), f.getName(), f.getSignature(), f.isStatic())));
-				}
-			}
-
-			if (bloatableFields.size() > 0) {
-				stack = new OpcodeStack();
-				super.visitClassContext(classContext);
-
-				for (Map.Entry<XField, SourceLineAnnotation> entry : bloatableFields.entrySet()) {
-					SourceLineAnnotation sla = entry.getValue();
-					if (sla != null) {
-						bugReporter.reportBug(new BugInstance(this, "PMB_POSSIBLE_MEMORY_BLOAT", NORMAL_PRIORITY)
-						.addClass(this)
-						.addSourceLine(sla)
-						.addField(entry.getKey()));
-					}
-				}
-			}
-		} finally {
-			stack = null;
-			bloatableFields = null;
-		}
+		//snip...
+		//we'll come back to this code
+		//...snip
 	}
 
 	@Override
 	public void visitMethod(Method obj) {
-		methodName = obj.getName();
+		//snip...
+		//we'll come back to this code
+		//...snip
 	}
 
 	@Override
 	public void visitCode(Code obj) {
-		stack.resetForMethodEntry(this);
-
-		if ("<clinit>".equals(methodName)
-				||  "<init>".equals(methodName))
-			return;
-
-		if (bloatableFields.size() > 0)
-			super.visitCode(obj);
+		//snip...
+		//we'll come back to this code
+		//...snip
 	}
 
 	@Override
 	public void sawOpcode(int seen) {
-		try {
-			if (bloatableFields.isEmpty())
-				return;
-
-			stack.precomputation(this);
-
-			if ((seen == INVOKEVIRTUAL)
-					||  (seen == INVOKEINTERFACE)) {
-				String sig = getSigConstantOperand();
-				int argCount = Type.getArgumentTypes(sig).length;
-				if (stack.getStackDepth() > argCount) {
-					OpcodeStack.Item itm = stack.getStackItem(argCount);
-					XField field = itm.getXField();
-					if (field != null) {
-						if (bloatableFields.containsKey(field)) {
-							String mName = getNameConstantOperand();
-							if (decreasingMethods.contains(mName)) {
-								bloatableFields.remove(field);
-							} else if (increasingMethods.contains(mName)) {
-								if (bloatableFields.get(field) == null) {
-									SourceLineAnnotation sla = SourceLineAnnotation.fromVisitedInstruction(this);
-									bloatableFields.put(field, sla);
-								}
-							}
-						}
-					}
-				}
-			}
-			else if (seen == ARETURN) {
-				if (stack.getStackDepth() > 0) {
-					OpcodeStack.Item returnItem = stack.getStackItem(0);
-					XField field = returnItem.getXField();
-					if (field != null) {
-						bloatableFields.remove(field);
-					}
-				}
-			}
-		}
-		finally {
-			stack.sawOpcode(this, seen);
-		}
+		//snip...
+		//we'll come back to this code
+		//...snip
 	}
 }
