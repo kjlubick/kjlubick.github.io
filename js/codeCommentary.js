@@ -32,8 +32,8 @@ function highlightLines(jPre, lineNumber, secondLineNumber, connected) {
 
 
 function getMouseOverLine(jPre, yOffset) {
-    var lineHeight = parseFloat(jPre.css("line-height"));
-    return Math.floor((yOffset - 5) / lineHeight) + 1;		//+1 to account for the top buffer zone
+    var lineHeight = parseInt(jPre.css("line-height"));
+    return Math.floor((yOffset + 1) / lineHeight);		//+1 to make mouseover have a more natural feel
 }
 
 function checkEndPointsForNum(first, second, test) {
