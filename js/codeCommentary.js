@@ -109,7 +109,7 @@ function adjustCodeCommentBoxForMousePosition(codeComment, y) {
 
     else if (!isAnimating && currTop + 0.8 * height < y) {
         //scroll down
-        parentHeight = parseInt(parent.css("height"), 10);
+        parentHeight = parseInt(parent.find("pre").css("height"), 10);
         //the top should never be less than 10, but we don't want it to scroll down off the edge (10px margin)
         newTop = Math.max(10, Math.min((y - (0.7 * height)), parentHeight - (height + 10), currTop + (window.innerHeight - rect.bottom) - 10));
         codeComment.animate({ top: newTop }, 150);

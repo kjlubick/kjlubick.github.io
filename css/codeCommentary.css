@@ -37,13 +37,16 @@
 	padding-right:22%;
 	white-space:nowrap;
 	overflow-wrap:normal;
+	overflow-y:hidden;
+	padding-bottom:25px;
+	
 }
 
 
 
 .codeContainer{
 	position:relative;
-	
+	overflow-y:scroll;
 }
 
 
