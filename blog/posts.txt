@@ -60,9 +60,13 @@ var contextPosts = {
 	"<span class='mouseComment' data-show=3>fb-contrib is released under the <a href='https://tldrlegal.com/license/gnu-lesser-general-public-license-v2.1-(lgpl-2.1)'>LGPL</a></span>",
 	'</div></div>',
 	
-	'<p>You clever people in the audience may have guessed that to make our HangingExecutors detector work, all we will need to do is copy this code into our detector and modify <span class="code">bloatableSigs</span> from line 8 and <span class="code">decreasingMethods</span> from line 15 to our ExecutorService specific signatures and we\'d be done.  You clever folk would be correct.</p>',
+	'<p>You clever people in the audience may have guessed that to make our HangingExecutors detector work, all we will need to do is copy this code into our detector and modify <span class="code">bloatableSigs</span> from line 8 and <span class="code">decreasingMethods</span> from line 15 to our ExecutorService specific signatures and we\'d be done.  You clever folk would be <b>correct</b>.</p>',
 	
-	'<p>While I have your attention, let\'s go over the interesting parts, that is, the snipped out code and see exactly how this detection thing works.</p>',
+	'<p>While I have your attention, let\'s go over the interesting parts, that is, the snipped out code and see exactly how this detection thing works.  Before we get to it, I\'d like to give a quick refresher on the <a href="http://en.wikipedia.org/wiki/Visitor_pattern">Visitor pattern</a> because the pattern is how detectors function -- FindBugs uses <a href="http://en.wikipedia.org/wiki/BCEL">BCEL</a> to walk through the compiled Java bytecode and creates "events" every time it runs into things, the <span class="toolTip" title="visitCodeContext()">beginning of a class</span> or an <span class="toolTip" title="sawOpcode()">individual bytecode</span>, for instance. Our job is to override these listeners and keep track of the interesting bits to detect our bugs.</p>',
+	
+	'<p>Generally, you will need the following four visitor methods to make a detector (There are many more than these four, but these will do most of the job).  The order that these get called is: <br/><img src="images/detectors.png" title="The flow of the visitors for a BytecodeScanningDetector"/><br/>',
+
+	' that is, for every class, we can browse the class context (and see fields, mostly), then for every method, we get a visitMethod() [usually to get the name or reset the <span class="code toolTip" title="A tool for keeping track of the most recently seen opcodes">OpcodeStack</span>], then a visitCode() [similar to visitMethod()], and then for every <span class="toolTip" title="I\'ve been using opcode a lot.  For the uninitiated, it is just a byte that is a machine instruction.">opcode</span>, a call to sawOpcode() is performed [the meat of most detectors goes here].</p>',
 	
 	"<h3>Detecting no shutdown() calls</h3>",
 	

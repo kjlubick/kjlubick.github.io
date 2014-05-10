@@ -30,3 +30,7 @@ html, body {
 .code {
 	font-family:monospace;
 }
+
+.toolTip{
+	border-bottom: 1px dashed #222;
+}
