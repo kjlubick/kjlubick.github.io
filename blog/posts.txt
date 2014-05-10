@@ -59,6 +59,11 @@ var contextPosts = {
     '<div class="codeComment">',
 	"<span class='mouseComment' data-show=3>fb-contrib is released under the <a href='https://tldrlegal.com/license/gnu-lesser-general-public-license-v2.1-(lgpl-2.1)'>LGPL</a></span>",
 	'</div></div>',
+	
+	'<p>You clever people in the audience may have guessed that to make our HangingExecutors detector work, all we will need to do is copy this code into our detector and modify <span class="code">bloatableSigs</span> from line 8 and <span class="code">decreasingMethods</span> from line 15 to our ExecutorService specific signatures and we\'d be done.  You clever folk would be correct.</p>',
+	
+	'<p>While I have your attention, let\'s go over the interesting parts, that is, the snipped out code and see exactly how this detection thing works.</p>',
+	
 	"<h3>Detecting no shutdown() calls</h3>",
 	
 	"<h3>Detecting local ExecutorServices</h3>",
