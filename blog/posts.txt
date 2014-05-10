@@ -58,6 +58,10 @@ var contextPosts = {
 	'<div class="codeContainer"><pre data-src="blog/code/PMB.java" class="line-numbers" data-line="1,3"></pre>',
     '<div class="codeComment">',
 	"<span class='mouseComment' data-show=3>fb-contrib is released under the <a href='https://tldrlegal.com/license/gnu-lesser-general-public-license-v2.1-(lgpl-2.1)'>LGPL</a></span>",
+	"<span class='mouseComment' data-show=6>Most detectors extend ByteCodeScanningDetector.  It gives us a framework for analyzing bytecodes without having to worry about parsing things ourselves.</span>",
+	"<span class='mouseComment' data-show=8-13>This is a list of Collections that PMB checks.  Why the L/ out front?  Think of that as they fully qualified compiled name of each class.</span>",
+	"<span class='mouseComment' data-show=15-20>This is a list of methods that remove things from collections.</span>",
+	"<span class='mouseComment' data-show=23-28>This is a list of methods that add things to collections.</span>",
 	'</div></div>',
 	
 	'<p>You clever people in the audience may have guessed that to make our HangingExecutors detector work, all we will need to do is copy this code into our detector and modify <span class="code">bloatableSigs</span> from line 8 and <span class="code">decreasingMethods</span> from line 15 to our ExecutorService specific signatures and we\'d be done.  You clever folk would be <b>correct</b>.</p>',
