@@ -55,7 +55,7 @@ var contextPosts = {
 	
 	"<p>There is no magic way to find a similar enough detector, but I've had luck browsing through the fb-contrib <a href='https://github.com/mebigfatguy/fb-contrib/blob/master/etc/messages.xml'>messages.xml</a> file until I find a message that seems familiar.  I, by a stroke of luck, had been recently improving the message on the <a href='https://github.com/mebigfatguy/fb-contrib/blob/ecf7de05da21e4c1960e6df714fa3adfc56e074a/src/com/mebigfatguy/fbcontrib/detect/PossibleMemoryBloat.java'>PMB_PossibleMemoryBloat detector</a>, which seemed like a good start.  It seems suitable because it detects collections that never get a call to remove(), clear() or similar methods, which is similar to what we want to do.</p>",
 	
-	'<div class="codeContainer"><pre data-src="blog/code/PMB.java" class="line-numbers" data-line="1,3"></pre>',
+	'<div class="codeContainer" style="height:500px"><pre data-src="blog/code/PMB.java" class="line-numbers" data-line="1,3"></pre>',
     '<div class="codeComment">',
 	"<span class='mouseComment' data-show=3>fb-contrib is released under the <a href='https://tldrlegal.com/license/gnu-lesser-general-public-license-v2.1-(lgpl-2.1)'>LGPL</a></span>",
 	"<span class='mouseComment' data-show=6>Most detectors extend ByteCodeScanningDetector.  It gives us a framework for analyzing bytecodes without having to worry about parsing things ourselves.</span>",
@@ -70,7 +70,7 @@ var contextPosts = {
 	
 	'<p>Generally, you will need the following four visitor methods to make a detector (There are many more than these four, but these will do most of the job).  The order that these get called is: <br/><img src="images/detectors.png" title="The flow of the visitors for a BytecodeScanningDetector"/><br/>',
 
-	' that is, for every class, we can browse the class context (and see fields, mostly), then for every method, we get a visitMethod() [usually to get the name or reset the <span class="code toolTip" title="A tool for keeping track of the most recently seen opcodes">OpcodeStack</span>], then a visitCode() [similar to visitMethod()], and then for every <span class="toolTip" title="I\'ve been using opcode a lot.  For the uninitiated, it is just a byte that is a machine instruction.">opcode</span>, a call to sawOpcode() is performed [the meat of most detectors goes here].</p>',
+	'That is, for every class, we can browse the class context (and see fields, mostly), then for every method, we get a visitMethod() [usually to get the name or reset the <span class="code toolTip" title="A tool for keeping track of the most recently seen opcodes">OpcodeStack</span>], then a visitCode() [similar to visitMethod()], and then for every <span class="toolTip" title="I\'ve been using opcode and bytecode a lot (for our purposes they are interchangable).  For the uninitiated, they are just a byte that is a machine instruction.">opcode</span>, a call to sawOpcode() is performed [the meat of most detectors goes here].</p>',
 	
 	"<h3>Detecting no shutdown() calls</h3>",
 	

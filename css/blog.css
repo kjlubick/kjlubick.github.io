@@ -34,3 +34,8 @@ html, body {
 .toolTip{
 	border-bottom: 1px dashed #222;
 }
+
+p img{
+	display:block;
+	margin:auto;
+}
