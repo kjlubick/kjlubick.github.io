@@ -1,4 +1,4 @@
-/*
+/* PossibleMemoryBloat.java
  * fb-contrib - Auxiliary detectors for Java programs
  * Copyright (C) 2005-2014 Dave Brosius
  */
