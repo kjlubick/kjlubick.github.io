@@ -53,7 +53,7 @@ var contextPosts = {
 	"<h3>Finding some detector code to work with</h3>",
 	"<p>Chris Grindstaff recommends finding a similar detector to base our new detector off, and I heartily agree, especially for the first, second or nth detector that you plan to write.</p>",
 	
-	"<p>There is no magic way to find a similar enough detector, but I've had luck browsing through the fb-contrib <a href='https://github.com/mebigfatguy/fb-contrib/blob/master/etc/messages.xml'>messages.xml</a> file until I find a message that seems familiar.  I, by a stroke of luck, had been recently improving the message on the <a href='https://github.com/mebigfatguy/fb-contrib/blob/ecf7de05da21e4c1960e6df714fa3adfc56e074a/src/com/mebigfatguy/fbcontrib/detect/PossibleMemoryBloat.java'>PMB_PossibleMemoryBloat detector</a>, which seemed like a good start.  It seems suitable because it detects collections that never get a call to remove(), clear() or similar methods (and thus always get larger but never get smaller), which is similar to what we want to do.</p>",
+	"<p>There is no magic way to find a similar enough detector, but I've had luck browsing through the fb-contrib <a href='https://github.com/mebigfatguy/fb-contrib/blob/master/etc/messages.xml'>messages.xml</a> file until I find a message that seems familiar.  I, by a stroke of luck, had been recently improving the message on the <a href='https://github.com/kjlubick/fb-contrib/blob/0ca6d7b2b2ba74abe588630d55d04ae0924f94a4/src/com/mebigfatguy/fbcontrib/detect/PossibleMemoryBloat.java'>PMB_PossibleMemoryBloat detector</a>, which seemed like a good start.  It seems suitable because it detects collections that never get a call to remove(), clear() or similar methods (and thus always get larger but never get smaller), which is similar to what we want to do.</p>",
 	
 	'<div class="codeContainer" style="height:500px"><pre data-src="blog/code/PMB.java" class="line-numbers" data-line="1,3"></pre>',
     '<div class="codeComment">',
@@ -62,7 +62,16 @@ var contextPosts = {
 	"<span class='mouseComment' data-show=8-13>This is a list of <span class='code'>Collection</span>s that PMB checks.  Why the L/ out front?  Think of that as they fully qualified compiled name of each class.</span>",
 	"<span class='mouseComment' data-show=15-20>This is a list of methods that remove things from collections.</span>",
 	"<span class='mouseComment' data-show=23-28>This is a list of methods that add things to collections.</span>",
-	"<span class='mouseComment' data-show=32><span class='code'>XField</span>s are objects representing fields.  <span class='code'>SourceLineAnnotation</span>s point to a specific line number, so we can put our notification in the right place.</span>",
+	"<span class='mouseComment' data-show=32-33><span class='code'>XField</span>s are objects representing fields.  <span class='code'>SourceLineAnnotation</span>s point to a specific line number, so we can put our notification in the right place.</span>",
+	"<span class='mouseComment' data-show=43-46>This is one of the visitor methods mentioned below.</span>",
+	"<span class='mouseComment' data-show=50-53>This is one of the visitor methods mentioned below.</span>",
+	"<span class='mouseComment' data-show=57-60>This is one of the visitor methods mentioned below.</span>",
+	"<span class='mouseComment' data-show=64-67>This is one of the visitor methods mentioned below.</span>",
+	"<span class='mouseComment' data-show=70-73>This is a helper method.  We'll cover it later.</span>",
+	"<span class='mouseComment' data-show=76-79>This is a helper method.  We'll cover it later.</span>",
+	"<span class='mouseComment' data-show=82-85>This is a helper method.  We'll cover it later.</span>",
+	"<span class='mouseComment' data-show=88-91>This is a helper method.  We'll cover it later.</span>",
+	"<span class='mouseComment' data-show=94-97>This is a helper method.  We'll cover it later.</span>",
 	'</div></div>',
 	
 	'<p>You clever people in the audience may have guessed that to make our HangingExecutors detector work, all we will need to do is copy this code into our detector and modify <span class="code">bloatableSigs</span> from line 8 and <span class="code">decreasingMethods</span> from line 15 to our ExecutorService specific signatures and we\'d be done.  You clever folk would be <b>correct</b>.</p>',
@@ -83,7 +92,8 @@ var contextPosts = {
 	
 	'<div class="codeContainer" style="height:500px"><pre data-src="blog/code/PMB_classContext.java" class="line-numbers" data-line="1,3"></pre>',
     '<div class="codeComment">',
-	"<span class='mouseComment' data-show=3>fb-contrib is released under the <a href='https://tldrlegal.com/license/gnu-lesser-general-public-license-v2.1-(lgpl-2.1)'>LGPL</a></span>",
+	"<span class='mouseComment' data-show=15+32>Parses the fields defined in this class</span>",
+	"<span class='mouseComment' data-show=18>This call to super.visitClassContext() is <b>very important</b>.  Without this call, the traversal of the class stops, meaning <u>none</u> of the other visitor methods will be called.</span>",
 	'</div></div>',
 	"<h3>Detecting no shutdown() calls</h3>",
 	

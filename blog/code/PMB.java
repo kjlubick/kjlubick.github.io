@@ -27,10 +27,13 @@ public class PossibleMemoryBloat extends BytecodeScanningDetector
 		//snip... more methods that add things
 		increasingMethods.add("put");
 	}
+	
 	private final BugReporter bugReporter;
+	private Map<XField, FieldAnnotation> bloatableCandidates;
+	private Map<XField, FieldAnnotation> bloatableFields;
 	private OpcodeStack stack;
-	private Map<XField, SourceLineAnnotation> bloatableFields;
 	private String methodName;
+	private Set<FieldAnnotation> threadLocalNonStaticFields;
 
 	public PossibleMemoryBloat(BugReporter bugReporter) {
 		this.bugReporter = bugReporter;
@@ -39,28 +42,58 @@ public class PossibleMemoryBloat extends BytecodeScanningDetector
 	@Override
 	public void visitClassContext(ClassContext classContext) {
 		//snip...
-		//we'll come back to this code
+		//We'll cover this later
 		//...snip
 	}
 
 	@Override
 	public void visitMethod(Method obj) {
 		//snip...
-		//we'll come back to this code
+		//We'll cover this later
 		//...snip
 	}
 
 	@Override
 	public void visitCode(Code obj) {
 		//snip...
-		//we'll come back to this code
+		//We'll cover this later
 		//...snip
 	}
 
 	@Override
 	public void sawOpcode(int seen) {
 		//snip...
-		//we'll come back to this code
+		//We'll cover this later
+		//...snip
+	}
+	
+	private void reportThreadLocalBugs() {
+		//snip...
+		//We'll cover this later
+		//...snip
+	}
+
+	private void reportMemoryBloatBugs() {
+		//snip...
+		//We'll cover this later
+		//...snip
+	}
+
+	private void parseFields(ClassContext classContext) {
+		//snip...
+		//We'll cover this later
+		//...snip
+	}
+
+	private void removeFieldsThatGetReturned() {
+		//snip...
+		//We'll cover this later
+		//...snip
+	}
+
+	private void checkMethodAsDecreasingOrIncreasing(XField field) {
+		//snip...
+		//We'll cover this later
 		//...snip
 	}
 }
