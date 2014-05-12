@@ -62,7 +62,7 @@ var contextPosts = {
 	"<span class='mouseComment' data-show=8-13>This is a list of <span class='code'>Collection</span>s that PMB checks.  Why the L/ out front?  Think of that as they fully qualified compiled name of each class.</span>",
 	"<span class='mouseComment' data-show=15-20>This is a list of methods that remove things from collections.</span>",
 	"<span class='mouseComment' data-show=23-28>This is a list of methods that add things to collections.</span>",
-	"<span class='mouseComment' data-show=32-33><span class='code'>XField</span>s are objects representing fields.  <span class='code'>SourceLineAnnotation</span>s point to a specific line number, so we can put our notification in the right place.</span>",
+	"<span class='mouseComment' data-show=32-33><span class='code'>XField</span>s are objects representing fields.  <span class='code'>FieldAnnotation</span>s point to the line number where the field is created, so we can put our notification in the right place.</span>",
 	"<span class='mouseComment' data-show=43-46>This is one of the visitor methods mentioned below.</span>",
 	"<span class='mouseComment' data-show=50-53>This is one of the visitor methods mentioned below.</span>",
 	"<span class='mouseComment' data-show=57-60>This is one of the visitor methods mentioned below.</span>",
@@ -84,7 +84,7 @@ var contextPosts = {
 	'That is, for every class, visitClassContext() is called [in this method we tend to look at fields), then for every method, we get a visitMethod() [usually to get the name or reset the <span class="code toolTip" title="A tool for keeping track of the most recently seen opcodes">OpcodeStack</span>], then a visitCode() [similar to visitMethod()], and then for every <span class="toolTip" title="I\'ve been using opcode and bytecode a lot (for our purposes they are interchangable).  For the uninitiated, they are just a byte that is a machine instruction.">opcode</span>, a call to sawOpcode() is performed [the meat of most detectors goes here].</p>',
 	
 	'<h4>How does PossibleMemoryBloat work?</h4>',
-	'<p>At a high level, PMB works in four steps:<ol><li>Find all <span class="code">Collection</span> fields</li><li>While parsing through all methods, see if things ever get added to the <span class="code">Collection</span> fields.</li> <li>While parsing through all methods, remove any fields that get a call to clear(), remove() or similar.</li> <li>Report bugs on all remaining <span class="code">Collection</span> fields.</li> </ol> </p>',
+	'<p>At a high level, PMB works in four steps:<ol><li>Find all <span class="code">Collection</span> fields and put them in <span class="code">bloatableCandidates</span>.</li><li>While parsing through all methods, see if things ever get added to the <span class="code">Collection</span> fields and add those to <span class="code">bloatableFields</span>.</li> <li>While parsing through all methods, remove any fields that get a call to clear(), remove() or similar.</li> <li>Report bugs on all remaining <span class="code">Collection</span> fields.</li> </ol> </p>',
 	
 	"<p>This seems straight forward enough.  Because <span class='code'>ExecutorService</span>s are just dangerous if they don't get shutdown, our detector will omit step 2, but I'll still walk through the original PMB source code for that step.  </p>",  
 	
@@ -93,7 +93,9 @@ var contextPosts = {
 	'<div class="codeContainer" style="height:500px"><pre data-src="blog/code/PMB_classContext.java" class="line-numbers" data-line="1,3"></pre>',
     '<div class="codeComment">',
 	"<span class='mouseComment' data-show=15+32>Parses the fields defined in this class</span>",
-	"<span class='mouseComment' data-show=18>This call to super.visitClassContext() is <b>very important</b>.  Without this call, the traversal of the class stops, meaning <u>none</u> of the other visitor methods will be called.</span>",
+	"<span class='mouseComment' data-show=19>This call to super.visitClassContext() is <b>very important</b>.  Without this call, the traversal of the class stops, meaning <u>none</u> of the other visitor methods will be called.</span>",
+	"<span class='mouseComment' data-show=25-28>It's pretty typical to force any fields back to null for garbage collection to occur after you are done with the class context.</span>",
+	"<span class='mouseComment' data-show=33-34>This is how you can access all the fields in a class.  Note that <span class='code'>Field</span> is the BCEL object (read: not FindBugs message compatible) and <span class='code'>XField</span>, created on line 39, is the FindBugs version (which adds some extra functionality).</span>",
 	'</div></div>',
 	"<h3>Detecting no shutdown() calls</h3>",
 	
