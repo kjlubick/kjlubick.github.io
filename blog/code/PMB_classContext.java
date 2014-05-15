@@ -3,7 +3,7 @@
 private final BugReporter bugReporter;
 private Map<XField, FieldAnnotation> bloatableCandidates;
 private Map<XField, FieldAnnotation> bloatableFields;
-private OpcodeStack stack;
+
 private Set<FieldAnnotation> threadLocalNonStaticFields;
 
 @Override
@@ -50,8 +50,7 @@ private void reportMemoryBloatBugs() {
 		if (fieldAn != null) {
 			bugReporter.reportBug(new BugInstance(this, "PMB_POSSIBLE_MEMORY_BLOAT", NORMAL_PRIORITY)
 			.addClass(this)
-			.addField(fieldAn)
-			.addField(entry.getKey()));
+			.addField(fieldAn));
 		}
 	}
 }
@@ -63,5 +62,3 @@ private void reportThreadLocalBugs() {
 		.addField(fieldAn));
 	}
 }
-
-	

@@ -74,10 +74,10 @@ var contextPosts = {
 	"<span class='mouseComment' data-show=94-97>This is a helper method.  We'll cover it later.</span>",
 	'</div></div>',
 	
-	'<p>You clever people in the audience may have guessed that to make our HangingExecutors detector work, all we will need to do is copy this code into our detector and modify <span class="code">bloatableSigs</span> from line 8 and <span class="code">decreasingMethods</span> from line 15 to our ExecutorService specific signatures and we\'d be done.  You clever folk would be <b>correct</b>.</p>',
+	'<p>You clever people in the audience may have guessed that to make our HangingExecutors detector work, all we will need to do is copy most of this code into our detector and modify <span class="code">bloatableSigs</span> from line 8 and <span class="code">decreasingMethods</span> from line 15 to our ExecutorService specific signatures and we\'d be basically done.  You clever folk would be <b>correct</b>.</p>',
 	
 	'<h4>Visitor Pattern Interlude</h4>',
-	'<p>While I have your attention, let\'s go over the interesting parts, that is, the snipped out code and see exactly how this detection thing works.  Before we get to it, I\'d like to give a quick refresher on the <a href="http://en.wikipedia.org/wiki/Visitor_pattern">Visitor pattern</a> because the pattern is how detectors function -- FindBugs uses <a href="http://en.wikipedia.org/wiki/BCEL">BCEL</a> to walk through the compiled Java bytecode and creates "events" every time it runs into things, the <span class="toolTip" title="visitCodeContext()">beginning of a class</span> or an <span class="toolTip" title="sawOpcode()">individual bytecode</span>, for instance. Our job is to override these listeners and keep track of the interesting bits to detect our bugs.</p>',
+	'<p>Before we get into how to modify this code to suit our needs, let\'s go over the interesting parts, that is, the snipped out code and see exactly how this detection thing works.  Before we get to it, I\'d like to give a quick refresher on the <a href="http://en.wikipedia.org/wiki/Visitor_pattern">Visitor pattern</a> because the pattern is how detectors function -- FindBugs uses <a href="http://en.wikipedia.org/wiki/BCEL">BCEL</a> to walk through the compiled Java bytecode and creates "events" every time it runs into things, the <span class="toolTip" title="visitCodeContext()">beginning of a class</span> or an <span class="toolTip" title="sawOpcode()">individual bytecode</span>, for instance. Our job is to override these listeners and keep track of the interesting bits to detect our bugs.</p>',
 	
 	'<p>Generally, you will need the following four visitor methods to make a detector (There are many more than these four, but these will do most of the job).  The order that these get called is: <br/><img src="images/detectors.png" title="The flow of the visitors for a BytecodeScanningDetector"/><br/>',
 
@@ -96,7 +96,23 @@ var contextPosts = {
 	"<span class='mouseComment' data-show=19>This call to super.visitClassContext() is <b>very important</b>.  Without this call, the traversal of the class stops, meaning <u>none</u> of the other visitor methods will be called.</span>",
 	"<span class='mouseComment' data-show=25-28>It's pretty typical to force any fields back to null for garbage collection to occur after you are done with the class context.</span>",
 	"<span class='mouseComment' data-show=33-34>This is how you can access all the fields in a class.  Note that <span class='code'>Field</span> is the BCEL object (read: not FindBugs message compatible) and <span class='code'>XField</span>, created on line 39, is the FindBugs version (which adds some extra functionality).</span>",
+	"<span class='mouseComment' data-show=37>The detector only looks at static fields, which will be around for longer than local variables, and thus more prone to bloat.</span>",
+	"<span class='mouseComment' data-show=39>When at all possible, it is best to convert the BCEL objects (like <span class='code'>Field</span>, <span class='code'>Method</span>, <span class='code'>ClassDescriptor</span>) and turn them into their FindBug's equivalent (<span class='code'>XField</span>, <span class='code'>XMethod</span> and <span class='code'>XClass</span>) using the convenience\ methods in <span class='code'>XFactory</span></span>",
+	"<span class='mouseComment' data-show=42+60>Detecting local instances of <a target='_blank' style='target-new: tab;' href='http://docs.oracle.com/javase/7/docs/api/java/lang/ThreadLocal.html' class='code'>ThreadLocal</a>s is also wrapped into the PMB Detector.  When we reuse this detector, we'll be able to omit this, but for now, it's a good example that one detector can be responsible for more than one bug type.</span>",
+	"<span class='mouseComment' data-show=51>To report a bug, simply call reportBug() on the bugReporter with a new BugDetector. For now, don't worry about the <span class='code'>this</span>, just know that we need to have it and the name of the bug.  NORMAL_PRIORITY actually refers to confidence (!), which impacts severity.</span>",
+	"<span class='mouseComment' data-show=52+61>We can customize the displayed message to include things like the class name.  The order matters, so this class annotation is referred to as Annotation Index 0</span>",
+	"<span class='mouseComment' data-show=53+62>To make the message include the name of the field and make bug appear at the right line number, we need a field annotation, which we cached in parseFields(). The order matters, so this field annotation is referred to as Annotation Index 1.  Other techniques for specifying line number include using <span class='code'>SourceLineAnnotation</span>.</span>",
 	'</div></div>',
+	
+	"<br/><p>The rest of the visitors are shown in the next code snippet.  <span class='code'>sawOpcode()</span> does most of the work.  A word of warning, some of the sawOpcode() methods in other detectors contain really long switch case methods and can be a bit daunting at first, but be strong!  Carry on!</p>",
+	
+	'<div class="codeContainer" style="height:500px"><pre data-src="blog/code/PMB_otherDetectors.java" class="line-numbers" data-line="1,3"></pre>',
+    '<div class="codeComment">',
+	"<span class='mouseComment' data-show=15+32>Parses the fields defined in this class</span>",
+	"<span class='mouseComment' data-show=19>This call to super.visitClassContext() is <b>very important</b>.  Without this call, the traversal of the class stops, meaning <u>none</u> of the other visitor methods will be called.</span>",
+	"<span class='mouseComment' data-show=25-28>It's pretty typical to force any fields back to null for garbage collection to occur after you are done with the class context.</span>",
+	'</div></div>',
+	
 	"<h3>Detecting no shutdown() calls</h3>",
 	
 	"<h3>Detecting local ExecutorServices</h3>",
