@@ -108,18 +108,15 @@ var contextPosts = {
 	
 	'<div class="codeContainer" style="height:500px"><pre data-src="blog/code/PMB_otherDetectors.java" class="line-numbers" data-line="1,3"></pre>',
     '<div class="codeComment">',
-	"<span class='mouseComment' data-show=15+32>Parses the fields defined in this class</span>",
-	"<span class='mouseComment' data-show=19>This call to super.visitClassContext() is <b>very important</b>.  Without this call, the traversal of the class stops, meaning <u>none</u> of the other visitor methods will be called.</span>",
-	"<span class='mouseComment' data-show=25-28>It's pretty typical to force any fields back to null for garbage collection to occur after you are done with the class context.</span>",
+	"<span class='mouseComment' data-show=3>Remember this <span class='code'>Method</span> object is from the BCEL framework.  This method is more of a 'notification' call than the start of a deeper visitor pattern traversal, so, we don't need to call super.visitMethod() to continue traversing (in fact, the overridden implementation is blank)</span>",
+	"<span class='mouseComment' data-show=7+14>At first blush, this method may seem similar to visitMethod(), but the key difference is that visitCode() is called as part of actually parsing the bytecode (so we need to call the super's implementation to continue parsing)</span>",
+	"<span class='mouseComment' data-show=8>We'll be using the <span class='code'>OpcodeStack</span> soon, so we need to reset it to clear it out.</span>",
+	'<span class="mouseComment" data-show=18> Each of these opcodes will be something off <a href="http://en.wikipedia.org/wiki/Java_bytecode_instruction_listings">this list</a>.  Thankfully, you won\'t have to have a bunch of magic numbers floating around your code because these are all defined in a superclass.</span>',
 	'</div></div>',
 	
 	"<h3>Detecting no shutdown() calls</h3>",
 	
-	"<h3>Detecting local ExecutorServices</h3>",
-	
-	"<h3>Detecting the replacement of an ExecutorService</h3>",
-	
-	"<h3>Merging in my contribution</h3>"
+	"<h3>Making the message and other bookkeeping</h3>"
 	]
     }]
 };
