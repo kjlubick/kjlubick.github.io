@@ -93,25 +93,31 @@ var isAnimating = false;
 
 function adjustCodeCommentBoxForMousePosition(codeComment, y) {
     var height = parseInt(codeComment.css("height"), 10), currTop = parseInt(codeComment.css("top"), 10), newTop,
-	//rect is the code comment's rectangle relative to the viewport
-	rect = codeComment.get(0).getBoundingClientRect(), parent, parentHeight;
+	rect, parent, preHeight, parentHeight;
 
+	//rect is the code comment's rectangle relative to the viewport
+	rect = codeComment.get(0).getBoundingClientRect()
     parent = codeComment.closest(".codeContainer");
+	parentHeight = parseInt(parent.css("height"), 10);
 
 
     if (!isAnimating && currTop + 0.2 * height > y) {
         //scroll up
 		isAnimating = true;
-        newTop = Math.max(y - (0.3 * height), 10, currTop - (rect.top - 60));	//-60 because the nav bar's height is 50 and I want some space
+        newTop = Math.max(y - (0.3 * height), 15, currTop - (rect.top - 60),	//-60 because the nav bar's height is 50 and I want some space
+			currTop - (codeComment.position().top - 10)		//jquery position
+		);
         codeComment.animate({ top: newTop }, 150, "swing", function () { isAnimating = false; });
     }
 
     else if (!isAnimating && currTop + 0.8 * height < y) {
         //scroll down
 		isAnimating = true;
-        parentHeight = parseInt(parent.find("pre").css("height"), 10);
+        preHeight = parseInt(parent.find("pre").css("height"), 10);
         //the top should never be less than 10, but we don't want it to scroll down off the edge (10px margin)
-        newTop = Math.max(10, Math.min((y - (0.7 * height)), parentHeight - (height + 10), currTop + (window.innerHeight - rect.bottom) - 10));
+        newTop = Math.max(10, Math.min((y - (0.7 * height)), preHeight - (height + 10), currTop + (window.innerHeight - rect.bottom) - 10,
+			currTop + (parentHeight - (codeComment.position().top + height) ) - 10)
+		);
         codeComment.animate({ top: newTop }, 150, "swing", function () { isAnimating = false; });
     }
 }
