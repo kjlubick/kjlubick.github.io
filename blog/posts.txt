@@ -112,7 +112,8 @@ var contextPosts = {
     '<div class="codeComment">',
 	"<span class='mouseComment' data-show=3>Remember this <span class='code'>Method</span> object is from the BCEL framework.  This method is more of a 'notification' call than the start of a deeper visitor pattern traversal, so, we don't need to call super.visitMethod() to continue traversing (in fact, the overridden implementation is blank)</span>",
 	"<span class='mouseComment' data-show=7+14>At first blush, this method may seem similar to visitMethod(), but the key difference is that visitCode() is called as part of actually parsing the bytecode (so we need to call the super's implementation to continue parsing)</span>",
-	"<span class='mouseComment' data-show=8>We'll be using the <span class='code'>OpcodeStack</span> soon, so we need to reset it to clear it out.</span>",
+	"<span class='mouseComment' data-show=8>This is a common way to avoid doing anything in the constructor or the static initializer.</span>",
+	"<span class='mouseComment' data-show=10>We'll be using the <span class='code'>OpcodeStack</span> soon, so we need to reset it to clear it out.</span>",
 	'<span class="mouseComment" data-show=18> Each of these opcodes will be something off <a href="http://en.wikipedia.org/wiki/Java_bytecode_instruction_listings">this list</a>.  Thankfully, you won\'t have to have a bunch of magic numbers floating around your code because these are all defined in a superclass.</span>',
 	"<span class='mouseComment' data-show=20>This call is probably redundant given lines 13 and 14, but it's probably better to be safe than sorry.</span>",
 	"<span class='mouseComment' data-show=23>This is needed for the OpcodeStack to collect information before something is pushed or popped.</span>",
@@ -130,9 +131,15 @@ var contextPosts = {
 	//Activate the stackPic imageToolTip 
 	"<script>$(document).ready(function() {$('#stackPic').tooltipster({content: $('<img style=\"max-height:350px;\" src=\"images/opcodeStack.png\" />')});});</script>",
 	
-	"<h3>Detecting no shutdown() calls</h3>",
+	"<p><br/>So that was all the code in the detector.  Not trivial, but not so bad once you know a couple of FindBugs quirks, eh?  Some of you may be wondering about the message that gets displayed.  That involves three more files and is more of a bureaucratic step so, I'll kill two birds with one stone and explain the concepts while we make our own detector in the next section.</p>",
 	
-	"<h3>Making the message and other bookkeeping</h3>"
+	"<h3>Building our custom \"no shutdown() calls on an ExecutorService\" detector</h3>",
+	
+	
+	
+	"<h4>Making the message and other bookkeeping</h4>",
+	"<h4>The modified code</h4>",
+	"<h4>Finishing up</h4>"
 	]
     }]
 };
