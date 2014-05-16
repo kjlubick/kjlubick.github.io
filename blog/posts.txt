@@ -5,7 +5,8 @@ var contextPosts = {
         id: 'n',
         title: "",
         author: { name: "Kevin Lubick" },
-        date: new Date('12-27-2012'),
+        date: new Date('4-28-2014 13:00:00'),
+		tags: ["",""],
         excerpt: "",
         bodyArr:[
 		"",
@@ -19,6 +20,7 @@ var contextPosts = {
         title: "Building my First Findbugs Detector",
         author: { name: "Kevin Lubick" },
         date: new Date('4-28-2014 13:00:00'),
+		tags: ["FindBugs", "fb-contrib", "tutorial", "verbose"],
         excerpt: "My less-than-legendary, yet successful story of building a <a href='http://findbugs.sourceforge.net/'>FindBugs</a> plugin to detect ExecutorServices that have not been properly shutdown.  <a href='https://github.com/mebigfatguy/fb-contrib/pull/14'>End result</a>.",
         bodyArr: [
 	"<p class='log'>Code log entry 084: After roughly 187 minutes of analyzing using the <a href = 'http://docs.oracle.com/javase/6/docs/technotes/tools/share/jvisualvm.html'>Java Visual VM</a>, the cause of the non-terminating program was found.  A lone ExecutorService was found to have never been shutdown(), and the internal thread pool had been keeping the JVM from terminating.  A proper call to shutdown() was added to the offending class's stop() method, resolving the issue.</p>",
@@ -77,11 +79,11 @@ var contextPosts = {
 	'<p>You clever people in the audience may have guessed that to make our HangingExecutors detector work, all we will need to do is copy most of this code into our detector and modify <span class="code">bloatableSigs</span> from line 8 and <span class="code">decreasingMethods</span> from line 15 to our ExecutorService specific signatures and we\'d be basically done.  You clever folk would be <b>correct</b>.</p>',
 	
 	'<h4>Visitor Pattern Interlude</h4>',
-	'<p>Before we get into how to modify this code to suit our needs, let\'s go over the interesting parts, that is, the snipped out code and see exactly how this detection thing works.  Before we get to it, I\'d like to give a quick refresher on the <a href="http://en.wikipedia.org/wiki/Visitor_pattern">Visitor pattern</a> because the pattern is how detectors function -- FindBugs uses <a href="http://en.wikipedia.org/wiki/BCEL">BCEL</a> to walk through the compiled Java bytecode and creates "events" every time it runs into things, the <span class="toolTip" title="visitCodeContext()">beginning of a class</span> or an <span class="toolTip" title="sawOpcode()">individual bytecode</span>, for instance. Our job is to override these listeners and keep track of the interesting bits to detect our bugs.</p>',
+	'<p>Before we get into how to modify this code to suit our needs, let\'s go over the interesting parts, that is, the snipped out code and see exactly how this detection thing works.  Before we get to it, I\'d like to give a quick refresher on the <a href="http://en.wikipedia.org/wiki/Visitor_pattern">Visitor pattern</a> because the pattern is how detectors function -- FindBugs uses <a href="http://en.wikipedia.org/wiki/BCEL">BCEL</a> (<a href="http://commons.apache.org/proper/commons-bcel/apidocs/">JavaDocs</a>) to walk through the compiled Java bytecode and creates "events" every time it runs into things, the <span class="mouseOverMe tooltip" title="visitCodeContext()">beginning of a class</span> or an <span class="mouseOverMe tooltip" title="sawOpcode()">individual bytecode</span>, for instance. Our job is to override these listeners and keep track of the interesting bits to detect our bugs.</p>',
 	
 	'<p>Generally, you will need the following four visitor methods to make a detector (There are many more than these four, but these will do most of the job).  The order that these get called is: <br/><img src="images/detectors.png" title="The flow of the visitors for a BytecodeScanningDetector"/><br/>',
 
-	'That is, for every class, visitClassContext() is called [in this method we tend to look at fields), then for every method, we get a visitMethod() [usually to get the name or reset the <span class="code toolTip" title="A tool for keeping track of the most recently seen opcodes">OpcodeStack</span>], then a visitCode() [similar to visitMethod()], and then for every <span class="toolTip" title="I\'ve been using opcode and bytecode a lot (for our purposes they are interchangable).  For the uninitiated, they are just a byte that is a machine instruction.">opcode</span>, a call to sawOpcode() is performed [the meat of most detectors goes here].</p>',
+	'That is, for every class, visitClassContext() is called [in this method we tend to look at fields), then for every method, we get a visitMethod() [usually to get the name or reset the <span class="code mouseOverMe" title="A tool for keeping track of the most recently seen opcodes">OpcodeStack</span>], then a visitCode() [similar to visitMethod()], and then for every <span class="mouseOverMe" title="I\'ve been using opcode and bytecode a lot (for our purposes they are interchangable).  For the uninitiated, they are just a byte that is a machine instruction.">opcode</span>, a call to sawOpcode() is performed [the meat of most detectors goes here].</p>',
 	
 	'<h4>How does PossibleMemoryBloat work?</h4>',
 	'<p>At a high level, PMB works in four steps:<ol><li>Find all <span class="code">Collection</span> fields and put them in <span class="code">bloatableCandidates</span>.</li><li>While parsing through all methods, see if things ever get added to the <span class="code">Collection</span> fields and add those to <span class="code">bloatableFields</span>.</li> <li>While parsing through all methods, remove any fields that get a call to clear(), remove() or similar.</li> <li>Report bugs on all remaining <span class="code">Collection</span> fields.</li> </ol> </p>',
@@ -112,6 +114,11 @@ var contextPosts = {
 	"<span class='mouseComment' data-show=7+14>At first blush, this method may seem similar to visitMethod(), but the key difference is that visitCode() is called as part of actually parsing the bytecode (so we need to call the super's implementation to continue parsing)</span>",
 	"<span class='mouseComment' data-show=8>We'll be using the <span class='code'>OpcodeStack</span> soon, so we need to reset it to clear it out.</span>",
 	'<span class="mouseComment" data-show=18> Each of these opcodes will be something off <a href="http://en.wikipedia.org/wiki/Java_bytecode_instruction_listings">this list</a>.  Thankfully, you won\'t have to have a bunch of magic numbers floating around your code because these are all defined in a superclass.</span>',
+	"<span class='mouseComment' data-show=20>This call is probably redundant given lines 13 and 14, but it's probably better to be safe than sorry.</span>",
+	"<span class='mouseComment' data-show=23>This is needed for the OpcodeStack to collect information before something is pushed or popped.</span>",
+	"<span class='mouseComment' data-show=25>INVOKEVIRTUAL and INVOKEINTERFACE are two of the five bytecodes that can be used to indicate a method.  Apparently we don't need to worry about the other three.</span>",
+	"<span class='mouseComment' data-show=26+27>getSigConstantOperand() returns a semi-cryptic String that indicates how many params a method call had.  <span class='mouseOverMe' title='There will not be a quiz on this, so ignore this if you want to.'>For example</span>,  \"<span class='code'>(JLjava/util/concurrent/ TimeUnit;)Z</span>\" means that a <span class='code'>long</span> and something of type type <span class='code'>java.util.concurrent. TimeUnit</span> were passed in. <span class='code'>Type.getArgumentTypes()</span> parses this into usable Objects. </span>",
+	"<span class='mouseComment' data-show=29>At this point, on the stack we have </span>",
 	'</div></div>',
 	
 	"<h3>Detecting no shutdown() calls</h3>",

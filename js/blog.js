@@ -36,3 +36,5 @@ contextPosts.posts.sort(function (a, b) {
 html = template(contextPosts);
 
 $("#main").html(html);
+
+$(".tooltip").tooltipster();

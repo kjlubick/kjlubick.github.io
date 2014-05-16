@@ -31,7 +31,7 @@ html, body {
 	font-family:monospace;
 }
 
-.toolTip{
+.mouseOverMe{
 	border-bottom: 1px dashed #222;
 }
 
