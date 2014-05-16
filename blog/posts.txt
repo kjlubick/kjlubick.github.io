@@ -118,8 +118,11 @@ var contextPosts = {
 	"<span class='mouseComment' data-show=23>This is needed for the OpcodeStack to collect information before something is pushed or popped.</span>",
 	"<span class='mouseComment' data-show=25>INVOKEVIRTUAL and INVOKEINTERFACE are two of the five bytecodes that can be used to indicate a method.  Apparently we don't need to worry about the other three.</span>",
 	"<span class='mouseComment' data-show=26+27>getSigConstantOperand() returns a semi-cryptic String that indicates how many params a method call had.  <span class='mouseOverMe' title='There will not be a quiz on this, so ignore this if you want to.'>For example</span>,  \"<span class='code'>(JLjava/util/concurrent/ TimeUnit;)Z</span>\" means that a <span class='code'>long</span> and something of type type <span class='code'>java.util.concurrent. TimeUnit</span> were passed in. <span class='code'>Type.getArgumentTypes()</span> parses this into usable Objects. </span>",
-	"<span class='mouseComment' data-show=29>At this point, on the stack we have </span>",
+	"<span class='mouseComment' data-show=29>At this point, on the stack we have looks like <span id='stackPic' class='mouseOverMe'>this</span> and we want to get to the name of the method.  So, we have to dig down past the number of arguments and get that stack item.</span>",
 	'</div></div>',
+	
+	//Activate the stackPic imageToolTip 
+	"<script>$(document).ready(function() {$('#stackPic').tooltipster({content: $('<img style=\"max-width:400px;\" src=\"images/detectors.png\" />')});});</script>",
 	
 	"<h3>Detecting no shutdown() calls</h3>",
 	
