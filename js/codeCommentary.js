@@ -122,8 +122,8 @@ Prism.hooks.add('after-highlight', function (env) {
         return;
     }
     numbersToHighlight = [];
-    console.log("call ");
-    console.log(env);
+    //console.log("call ");
+    //console.log(env);
 
     container = $(env.element).closest(".codeContainer");
 
@@ -146,7 +146,7 @@ Prism.hooks.add('after-highlight', function (env) {
         }
     });
 
-    console.log(numbersToHighlight);
+    //console.log(numbersToHighlight);
 
     if (numbersToHighlight.length > 0) {
         lineNumbers = container.find(".line-numbers-rows span");
@@ -160,7 +160,7 @@ Prism.hooks.add('after-highlight', function (env) {
 });
 
 $(document).ready(function () {
-    console.log("codeCommentary.js");
+    //console.log("codeCommentary.js");
     $(".codeContainer").on("mousemove", "pre", function (e) {
         var selectedLine, y, comments, enclosingObject = $(this);
 
