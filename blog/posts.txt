@@ -131,7 +131,7 @@ var contextPosts = {
 	//Activate the stackPic imageToolTip 
 	"<script>$(document).ready(function() {$('#stackPic').tooltipster({content: $('<img style=\"max-height:350px;\" src=\"images/opcodeStack.png\" />')});});</script>",
 	
-	"<p><br/>So that was all the code in the detector.  Not trivial, but not so bad once you know a couple of FindBugs quirks, eh?  Some of you may be wondering about the message that gets displayed.  That involves three more files and is more of a bureaucratic step so, I'll kill two birds with one stone and explain the concepts while we make our own detector in the next section.</p>",
+	"<p><br/>So that was all the code in the detector.  Not trivial, but not so bad once you know a couple of FindBugs quirks, eh?  Some of you may be wondering about the message that gets displayed.  That involves three more files and is more of a bureaucratic step than a development step, therefore I'll kill two birds with one stone and explain the \"paperwork\" concepts while we make our own detector in the next section.</p>",
 	
 	"<h3>Building our custom \"no shutdown() calls on an ExecutorService\" detector</h3>",
 	
