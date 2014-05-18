@@ -10,7 +10,6 @@
 	height:90%;
 	max-height:300px;
 	padding:5px;
-	-webkit-backface-visibility: hidden;   /*Work around for animation artifacts */
 }
 
 /* overriding from prism.js for starring and bolding */
