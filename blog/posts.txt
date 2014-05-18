@@ -143,6 +143,8 @@ var contextPosts = {
 	"<span class='mouseComment' data-show=9>This is our added line, appended to the bottom (order doesn't matter).  Be <b>very</b> careful not to omit a space.  This will make FindBugs crash because of <a target=\'_blank\' style=\'target-new: tab;\' href='https://github.com/findbugs/findbugs/blob/77fea571f00ec5c04f33b45c0cf14ed2dbc25253/findbugs/src/java/edu/umd/cs/findbugs/BugRanker.java#L151'>this line of code</a>, which can lead to a terrifying wild-goose chase.</span>",
 	'</div></div>',
 	
+	'<p>That new line of code [line 9 in the example] registers a new BugPattern called HE_EXECUTOR_NEVER_SHUTDOWN.  A BugPattern is tied to a message and lives in exactly one Detector.  A single detector can be responsible for one or more BugPatterns.  We\'ve already seen an example where one <span class="mouseOverMe" title="PossibleMemoryBloat">Detector</span> was responsible for <span class="mouseOverMe" title = "PMB_POSSIBLE_MEMORY_BLOAT and PMB_INSTANCE_BASED_THREAD_LOCAL">two BugPatterns</span>.</p>',
+	
 	"<h4>The modified code</h4>",
 	"<h4>Finishing up</h4>"
 	]
