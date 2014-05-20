@@ -149,11 +149,24 @@ var contextPosts = {
 	
 	"<p><b>Now</b>, to tell FindBugs that we have made a new detector and where to find it, we go to <a target=\'_blank\' style=\'target-new: tab;\' href='https://github.com/mebigfatguy/fb-contrib/blob/1bbd37fa9738f67ccf116b005121db2f2b99f051/etc/findbugs.xml'>etc/findbugs.xml</a>, and add two entries:</p>",
 	
-	'<div class="codeContainer"><pre data-src="blog/code/first_detector_modded_findbugs.css"  class="line-numbers language-java" data-line="1,3"></pre>',
+	'<div class="codeContainer"><pre data-src="blog/code/first_detector_modded_findbugs.html"  class="line-numbers" data-line="1,3" ></pre>',
     '<div class="codeComment">',
-	"<span class='mouseComment' data-show=9>This is our added line, appended to the bottom (order doesn't matter).  Be <b>very</b> careful not to omit a space.  This will make FindBugs crash because of <a target=\'_blank\' style=\'target-new: tab;\' href='https://github.com/findbugs/findbugs/blob/77fea571f00ec5c04f33b45c0cf14ed2dbc25253/findbugs/src/java/edu/umd/cs/findbugs/BugRanker.java#L151'>this line of code</a>, which can lead to a terrifying wild-goose chase.</span>",
+	"<span class='mouseComment' data-show=22>We need to add this entry to the XML.  Note that we have our class name and one or more detectors that the class can report.  We haven't made <span class='code'>com.mebigfatguy.fbcontrib. detect.HangingExecutors</span> yet, but we will shortly.</span>",
+	"<span class='mouseComment' data-show=30>And now we need to register the existance of the BugPattern we are making.  Don't worry too much about the abbreviation part, just make something with three letters (to avoid conflicts with the two-letter FindBugs abbreviations.  It's good practice to set new detectors to be experimental.</span>",
 	'</div></div>',
 	
+	"<p>The final part, and arguably the most important part from a usability standpoint, is making an understandable message.  This, of course, goes in <a target=\'_blank\' style=\'target-new: tab;\' href='https://github.com/mebigfatguy/fb-contrib/blob/1bbd37fa9738f67ccf116b005121db2f2b99f051/etc/messages.xml'>etc/messages.xml</a>, along with a description of the detector itself and one last BugCode.  To explain the difference between the BugPattern message and the Detector description, see the following image: <br/> <br/><img src = 'images/BugPattern-DetectorDistinction.png'/> <br/></p>",
+	
+	'<div class="codeContainer" style="max-height:450px"><pre data-src="blog/code/first_detector_modded_messages.html"  class="line-numbers" data-line="1,3" ></pre>',
+    '<div class="codeComment">',
+	"<span class='mouseComment' data-show=21>This is where we add in our detector description (and need to repeat our class name).</span>",
+	"<span class='mouseComment' data-show=23-26>The meat of your description goes in the CDATA comment.  You can use html if you wish.  </span>",
+	"<span class='mouseComment' data-show=37>Here is the all important BugPattern message.  Note the three parts.  They are all important.</span>",
+	"<span class='mouseComment' data-show=39>It is common practice to have placeholders in the LongDescription.  Remember earlier when we made a call to addField()?  That will replace the {1} when the string is rendered (see the above image for <span class='mouseOverMe' title='FixedThreadPoolProblem.executor is the injected text, right after Bug: '>an example.</span></span>",
+	"<span class='mouseComment' data-show=41-54>Your error message goes in the CDATA comment.  Feel free to be verbose, or put code samples in <span class='code'>&lt;code&gt;</span> tags, whatever you want.  As of FindBugs 2.0.3, you cannot, unfortunately, have injected content like in the LongDescription.</span>",
+	"<span class='mouseComment' data-show=63>Finally, add an abbreviation for your detector.  This will be used in the descriptions of the bug.</span>",
+	'</div></div><br/>',
+	"<p>And that wraps up the paperwork.  Now, let's go finish writing the detector!</p>",
 	"<h4>The modified code</h4>",
 	"<h4>Finishing up</h4>"
 	]
