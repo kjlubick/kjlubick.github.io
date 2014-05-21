@@ -19,7 +19,7 @@ var contextPosts = {
         id: '1',
         title: "Building my First Findbugs Detector",
         author: { name: "Kevin Lubick" },
-        date: new Date('4-28-2014 13:00:00'),
+        date: new Date('5-20-2014 23:00:00'),
 		tags: ["FindBugs", "fb-contrib", "tutorial", "verbose"],
         excerpt: "My less-than-legendary, yet successful story of building a <a href='http://findbugs.sourceforge.net/'>FindBugs</a> plugin to detect ExecutorServices that have not been properly shutdown.  <a href='https://github.com/mebigfatguy/fb-contrib/pull/14'>End result</a>.",
         bodyArr: [
@@ -176,7 +176,9 @@ var contextPosts = {
 	"<span class='mouseComment' data-show=18>I've elected to simplify the detection process a bit, by removing second Map that we previously transferred the candidates to. This has also removed the set of increasing methods.</span>",
 	"<span class='mouseComment' data-show=127>All we need to do is remove any fields that have a call to shutdown, and once we get to the end of the class, all that remain are the non-shutdown <span class='code'>ExecutorService</span>s.</span>",
 	'</div></div>',
-	"<h4>Finishing up</h4>"
+	"<h4>Finishing up</h4>",
+	"<p>Now, to compile the plugin, just run the <a href='https://github.com/mebigfatguy/fb-contrib/blob/master/build.xml'>build script</a> that's a part of the fb-contrib source.  It's an <a href='http://en.wikipedia.org/wiki/Apache_Ant'>ant script</a>, so it will take care of everything (compilation, dependencies, etc).  The only thing you may have to do is to download <a href='http://search.maven.org/remotecontent?filepath=com/mebigfatguy/yank/yank/1.0.0/yank-1.0.0.jar'>yank.jar</a> from <a href='http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.mebigfatguy.yank%22'>Maven</a> to act as the dependency manager and put it in your ant/lib folder, which for me was in [eclipse install dir]\plugins\org.apache.ant_1.8.4.v201303080030\lib\ .</p>",
+	"<p>Finally, put your newly built fb-contrib.jar into the findbugs/plugin dir (for me, it was [eclipse install dir]\plugins\edu.umd.cs.findbugs.plugin.eclipse_2.0.3.20131122-15027\plugin]).  Run Findbugs and marvel in your cleverness!</p>"
 	]
     }]
 };
