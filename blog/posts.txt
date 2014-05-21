@@ -50,7 +50,7 @@ var contextPosts = {
 	'<span class="mouseComment" data-show="30">Line 30: This call to shutdown() is what we will look for to determine if an ExecutorService has to the potential to ever be shutdown, or not (like the example above)</span>',
 	'<span class="mouseComment" data-show="34">Line 34: I made a dummy class to save on typing lots of anonymous classes. </span>',
 	'</div></div>',
-	"<p>For those of you thinking ahead, there are (at least) two more cases where ExecutorServices can be left hanging, or be misused, which we'll hit in later sections.</p>",
+	"<p>For those of you thinking ahead, there are (at least) two more cases where ExecutorServices can be left hanging, or be misused, which I'll cover in a later blog post.</p>",
 	
 	"<h3>Finding some detector code to work with</h3>",
 	"<p>Chris Grindstaff recommends finding a similar detector to base our new detector off, and I heartily agree, especially for the first, second or nth detector that you plan to write.</p>",
@@ -145,7 +145,7 @@ var contextPosts = {
 	
 	'<p>That new line of code [line 9 in the example] registers a new BugPattern called HE_EXECUTOR_NEVER_SHUTDOWN.  A BugPattern is tied to a message and lives in exactly one Detector.  A single detector can be responsible for one or more BugPatterns.  We\'ve already seen an example where one <span class="mouseOverMe" title="PossibleMemoryBloat">Detector</span> was responsible for <span class="mouseOverMe" title = "PMB_POSSIBLE_MEMORY_BLOAT and PMB_INSTANCE_BASED_THREAD_LOCAL">two BugPatterns</span>.  </p>',
 	
-	'<p>What\'s the -2 for and why do all the others have 0?  Well, that number modifies the severity of the bug that is reported.  The severity follows the following formula:<br/>TODO IMAGE<br/>Strictly speaking, adding the BugPattern to bugrank.txt is optional, because if there isn\'t an entry, the last modifier defaults to 0.</p>',
+	'<p>What\'s the -2 for and why do all the others have 0?  Well, that number modifies the severity of the bug that is reported.  The severity follows the following formula:<br/><img src="images/BugRankCalculation.png"/><br/>Strictly speaking, adding the BugPattern to bugrank.txt is optional, because if there isn\'t an entry, the second modifier defaults to 0.  PMB, as are a plurality of the bugs, is a "Correctness" bug.  Our custom detector will also be in this category.</p>',
 	
 	"<p><b>Now</b>, to tell FindBugs that we have made a new detector and where to find it, we go to <a target=\'_blank\' style=\'target-new: tab;\' href='https://github.com/mebigfatguy/fb-contrib/blob/1bbd37fa9738f67ccf116b005121db2f2b99f051/etc/findbugs.xml'>etc/findbugs.xml</a>, and add two entries:</p>",
 	
