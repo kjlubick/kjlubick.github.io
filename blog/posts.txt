@@ -44,7 +44,7 @@ var contextPosts = {
 	"<h3>Setting up our TestBed</h3>",
 	'<p>If you have ever done Test Driven Development, writing your test code first is not a new idea.  For building FindBugs detectors, it is even more important because we need the source code to generate the Java bytecode that FindBugs scans.  I haven\'t found a way to make FindBugs operate in a unit test scenario (i.e. run tests and watch a green bar as they pass), but I still write test cases with code that should and should not work.</p>',
 	
-	"<p>Let's make a file, called HES_Sample.java, that will contain some buggy code.  I immediately replicated (and simplified) the case that caused me 3 hours of debugging to track down, as well as the fixed version:</p>",
+	"<p>Let's make a file, called HES_Sample.java, that will contain some buggy code.  This will go in the <a href='https://github.com/mebigfatguy/fb-contrib/tree/master/samples'>samples</a> folder when we are done with all the other test cases.  I immediately replicated (and simplified) the case that caused me 3 hours of debugging to track down, as well as the fixed version:</p>",
 	'<div class="codeContainer"><pre data-src="blog/code/first_detector_oneUnitTest.java" class="line-numbers" data-line="1,3"></pre>',
     '<div class="codeComment"><span class="mouseComment" data-show="5+19">Lines 5 and 19: I tend to use this //tag and //no tag notation to indicate that FindBugs should put a notification on the next line.  </span>',
 	'<span class="mouseComment" data-show="30">Line 30: This call to shutdown() is what we will look for to determine if an ExecutorService has to the potential to ever be shutdown, or not (like the example above)</span>',
@@ -168,6 +168,14 @@ var contextPosts = {
 	'</div></div><br/>',
 	"<p>And that wraps up the paperwork.  Now, let's go finish writing the detector!</p>",
 	"<h4>The modified code</h4>",
+	"<p>Since we've already seen the meat of the detector, just in a slightly different form, I won't go into as granular of detail as I did earlier.  The resulting code is below, with a few remarks on the changes.</p>",
+	'<div class="codeContainer" style="max-height:600px"><pre data-src="blog/code/first_detector_final_detector.java"  class="line-numbers" data-line="1,3" ></pre>',
+    '<div class="codeComment">',
+	"<span class='mouseComment' data-show=7>Again, this is just the fancy \"full\" name for the <span class='code'>ExecutorService</span>, which are produced by the <span class='code'>Executors</span> class.</span>",
+	"<span class='mouseComment' data-show=13-14>These are the only two methods that can safely shutdown the <span class='code'>ExecutorService</span>s and the <span class='code'>Thread</span>s inside.</span>",
+	"<span class='mouseComment' data-show=18>I've elected to simplify the detection process a bit, by removing second Map that we previously transferred the candidates to. This has also removed the set of increasing methods.</span>",
+	"<span class='mouseComment' data-show=127>All we need to do is remove any fields that have a call to shutdown, and once we get to the end of the class, all that remain are the non-shutdown <span class='code'>ExecutorService</span>s.</span>",
+	'</div></div>',
 	"<h4>Finishing up</h4>"
 	]
     }]
