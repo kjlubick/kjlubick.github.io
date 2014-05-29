@@ -178,7 +178,10 @@ var contextPosts = {
 	'</div></div>',
 	"<h4>Finishing up</h4>",
 	"<p>Now, to compile the plugin, just run the <a href='https://github.com/mebigfatguy/fb-contrib/blob/master/build.xml'>build script</a> that's a part of the fb-contrib source.  It's an <a href='http://en.wikipedia.org/wiki/Apache_Ant'>ant script</a>, so it will take care of everything (compilation, dependencies, etc).  The only thing you may have to do is to download <a href='http://search.maven.org/remotecontent?filepath=com/mebigfatguy/yank/yank/1.0.0/yank-1.0.0.jar'>yank.jar</a> from <a href='http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.mebigfatguy.yank%22'>Maven</a> to act as the dependency manager and put it in your ant/lib folder, which for me was in [HomeDirectory]/.ant/lib/ .</p>",
-	"<p>Finally, put your newly built fb-contrib.jar into the findbugs/plugin dir (for me, it was [eclipse install dir]/plugins/edu.umd.cs.findbugs.plugin.eclipse_2.0.3.20131122-15027/plugin/).  Run Findbugs and marvel in your cleverness!</p>"
+	"<p>Finally, put your newly built fb-contrib.jar into the findbugs/plugin dir (for me, it was [eclipse install dir]/plugins/edu.umd.cs.findbugs.plugin.eclipse_2.0.3.20131122-15027/plugin/).  Run Findbugs and marvel in your cleverness!</p>",
+	
+	"<h3>Epilogue</h3>",
+	"<p>Congratulations!  You've written your first FindBugs Detector.  From here, the door only opens wider.  Future posts will cover more advanced topics, like OpcodeStack gynamstics and looking at the bytecodes for inspiration to write a detector.  Check back soon!</p>
 	]
     }]
 };
