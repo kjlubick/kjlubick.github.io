@@ -181,7 +181,7 @@ var contextPosts = {
 	"<p>Finally, put your newly built fb-contrib.jar into the findbugs/plugin dir (for me, it was [eclipse install dir]/plugins/edu.umd.cs.findbugs.plugin.eclipse_2.0.3.20131122-15027/plugin/).  Run Findbugs and marvel in your cleverness!</p>",
 	
 	"<h3>Epilogue</h3>",
-	"<p>Congratulations!  You've written your first FindBugs Detector.  From here, the door only opens wider.  Future posts will cover more advanced topics, like OpcodeStack gynamstics and looking at the bytecodes for inspiration to write a detector.  Check back soon!</p>
+	"<p>Congratulations!  You've written your first FindBugs Detector.  From here, the door only opens wider.  Future posts will cover more advanced topics, like OpcodeStack gynamstics and looking at the bytecodes for inspiration to write a detector.  Check back soon!</p>"
 	]
     }]
 };
