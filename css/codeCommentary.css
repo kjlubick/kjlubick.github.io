@@ -13,16 +13,21 @@
 	line-height:19px;
 }
 
-/* overriding from prism.js for starring and bolding */
+/* overriding from prism.css for starring and bolding */
 .line-numbers-rows {
 	color: #999;
 }
 
-/* overriding from prism.js for starring and bolding */
+/* overriding from prism.css for starring and bolding */
 .line-numbers-rows > span:before {
 	content: attr(data-comment) counter(linenumber);
 	font-weight: inherit;
 	color:inherit;
+}
+/* overriding from prism.css to remove badge-like thing in the gutter */
+.line-highlight:before,
+.line-highlight[data-end]:after {
+	display:none;
 }
 
 .starredBolded {
