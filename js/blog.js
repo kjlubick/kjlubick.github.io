@@ -6,9 +6,10 @@ Handlebars.registerHelper('each', function (context) {
     var ret = "", postBody, i, j;
 
     for (i = 0, j = context.length; i < j; i++) {
-        context[i].body = context[i].bodyArr.join("");
+        context[i].body = context[i].bodyArr.join("\n");
         ret = ret + entryTemplate(context[i]);
     }
+	console.log(ret);
 
     return new Handlebars.SafeString(ret);
 });
