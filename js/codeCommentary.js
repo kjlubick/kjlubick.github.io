@@ -1,6 +1,6 @@
 /*global Prism*/
 var highlightCorrection = -1;
-
+var ie_correction = 0;
 
 function highlightLines(jPre, lineNumber, secondLineNumber, connected) {
     var line, secondLine, lineHeight = parseFloat(jPre.css("line-height"));
@@ -33,8 +33,8 @@ function highlightLines(jPre, lineNumber, secondLineNumber, connected) {
 
 
 function getMouseOverLine(jPre, yOffset) {
-    var lineHeight = parseInt(jPre.css("line-height"));
-    return Math.round((yOffset + 1) / lineHeight);		//+1 to make mouseover have a more natural feel
+    var lineHeight = parseFloat(jPre.css("line-height"));
+    return Math.round((yOffset + 1) / lineHeight) + ie_correction;		//+1 to make mouseover have a more natural feel
 }
 
 function checkEndPointsForNum(first, second, test) {
@@ -166,10 +166,18 @@ Prism.hooks.add('after-highlight', function (env) {
     }
 });
 
+function isIE() {
+	return (navigator.appVersion.indexOf("MSIE") + navigator.appVersion.indexOf("Trident")) >= -1;
+}
 
 $(document).ready(function () {
     console.log("codeCommentary.js");
-	//highlightCorrection = 
+
+	
+	if (isIE()) {
+		ie_correction = 1;
+	}
+	
     $(".codeContainer").on("mousemove", "pre", function (e) {
         var enclosingObject = $(this);
 		
