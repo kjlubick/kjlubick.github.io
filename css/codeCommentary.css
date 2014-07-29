@@ -10,6 +10,7 @@
 	height:90%;
 	max-height:300px;
 	padding:5px;
+	line-height:19px;
 }
 
 /* overriding from prism.js for starring and bolding */
@@ -39,7 +40,7 @@
 	overflow-wrap:normal;
 	overflow-y:hidden;
 	padding-bottom:25px;
-	
+	line-height:19px;
 }
 
 

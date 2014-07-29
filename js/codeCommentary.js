@@ -1,6 +1,7 @@
 /*global Prism*/
 var highlightCorrection = -1;
 
+
 function highlightLines(jPre, lineNumber, secondLineNumber, connected) {
     var line, secondLine, lineHeight = parseFloat(jPre.css("line-height"));
 
@@ -14,15 +15,15 @@ function highlightLines(jPre, lineNumber, secondLineNumber, connected) {
     line.show();
 
 
-    line.css("top", lineNumber * Math.floor(lineHeight) + 'px');
+    line.css("top", (lineNumber * lineHeight) + 'px');
 
     if (connected === true) {
         //create a bunch of new lines, which will cause this to highlight multiple lines
-        line.text(new Array(secondLineNumber - lineNumber + 2).join(' \r\n'));
+        line.text(new Array(secondLineNumber - lineNumber + 2).join(' \r\n'));		//plus 2 to account for the end and beginning
         secondLine.hide();
     } else if (secondLineNumber !== undefined) {
         line.text("\r\n");
-        secondLine.css("top", secondLineNumber * Math.floor(lineHeight) + 'px');
+        secondLine.css("top", (secondLineNumber * lineHeight) + 'px');
         secondLine.show();
     } else {
         line.text("\r\n");
@@ -33,7 +34,7 @@ function highlightLines(jPre, lineNumber, secondLineNumber, connected) {
 
 function getMouseOverLine(jPre, yOffset) {
     var lineHeight = parseInt(jPre.css("line-height"));
-    return Math.floor((yOffset + 1) / lineHeight);		//+1 to make mouseover have a more natural feel
+    return Math.round((yOffset + 1) / lineHeight);		//+1 to make mouseover have a more natural feel
 }
 
 function checkEndPointsForNum(first, second, test) {
@@ -165,16 +166,19 @@ Prism.hooks.add('after-highlight', function (env) {
     }
 });
 
+
 $(document).ready(function () {
-    //console.log("codeCommentary.js");
+    console.log("codeCommentary.js");
+	//highlightCorrection = 
     $(".codeContainer").on("mousemove", "pre", function (e) {
-        var selectedLine, y, comments, enclosingObject = $(this);
+        var enclosingObject = $(this);
+		
+		var y = e.pageY - enclosingObject.offset().top;		//cross-browser compatibility
 
-        y = e.offsetY === undefined ? e.layerY : e.offsetY;
 
-        selectedLine = getMouseOverLine(enclosingObject, y);
+        var selectedLine = getMouseOverLine(enclosingObject, y);
 
-        comments = enclosingObject.closest(".codeContainer").find(".mouseComment");
+        var comments = enclosingObject.closest(".codeContainer").find(".mouseComment");
         comments.hide();
 
         if (comments.size() > 0) {
