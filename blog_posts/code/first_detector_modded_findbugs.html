@@ -1,0 +1,32 @@
+<!-- etc/findbugs.xml -->
+<?xml version="1.0" encoding="UTF-8"?>
+<FindbugsPlugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="findbugsplugin.xsd" pluginid="com.mebigfatguy.fbcontrib" defaultenabled="true"
+	provider="fb-contrib project" website="http://fb-contrib.sourceforge.net">
+	<!-- Passes -->
+	<OrderingConstraints>
+		<SplitPass>
+			<Earlier class="com.mebigfatguy.fbcontrib.collect.CollectStatistics" />
+			<LaterCategory name="reporting" spanplugins="true" />
+		</SplitPass>
+		<SplitPass>
+            <Earlier class="com.mebigfatguy.fbcontrib.collect.CollectMethodsReturningImmutableCollections" />
+            <LaterCategory name="reporting" spanplugins="true" />
+        </SplitPass>		
+	</OrderingConstraints>
+	<!-- Detectors -->
+
+    <Detector class="com.mebigfatguy.fbcontrib.debug.OCSDebugger" speed="fast"/>
+    <Detector class="com.mebigfatguy.fbcontrib.detect.ClassEnvy" speed="fast" reports="CE_CLASS_ENVY" disabled="true" />    
+    <!-- ....snip ..... -->	
+    <Detector class="com.mebigfatguy.fbcontrib.detect.Unjitable" speed="fast" reports="UJM_UNJITABLE_METHOD" />
+	<Detector class="com.mebigfatguy.fbcontrib.detect.HangingExecutors" speed="fast" reports="HES_EXECUTOR_NEVER_SHUTDOWN"/>
+    
+	<!-- BugPattern -->
+
+	<BugPattern abbrev="ISB" type="ISB_INEFFICIENT_STRING_BUFFERING" category="PERFORMANCE" />
+	<BugPattern abbrev="ISB" type="ISB_EMPTY_STRING_APPENDING" category="PERFORMANCE" />
+	<!-- ....snip ..... -->
+	<BugPattern abbrev="UJM" type="UJM_UNJITABLE_METHOD" category="PERFORMANCE" experimental="true" />	
+	<BugPattern abbrev="HES" type="HES_EXECUTOR_NEVER_SHUTDOWN" category="CORRECTNESS" experimental="true" />
+
+</FindbugsPlugin>

@@ -1,0 +1,14 @@
+digraph {
+	rankdir=LR;
+	start[label="Start"];
+	cc[label="visitCodeContext()"]
+	method[label="visitMethod()"]
+	code[label="visitCode()"]
+	opCode[label="sawOpcode()"]
+
+	start->cc;
+	cc->method;
+	method->code;
+	code->opCode;
+	opCode->method;
+}

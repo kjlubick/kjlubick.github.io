@@ -1,0 +1,185 @@
+<div class="body">
+            <p class="log">Code log entry 084: After roughly 187 minutes of analyzing using the <a target="_blank" style="target-new: tab;" href="http://docs.oracle.com/javase/6/docs/technotes/tools/share/jvisualvm.html">Java Visual VM</a>, the cause of the non-terminating program was found.  A lone ExecutorService was found to have never been shutdown(), and the internal thread pool had been keeping the JVM from terminating.  A proper call to shutdown() was added to the offending class's stop() method, resolving the issue.</p>
+            <p>The problem I ran into above was a painful one to track down, but my intuition said the problem would make for a great <a target="_blank" style="target-new: tab;" href="http://findbugs.sourceforge.net/">FindBugs</a> detector because it dealt with omission of code, which is easy for static analysis to detect and generally time-consuming for humans to detect.</p>
+            <p>What follows is how I designed a detector to hopefully make the struggles detailed in entry 084 obsolete.  It is meant for readers who have not yet implemented a FindBugs detector, but are curious at what it entails and what a sample workflow might be.</p>
+            <h2>Recipe for FindBugs Detector</h2>
+            <div class="recipe">
+                <dl>
+                    <dt>Preparation time</dt>
+                    <dd>30m</dd>
+                    <dt>Coding time</dt>
+                    <dd>1h</dd>
+                    <dt>Difficulty</dt>
+                    <dd>Derived from existing detector</dd>
+                    <dt>Serves</dt>
+                    <dd>the purpose of a nice, easy introduction</dd>
+                </dl>
+            </div>
+            <p>When I implemented this detector, I contributed it to fb-contrib.  Pedagogically, if you don't have to worry about messing up the actual FindBugs code and you want to focus more on the detector and less on all of FindBugs internals, so I recommend doing the same for your first detector.</p>
+            <p>This recipe assumes the following conditions: </p>
+            <ul>
+                <li>You have the source code for both FindBugs and <a target="_blank" style="target-new: tab;" href="https://github.com/mebigfatguy/fb-contrib">fb-contrib</a> downloaded and ready to build (I recommend Eclipse)</li>
+                <li>You have read (or at least skimmed) Chris Grindstaff's <a target="_blank" style="target-new: tab;" href="https://www.ibm.com/developerworks/library/j-findbug2/">high level overview</a> of building a FindBugs detector at least once.  Don't worry if you don't understand everything, we'll be covering a lot of the topics and, trust me, things get much clearer when you do them yourself.</li>
+                <li>You've read the <a target="_blank" style="target-new: tab;" href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Executors.html">JavaDoc</a> for Executors (the protagonist of our story) and perhaps browsed <a target="_blank" style="target-new: tab;" href="http://www.javacodegeeks.com/2013/01/java-thread-pool-example-using-executors-and-threadpoolexecutor.html">this sample code</a> to get a feel for things.</li>
+                <li>You have a JDK installed, and a reference to it in your path.</li>
+            </ul>
+            <p></p>
+            <h3>Setting up our TestBed</h3>
+            <p>If you have ever done Test Driven Development, writing your test code first is not a new idea.  For building FindBugs detectors, it is even more important because we need the source code to generate the Java bytecode that FindBugs scans.  I haven't found a way to make FindBugs operate in a unit test scenario (i.e. run tests and watch a green bar as they pass), but I still write test cases with code that should and should not work.</p>
+            <p>Let's make a file, called HES_Sample.java, that will contain some buggy code.  This will go in the <a href="https://github.com/mebigfatguy/fb-contrib/tree/master/samples">samples</a> folder when we are done with all the other test cases.  I immediately replicated (and simplified) the case that caused me 3 hours of debugging to track down, as well as the fixed version:</p>
+            <div class="codeContainer">
+                <pre data-src="blog_posts/code/first_detector_oneUnitTest.java" class="line-numbers" data-line="1,3"></pre>
+                <div class="codeComment">
+                    <span class="mouseComment" data-show="5+19">Lines 5 and 19: I tend to use this //tag and //no tag notation to indicate that FindBugs should put a notification on the next line.  </span>
+                    <span class="mouseComment" data-show="30">Line 30: This call to shutdown() is what we will look for to determine if an ExecutorService has to the potential to ever be shutdown, or not (like the example above)</span>
+                    <span class="mouseComment" data-show="34">Line 34: I made a dummy class to save on typing lots of anonymous classes. </span>
+                </div>
+            </div>
+            <p>For those of you thinking ahead, there are (at least) two more cases where ExecutorServices can be left hanging, or be misused, which I'll cover in a later blog post.</p>
+            <h3>Finding some detector code to work with</h3>
+            <p>Chris Grindstaff recommends finding a similar detector to base our new detector off, and I heartily agree, especially for the first, second or nth detector that you plan to write.</p>
+            <p>There is no magic way to find a similar enough detector, but I've had luck browsing through the fb-contrib <a target="_blank" style="target-new: tab;" href="https://github.com/mebigfatguy/fb-contrib/blob/master/etc/messages.xml">messages.xml</a> file until I find a message that seems familiar.  I, by a stroke of luck, had been recently improving the message on the <a target="_blank" style="target-new: tab;" href="https://github.com/kjlubick/fb-contrib/blob/0ca6d7b2b2ba74abe588630d55d04ae0924f94a4/src/com/mebigfatguy/fbcontrib/detect/PossibleMemoryBloat.java">PMB_PossibleMemoryBloat detector</a>, which seemed like a good start.  It seems suitable because it detects collections that never get a call to remove(), clear() or similar methods (and thus always get larger but never get smaller), which is similar to what we want to do.</p>
+            <div class="codeContainer" style="height: 500px">
+                <pre data-src="blog_posts/code/PMB.java" class="line-numbers" data-line="1,3"></pre>
+                <div class="codeComment">
+                    <span class="mouseComment" data-show="3">fb-contrib is released under the <a target="_blank" style="target-new: tab;" href="https://tldrlegal.com/license/gnu-lesser-general-public-license-v2.1-(lgpl-2.1)">LGPL</a></span>
+                    <span class="mouseComment" data-show="6">Most detectors extend ByteCodeScanningDetector.  It gives us a framework for analyzing bytecodes without having to worry about parsing things ourselves.</span>
+                    <span class="mouseComment" data-show="8-13">This is a list of <span class="code">Collection</span>s that PMB checks.  Why the L/ out front?  Think of that as they fully qualified compiled name of each class.</span>
+                    <span class="mouseComment" data-show="15-20">This is a list of methods that remove things from collections.</span>
+                    <span class="mouseComment" data-show="23-28">This is a list of methods that add things to collections.</span>
+                    <span class="mouseComment" data-show="32-33"><span class="code">XField</span>s are objects representing fields.  <span class="code">FieldAnnotation</span>s point to the line number where the field is created, so we can put our notification in the right place.</span>
+                    <span class="mouseComment" data-show="43-46">This is one of the visitor methods mentioned below.</span>
+                    <span class="mouseComment" data-show="50-53">This is one of the visitor methods mentioned below.</span>
+                    <span class="mouseComment" data-show="57-60">This is one of the visitor methods mentioned below.</span>
+                    <span class="mouseComment" data-show="64-67">This is one of the visitor methods mentioned below.</span>
+                    <span class="mouseComment" data-show="70-73">This is a helper method.  We'll cover it later.</span>
+                    <span class="mouseComment" data-show="76-79">This is a helper method.  We'll cover it later.</span>
+                    <span class="mouseComment" data-show="82-85">This is a helper method.  We'll cover it later.</span>
+                    <span class="mouseComment" data-show="88-91">This is a helper method.  We'll cover it later.</span>
+                    <span class="mouseComment" data-show="94-97">This is a helper method.  We'll cover it later.</span>
+                </div>
+            </div>
+            <p>You clever people in the audience may have guessed that to make our HangingExecutors detector work, all we will need to do is copy most of this code into our detector and modify <span class="code">bloatableSigs</span> from line 8 and <span class="code">decreasingMethods</span> from line 15 to our ExecutorService specific signatures and we'd be basically done.  You clever folk would be <b>correct</b>.</p>
+            <h4>Visitor Pattern Interlude</h4>
+            <p>Before we get into how to modify this code to suit our needs, let's go over the interesting parts, that is, the snipped out code and see exactly how this detection thing works.  Before we get to it, I'd like to give a quick refresher on the <a target="_blank" style="target-new: tab;" href="http://en.wikipedia.org/wiki/Visitor_pattern">Visitor pattern</a> because the pattern is how detectors function -- FindBugs uses <a target="_blank" style="target-new: tab;" href="http://en.wikipedia.org/wiki/BCEL">BCEL</a> (<a target="_blank" style="target-new: tab;" href="http://commons.apache.org/proper/commons-bcel/apidocs/">JavaDocs</a>) to walk through the compiled Java bytecode and creates "events" every time it runs into things, the <span class="mouseOverMe tooltip" title="visitCodeContext()">beginning of a class</span> or an <span class="mouseOverMe tooltip" title="sawOpcode()">individual bytecode</span>, for instance. Our job is to override these listeners and keep track of the interesting bits to detect our bugs.</p>
+            <p>
+                Generally, you will need the following four visitor methods to make a detector (There are many more than these four, but these will do most of the job).  The order that these get called is:
+                <br>
+                <img src="images/detectors.png" title="The flow of the visitors for a BytecodeScanningDetector"><br>
+                That is, for every class, visitClassContext() is called [in this method we tend to look at fields), then for every method, we get a visitMethod() [usually to get the name or reset the <span class="code mouseOverMe" title="A tool for keeping track of the most recently seen opcodes">OpcodeStack</span>], then a visitCode() [similar to visitMethod()], and then for every <span class="mouseOverMe" title="I've been using opcode and bytecode a lot (for our purposes they are interchangable).  For the uninitiated, they are just a byte that is a machine instruction.">opcode</span>, a call to sawOpcode() is performed [the meat of most detectors goes here].
+            </p>
+            <h4>How does PossibleMemoryBloat work?</h4>
+            <p>At a high level, PMB works in four steps:</p>
+            <ol>
+                <li>Find all <span class="code">Collection</span> fields and put them in <span class="code">bloatableCandidates</span>.</li>
+                <li>While parsing through all methods, see if things ever get added to the <span class="code">Collection</span> fields and add those to <span class="code">bloatableFields</span>.</li>
+                <li>While parsing through all methods, remove any fields that get a call to clear(), remove() or similar.</li>
+                <li>Report bugs on all remaining <span class="code">Collection</span> fields.</li>
+            </ol>
+            <p></p>
+            <p>This seems straight forward enough.  Because <span class="code">ExecutorService</span>s are just dangerous if they don't get shutdown, our detector will omit step 2, but I'll still walk through the original PMB source code for that step.  </p>
+            <p>The following source code handles step 1, the discovery of <span class="code">Collection-</span>based fields:</p>
+            <div class="codeContainer" style="height: 500px">
+                <pre data-src="blog_posts/code/PMB_classContext.java" class="line-numbers" data-line="1,3"></pre>
+                <div class="codeComment">
+                    <span class="mouseComment" data-show="15+32">Parses the fields defined in this class</span>
+                    <span class="mouseComment" data-show="19">This call to super.visitClassContext() is <b>very important</b>.  Without this call, the traversal of the class stops, meaning <u>none</u> of the other visitor methods will be called.</span>
+                    <span class="mouseComment" data-show="25-28">It's pretty typical to force any fields back to null for garbage collection to occur after you are done with the class context.</span>
+                    <span class="mouseComment" data-show="33-34">This is how you can access all the fields in a class.  Note that <span class="code">Field</span> is the BCEL object (read: not FindBugs message compatible) and <span class="code">XField</span>, created on line 39, is the FindBugs version (which adds some extra functionality).</span>
+                    <span class="mouseComment" data-show="37">The detector only looks at static fields, which will be around for longer than local variables, and thus more prone to bloat.</span>
+                    <span class="mouseComment" data-show="39">When at all possible, it is best to convert the BCEL objects (like <span class="code">Field</span>, <span class="code">Method</span>, <span class="code">ClassDescriptor</span>) and turn them into their FindBug's equivalent (<span class="code">XField</span>, <span class="code">XMethod</span> and <span class="code">XClass</span>) using the convenience methods in <span class="code">XFactory</span></span>
+                    <span class="mouseComment" data-show="42+60">Detecting local instances of <a target="_blank" style="target-new: tab;" href="http://docs.oracle.com/javase/7/docs/api/java/lang/ThreadLocal.html" class="code">ThreadLocal</a>s is also wrapped into the PMB Detector.  When we reuse this detector, we'll be able to omit this, but for now, it's a good example that one detector can be responsible for more than one bug type.</span>
+                    <span class="mouseComment" data-show="51">To report a bug, simply call reportBug() on the bugReporter with a new BugDetector. For now, don't worry about the <span class="code">this</span>, just know that we need to have it and the name of the bug.  NORMAL_PRIORITY actually refers to confidence (!), which impacts severity.</span>
+                    <span class="mouseComment" data-show="52+61">We can customize the displayed message to include things like the class name.  The order matters, so this class annotation is referred to as Annotation Index 0</span>
+                    <span class="mouseComment" data-show="53+62">To make the message include the name of the field and make bug appear at the right line number, we need a field annotation, which we cached in parseFields(). The order matters, so this field annotation is referred to as Annotation Index 1.  Other techniques for specifying line number include using <span class="code">SourceLineAnnotation</span>.</span>
+                </div>
+            </div>
+            <br>
+            <p>The rest of the visitors are shown in the next code snippet.  <span class="code">sawOpcode()</span> does most of the work.  A word of warning, some of the sawOpcode() methods in other detectors contain really long switch case methods and can be a bit daunting at first, but be strong!  Carry on!</p>
+            <div class="codeContainer" style="height: 500px">
+                <pre data-src="blog_posts/code/PMB_otherDetectors.java" class="line-numbers" data-line="1,3"></pre>
+                <div class="codeComment">
+                    <span class="mouseComment" data-show="3">Remember this <span class="code">Method</span> object is from the BCEL framework.  This method is more of a 'notification' call than the start of a deeper visitor pattern traversal, so, we don't need to call super.visitMethod() to continue traversing (in fact, the overridden implementation is blank)</span>
+                    <span class="mouseComment" data-show="7+14">At first blush, this method may seem similar to visitMethod(), but the key difference is that visitCode() is called as part of actually parsing the bytecode (so we need to call the super's implementation to continue parsing)</span>
+                    <span class="mouseComment" data-show="8">This is a common way to avoid doing anything in the constructor or the static initializer.</span>
+                    <span class="mouseComment" data-show="10">We'll be using the <span class="code">OpcodeStack</span> soon, so we need to reset it to clear it out.</span>
+                    <span class="mouseComment" data-show="18">Each of these opcodes will be something off <a target="_blank" style="target-new: tab;" href="http://en.wikipedia.org/wiki/Java_bytecode_instruction_listings">this list</a>.  Thankfully, you won't have to have a bunch of magic numbers floating around your code because these are all defined in a superclass.</span>
+                    <span class="mouseComment" data-show="20">This call is probably redundant given lines 13 and 14, but it's probably better to be safe than sorry.</span>
+                    <span class="mouseComment" data-show="23">This is needed for the OpcodeStack to collect information before something is pushed or popped.</span>
+                    <span class="mouseComment" data-show="25">INVOKEVIRTUAL and INVOKEINTERFACE are two of the five bytecodes that can be used to indicate a method.  Apparently we don't need to worry about the other three.</span>
+                    <span class="mouseComment" data-show="26+27">The built-in getSigConstantOperand() returns a semi-cryptic String that indicates how many params a method call had.  <span class="mouseOverMe" title="There will not be a quiz on this, so ignore this if you want to.">For example</span>,  "<span class="code">(JLjava/util/concurrent/ TimeUnit;)Z</span>" means that a <span class="code">long</span> and something of type type <span class="code">java.util.concurrent. TimeUnit</span> were passed in. <span class="code">Type.getArgumentTypes()</span> parses this into usable Objects. </span>
+                    <span class="mouseComment" data-show="29">At this point, the stack we have looks like <span id="stackPic" class="mouseOverMe tooltipstered">this</span> and we want to get to the name of the method.  So, we have to dig down past the number of arguments and get that stack item.</span>
+                    <span class="mouseComment" data-show="30">Rather than casting <span class="code">Item</span>s we pull off the stack, the convention is to call <span class="mouseOverMe" title="In this case, getXField()">getSomething()</span> and checking the result against null.</span>
+                    <span class="mouseComment" data-show="39-41">If a field is returned, we (using static analysis) can't be sure that elsewhere, something like clear() is **not** called, so, we remove a potential false positive because following the returned value is challenging. </span>
+                    <span class="mouseComment" data-show="43-45">In all cases, we want to add the opcode to the stack (so the stack works like we expect).  Why do it in a finally block?  It's a nice safe way to make sure it will always happen, even if we happen to <span class="code">continue</span> in one of the above branches.  Questionable practice?  Maybe.  Effective?  Yes.  Evidence that the author of the detector copied and pasted from elsewhere?  Almost certainly. </span>
+                    <span class="mouseComment" data-show="33+59">If this is an increasing method (something is added to the collection), we move the field from the <span class="mouseOverMe" title="bloatableCandidates">candidate list</span> to the <span class="mouseOverMe" title="bloatableFields">culprit list</span>.  Otherwise, if the method is a decreasing one, remove the field from both lists.</span>
+                    <span class="mouseComment" data-show="50">If the current opcode deals with returning something, the thing to be returned is at the top of the opcodeStack.  No need to count arguments or anything like that.</span>
+                    <span class="mouseComment" data-show="60">getNameConstantOperand() a built in method that gets us a relevant name that is associated with the current opcode.  Because the current opcode deals with a method call, we know this will be the method name.</span>
+                </div>
+            </div>
+            
+            <p>
+                <br>
+                So that was all the code in the detector.  Not trivial, but not so bad once you know a couple of FindBugs quirks, eh?  Some of you may be wondering about the message that gets displayed.  That involves three more files and is more of a bureaucratic step than a development step, therefore I'll kill two birds with one stone and explain the "paperwork" concepts while we make our own detector in the next section.</p>
+            <h3>Building our custom "no shutdown() calls on an ExecutorService" detector</h3>
+            <h4>Making the message and other bookkeeping</h4>
+            <p>Before we make our code, we'll need to make a message and tell FindBugs how to invoke our detector.  That will involve adding entries to three files, <a target="_blank" style="target-new: tab;" href="https://github.com/mebigfatguy/fb-contrib/blob/e41853af2fb5b5b44fe1ab39f1293bab19818c30/etc/bugrank.txt">etc/bugrank.txt</a>, <a target="_blank" style="target-new: tab;" href="https://github.com/mebigfatguy/fb-contrib/blob/1bbd37fa9738f67ccf116b005121db2f2b99f051/etc/findbugs.xml">etc/findbugs.xml</a>, and <a target="_blank" style="target-new: tab;" href="https://github.com/mebigfatguy/fb-contrib/blob/1bbd37fa9738f67ccf116b005121db2f2b99f051/etc/messages.xml">etc/messages.xml</a>.</p>
+            <div class="codeContainer">
+                <pre data-src="blog_posts/code/first_detector_modded_bugrank.css" class="line-numbers language-java" data-line="1,3"></pre>
+                <div class="codeComment">
+                    <span class="mouseComment" data-show="9">This is our added line, appended to the bottom (order doesn't matter).  Be <b>very</b> careful not to omit a space.  This will make FindBugs crash because of <a target="_blank" style="target-new: tab;" href="https://github.com/findbugs/findbugs/blob/77fea571f00ec5c04f33b45c0cf14ed2dbc25253/findbugs/src/java/edu/umd/cs/findbugs/BugRanker.java#L151">this line of code</a>, which can lead to a terrifying wild-goose chase.</span>
+                </div>
+            </div>
+            <p>That new line of code [line 9 in the example] registers a new BugPattern called HE_EXECUTOR_NEVER_SHUTDOWN.  A BugPattern is tied to a message and lives in exactly one Detector.  A single detector can be responsible for one or more BugPatterns.  We've already seen an example where one <span class="mouseOverMe" title="PossibleMemoryBloat">Detector</span> was responsible for <span class="mouseOverMe" title="PMB_POSSIBLE_MEMORY_BLOAT and PMB_INSTANCE_BASED_THREAD_LOCAL">two BugPatterns</span>.  </p>
+            <p>What's the -2 for and why do all the others have 0?  Well, that number modifies the severity of the bug that is reported.  The severity follows the following formula:<br>
+                <img src="images/BugRankCalculation.png"><br>
+                Strictly speaking, adding the BugPattern to bugrank.txt is optional, because if there isn't an entry, the second modifier defaults to 0.  PMB, as are a plurality of the bugs, is a "Correctness" bug.  Our custom detector will also be in this category.</p>
+            <p><b>Now</b>, to tell FindBugs that we have made a new detector and where to find it, we go to <a target="_blank" style="target-new: tab;" href="https://github.com/mebigfatguy/fb-contrib/blob/1bbd37fa9738f67ccf116b005121db2f2b99f051/etc/findbugs.xml">etc/findbugs.xml</a>, and add two entries:</p>
+            <div class="codeContainer">
+                <pre data-src="blog_posts/code/first_detector_modded_findbugs.html" class="line-numbers" data-line="1,3"></pre>
+                <div class="codeComment">
+                    <span class="mouseComment" data-show="22">We need to add this entry to the XML.  Note that we have our class name and one or more detectors that the class can report.  We haven't made <span class="code">com.mebigfatguy.fbcontrib. detect.HangingExecutors</span> yet, but we will shortly.</span>
+                    <span class="mouseComment" data-show="30">And now we need to register the existance of the BugPattern we are making.  Don't worry too much about the abbreviation part, just make something with three letters (to avoid conflicts with the two-letter FindBugs abbreviations.  It's good practice to set new detectors to be experimental.</span>
+                </div>
+            </div>
+            <p>The final part, and arguably the most important part from a usability standpoint, is making an understandable message.  This, of course, goes in <a target="_blank" style="target-new: tab;" href="https://github.com/mebigfatguy/fb-contrib/blob/1bbd37fa9738f67ccf116b005121db2f2b99f051/etc/messages.xml">etc/messages.xml</a>, along with a description of the detector itself and one last BugCode.  To explain the difference between the BugPattern message and the Detector description, see the following image:
+                <br>
+                <br>
+                <img src="images/BugPattern-DetectorDistinction.png">
+                <br>
+            </p>
+            <div class="codeContainer" style="max-height: 450px">
+                <pre data-src="blog_posts/code/first_detector_modded_messages.html" class="line-numbers" data-line="1,3"></pre>
+                <div class="codeComment">
+                    <span class="mouseComment" data-show="21">This is where we add in our detector description (and need to repeat our class name).</span>
+                    <span class="mouseComment" data-show="23-26">The meat of your description goes in the CDATA comment.  You can use html if you wish.  </span>
+                    <span class="mouseComment" data-show="37">Here is the all important BugPattern message.  Note the three parts.  They are all important.</span>
+                    <span class="mouseComment" data-show="39">It is common practice to have placeholders in the LongDescription.  Remember earlier when we made a call to addField()?  That will replace the {1} when the string is rendered (see the above image for <span class="mouseOverMe" title="FixedThreadPoolProblem.executor is the injected text, right after Bug: ">an example.</span></span>
+                    <span class="mouseComment" data-show="41-54">Your error message goes in the CDATA comment.  Feel free to be verbose, or put code samples in <span class="code">&lt;code&gt;</span> tags, whatever you want.  As of FindBugs 2.0.3, you cannot, unfortunately, have injected content like in the LongDescription.</span>
+                    <span class="mouseComment" data-show="63">Finally, add an abbreviation for your detector.  This will be used in the descriptions of the bug.</span>
+                </div>
+            </div>
+            <br>
+            <p>And that wraps up the paperwork.  Now, let's go finish writing the detector!</p>
+            <h4>The modified code</h4>
+            <p>Since we've already seen the meat of the detector, just in a slightly different form, I won't go into as granular of detail as I did earlier.  The resulting code is below, with a few remarks on the changes.</p>
+            <div class="codeContainer" style="max-height: 600px">
+                <pre data-src="blog_posts/code/first_detector_final_detector.java" class="line-numbers" data-line="1,3"></pre>
+                <div class="codeComment">
+                    <span class="mouseComment" data-show="7">Again, this is just the fancy "full" name for the <span class="code">ExecutorService</span>, which are produced by the <span class="code">Executors</span> class.</span>
+                    <span class="mouseComment" data-show="13-14">These are the only two methods that can safely shutdown the <span class="code">ExecutorService</span>s and the <span class="code">Thread</span>s inside.</span>
+                    <span class="mouseComment" data-show="18">I've elected to simplify the detection process a bit, by removing second Map that we previously transferred the candidates to. This has also removed the set of increasing methods.</span>
+                    <span class="mouseComment" data-show="127">All we need to do is remove any fields that have a call to shutdown, and once we get to the end of the class, all that remain are the non-shutdown <span class="code">ExecutorService</span>s.</span>
+                </div>
+            </div>
+            <h4>Finishing up</h4>
+            <p>Now, to compile the plugin, just run the <a href="https://github.com/mebigfatguy/fb-contrib/blob/master/build.xml">build script</a> that's a part of the fb-contrib source.  It's an <a href="http://en.wikipedia.org/wiki/Apache_Ant">ant script</a>, so it will take care of everything (compilation, dependencies, etc).  The only thing you may have to do is to download <a href="http://search.maven.org/remotecontent?filepath=com/mebigfatguy/yank/yank/1.0.0/yank-1.0.0.jar">yank.jar</a> from <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.mebigfatguy.yank%22">Maven</a> to act as the dependency manager and put it in your ant/lib folder, which for me was in [HomeDirectory]/.ant/lib/ .</p>
+            <p>Finally, put your newly built fb-contrib.jar into the findbugs/plugin dir (for me, it was [eclipse install dir]/plugins/edu.umd.cs.findbugs.plugin.eclipse_2.0.3.20131122-15027/plugin/).  Run Findbugs and marvel in your cleverness!</p>
+            <h3>Epilogue</h3>
+            <p>Congratulations!  You've written your first FindBugs Detector.  From here, the door only opens wider.  Future posts will cover more advanced topics, like OpcodeStack gynamstics and looking at the bytecodes for inspiration to write a detector.  Check back soon!</p>
+        </div>
+
+    </div>
+    <script>$(document).ready(function () { $('#stackPic').tooltipster({ content: $('<img style="max-height:350px;" src="images/opcodeStack.png" />') }); });</script>
+    <script src="js/libs/prism.js"></script>
+  <script src="js/codeCommentary.js"></script>
