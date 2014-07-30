@@ -15,7 +15,31 @@ angular.module('myApp.controllers', [])
   .controller('BlogCtrl', ['$rootScope', '$scope', '$http', '$sce', function($rootScope, $scope, $http, $sce) {
 	$rootScope.title = "thoughts@kjlubick.github.io";
 
+	$scope.blogPosts = {
+		source: ["old_app/fb-tutorial.html", "old_app/CognitiveDimensionsByExample.html"],
+		html: ["<div>Loading...</div>","<div>Loading...</div>"]
+	};
+
+
+	$http({method: 'GET', url: $scope.blogPosts.source[0]}).
+    success(function(data, status) {
+      // this callback will be called asynchronously
+      // when the response is available
+      console.log("Sucess with "+ $scope.blogPosts.source[0]);
+    	console.log(data);
+    	console.log(status);
+    	$scope.blogPosts.html[0] = data;
+    }).
+    error(function(data, status) {
+    	console.log("ERRROR with "+ $scope.blogPosts.source[0]);
+    	console.log(data);
+    	console.log(status);
+    	$scope.blogPosts.html[0] = "<div>Sorry, could not load post.</div>";
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+    });
+
 	$scope.renderHtml = function(postIndex) {
-		return $sce.trustAsHtml("<h1>Hello Blog Post" +postIndex+"! </h1>");
+		return $sce.trustAsHtml($scope.blogPosts.html[postIndex]);
 	};
   }]);
