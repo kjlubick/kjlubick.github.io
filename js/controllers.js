@@ -48,11 +48,8 @@ angular.module('myApp.controllers', [])
 		var post = $scope.blogPosts.posts[i];
 		$http({method: 'GET', url: post.source}).
 	    success(function(data) {
-	      // this callback will be called asynchronously
-	      // when the response is available
 	      console.log("Sucess with "+ post.source);
-	    	//console.log(data);
-	    	//console.log(status);
+
 	    	post.html = data;
 	    }).
 	    error(function(data, status) {
@@ -60,8 +57,6 @@ angular.module('myApp.controllers', [])
 	    	console.err(data);
 	    	console.log(status);
 	    	post.html = "<div>Sorry, could not load post.</div>";
-	      // called asynchronously if an error occurs
-	      // or server returns response with an error status.
 	    });
 	}
 
