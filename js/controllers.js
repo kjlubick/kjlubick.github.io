@@ -16,30 +16,56 @@ angular.module('myApp.controllers', [])
 	$rootScope.title = "thoughts@kjlubick.github.io";
 
 	$scope.blogPosts = {
-		source: ["blog_posts/fb-tutorial.html", "old_app/CognitiveDimensionsByExample.html"],
-		html: ["<div>Loading...</div>","<div>Loading...</div>"]
+		posts: [
+		/*{
+			id: 'n',
+			title: "",
+			author: { name: "Kevin Lubick" },
+			date: new Date('4-28-2014 13:00:00'),
+			tags: ["",""],
+			excerpt: "",
+			bodyArr:[
+			"",
+			""
+			]
+		} */
+		{
+			id: '1',
+	        title: "Building my First Findbugs Detector",
+	        author: { name: "Kevin Lubick" },
+	        date: new Date('5-20-2014 23:00:00'),
+			tags: ["FindBugs", "fb-contrib", "tutorial", "verbose"],
+	        excerpt: "My less-than-legendary, yet successful story of building a <a href='http://findbugs.sourceforge.net/'>FindBugs</a> plugin to detect ExecutorServices that have not been properly shutdown.  <a href='https://github.com/mebigfatguy/fb-contrib/pull/14'>End result</a>.",
+			source : "blog_posts/fb-tutorial.html",
+			html : "<div>Loading...</div>"
+		}
+
+		]
 	};
 
+	//go fetch posts
+	for(var i = 0; i< $scope.blogPosts.posts.length; i++) {
+		var post = $scope.blogPosts.posts[i];
+		$http({method: 'GET', url: post.source}).
+	    success(function(data) {
+	      // this callback will be called asynchronously
+	      // when the response is available
+	      console.log("Sucess with "+ post.source);
+	    	//console.log(data);
+	    	//console.log(status);
+	    	post.html = data;
+	    }).
+	    error(function(data, status) {
+	    	console.log("ERRROR with "+ post.source);
+	    	console.err(data);
+	    	console.log(status);
+	    	post.html = "<div>Sorry, could not load post.</div>";
+	      // called asynchronously if an error occurs
+	      // or server returns response with an error status.
+	    });
+	}
 
-	$http({method: 'GET', url: $scope.blogPosts.source[0]}).
-    success(function(data) {
-      // this callback will be called asynchronously
-      // when the response is available
-      console.log("Sucess with "+ $scope.blogPosts.source[0]);
-    	//console.log(data);
-    	//console.log(status);
-    	$scope.blogPosts.html[0] = data;
-    }).
-    error(function(data, status) {
-    	console.log("ERRROR with "+ $scope.blogPosts.source[0]);
-    	console.err(data);
-    	console.log(status);
-    	$scope.blogPosts.html[0] = "<div>Sorry, could not load post.</div>";
-      // called asynchronously if an error occurs
-      // or server returns response with an error status.
-    });
-
-	$scope.renderHtml = function(postIndex) {
-		return $sce.trustAsHtml($scope.blogPosts.html[postIndex]);
+	$scope.renderHtml = function(post) {
+		return $sce.trustAsHtml(post.html);
 	};
   }]);
