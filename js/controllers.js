@@ -1,11 +1,17 @@
-'use strict';
+/*global angular*/
 
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-  .controller('MyCtrl1', ['$scope', function($scope) {
+
+  .controller('IndexCtrl', ['$rootScope', function($rootScope) {
+  	$rootScope.title = "kjlubick@github.io";
 
   }])
-  .controller('MyCtrl2', ['$scope', function($scope) {
+  .controller('AboutCtrl', ['$rootScope', function($rootScope) {
+  	$rootScope.title = "kjlubick@github.io";
 
+  }])
+  .controller('BlogCtrl', ['$rootScope', function($rootScope) {
+	$rootScope.title = "thoughts@kjlubick.github.io";
   }]);
