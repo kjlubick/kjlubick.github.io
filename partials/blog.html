@@ -6,7 +6,7 @@
 
 	<div class="entry">
             <h1>{{post.title}}</h1>
-            <span class="post-date" title="{{post.pub_date | date : medium}}"><time relative>{{post.pub_date}}</time></span>
+            <span class="post-date" title="{{post.pub_date | date : 'medium'}}">{{post.pub_date}}</span>
             <div class="body">
                 <div ng-bind-html="renderHtml(post)"></div>
             </div>

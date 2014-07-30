@@ -46,10 +46,10 @@ angular.module('myApp.controllers', [])
 	//go fetch posts
 	for(var i = 0; i< $scope.blogPosts.posts.length; i++) {
 		var post = $scope.blogPosts.posts[i];
+		console.log(post.pub_date);
 		$http({method: 'GET', url: post.source}).
 	    success(function(data) {
 	      console.log("Sucess with "+ post.source);
-
 	    	post.html = data;
 	    }).
 	    error(function(data, status) {
@@ -61,6 +61,7 @@ angular.module('myApp.controllers', [])
 	}
 
 	$scope.renderHtml = function(post) {
+		console.log(post.pub_date);
 		return $sce.trustAsHtml(post.html);
 	};
   }]);
