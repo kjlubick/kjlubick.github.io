@@ -4,7 +4,15 @@
 
 <div ng-repeat="post in blogPosts.posts">
 
-	<div ng-bind-html="renderHtml(post)"></div>
+	<div class="entry">
+            <h1>{{post.title}}</h1>
+            <span class="post-date" title="{{post.pub_date | date : medium}}"><time relative>{{post.pub_date}}</time></span>
+            <div class="body">
+                <div ng-bind-html="renderHtml(post)"></div>
+            </div>
+        </div>
+
+	
 
 </div>
 
