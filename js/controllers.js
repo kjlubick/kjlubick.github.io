@@ -12,6 +12,10 @@ angular.module('myApp.controllers', [])
   	$rootScope.title = "kjlubick@github.io";
 
   }])
-  .controller('BlogCtrl', ['$rootScope', function($rootScope) {
+  .controller('BlogCtrl', ['$rootScope', '$scope', '$http', '$sce', function($rootScope, $scope, $http, $sce) {
 	$rootScope.title = "thoughts@kjlubick.github.io";
+
+	$scope.renderHtml = function(postIndex) {
+		return $sce.trustAsHtml("<h1>Hello Blog Post" +postIndex+"! </h1>");
+	};
   }]);
