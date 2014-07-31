@@ -171,9 +171,6 @@ function isIE() {
 }
 
 $(document).ready(function () {
-    console.log("codeCommentary.js");
-
-	
 	if (isIE()) {
 		ie_correction = 1;
 	}

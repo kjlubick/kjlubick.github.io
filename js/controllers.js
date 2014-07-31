@@ -3,10 +3,14 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-.controller('HeaderCtrl', function($scope) {
+.controller('HeaderCtrl', function($scope, $location) {
 	$scope.header = {
 		title : "test+kjlubick@github.io"
 	};
+
+	$scope.isActive = function (viewLocation) { 
+        return viewLocation === $location.path();
+    };
 })
 
   .controller('IndexCtrl', function($scope) {
