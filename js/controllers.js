@@ -3,17 +3,22 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
+.controller('HeaderCtrl', function($scope) {
+	$scope.header = {
+		title : "test+kjlubick@github.io"
+	};
+})
 
-  .controller('IndexCtrl', ['$rootScope', function($rootScope) {
-  	$rootScope.title = "kjlubick@github.io";
+  .controller('IndexCtrl', function($scope) {
+  	$scope.header.title = "kjlubick@github.io";
 
-  }])
-  .controller('AboutCtrl', ['$rootScope', function($rootScope) {
-  	$rootScope.title = "kjlubick@github.io";
+  })
+  .controller('AboutCtrl', function($scope) {
+  	$scope.header.title = "kjlubick@github.io";
 
-  }])
-  .controller('BlogCtrl', ['$rootScope', '$scope', '$http', '$sce', function($rootScope, $scope, $http, $sce) {
-	$rootScope.title = "thoughts@kjlubick.github.io";
+  })
+  .controller('BlogCtrl', function($scope, $http, $sce) {
+	$scope.header.title = "thoughts@kjlubick.github.io";
 
 	$scope.blogPosts = {
 		posts: [
@@ -62,4 +67,4 @@ angular.module('myApp.controllers', [])
 	$scope.renderHtml = function(post) {
 		return $sce.trustAsHtml(post.html);
 	};
-  }]);
+  });
