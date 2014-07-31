@@ -60,12 +60,6 @@ angular.module('myApp.controllers', [])
 	});
 
 	$scope.renderHtml = function(post) {
-		console.log(post.pub_date);
 		return $sce.trustAsHtml(post.html);
 	};
-
-	$scope.relativeFormat = function(date) {
-		return moment(date).fromNow();
-	};
-
   }]);
