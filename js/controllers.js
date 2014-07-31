@@ -1,4 +1,4 @@
-/*global angular*/
+/*global angular, moment, _*/
 
 /* Controllers */
 
@@ -44,24 +44,28 @@ angular.module('myApp.controllers', [])
 	};
 
 	//go fetch posts
-	for(var i = 0; i< $scope.blogPosts.posts.length; i++) {
-		var post = $scope.blogPosts.posts[i];
-		console.log(post.pub_date);
+	_.each($scope.blogPosts.posts, function(post)
+	{
 		$http({method: 'GET', url: post.source}).
-	    success(function(data) {
-	      console.log("Sucess with "+ post.source);
-	    	post.html = data;
-	    }).
-	    error(function(data, status) {
-	    	console.log("ERRROR with "+ post.source);
-	    	console.err(data);
-	    	console.log(status);
-	    	post.html = "<div>Sorry, could not load post.</div>";
-	    });
-	}
+		success(function(data) {
+			//console.log("Sucess with "+ post.source);
+			post.html = data;
+		}).
+		error(function(data, status) {
+			console.error("ERRROR with "+ post.source);
+			console.error(data);
+			console.log(status);
+			post.html = "<div>Sorry, could not load post body.</div>";
+		});
+	});
 
 	$scope.renderHtml = function(post) {
 		console.log(post.pub_date);
 		return $sce.trustAsHtml(post.html);
 	};
+
+	$scope.relativeFormat = function(date) {
+		return moment(date).fromNow();
+	};
+
   }]);

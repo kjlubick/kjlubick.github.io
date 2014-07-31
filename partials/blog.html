@@ -1,20 +1,13 @@
 <div id="main" class="container">
 
-<p>This is the partial for the blog.</p>
+	<div class="entry" ng-repeat="post in blogPosts.posts">
 
-<div ng-repeat="post in blogPosts.posts">
-
-	<div class="entry">
-            <h1>{{post.title}}</h1>
-            <span class="post-date" title="{{post.pub_date | date : 'medium'}}">{{post.pub_date}}</span>
-            <div class="body">
-                <div ng-bind-html="renderHtml(post)"></div>
-            </div>
-        </div>
-
-	
-
-</div>
+		<h1>{{post.title}}</h1>
+		<span class="post-date" title="{{post.pub_date | date : 'medium'}}">{{relativeFormat(post.pub_date)}}</span>
+		<div class="body">
+			<div ng-bind-html="renderHtml(post)"></div>
+		</div>
+	</div>
 
 
 </div>
