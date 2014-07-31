@@ -1,4 +1,4 @@
-/*global angular, moment, _*/
+/*global angular, _*/
 
 /* Controllers */
 
