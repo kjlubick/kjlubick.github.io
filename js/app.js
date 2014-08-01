@@ -13,6 +13,10 @@ config(['$routeProvider', function ($routeProvider) {
         templateUrl: 'partials/blog.html',
         controller: 'BlogCtrl'
     });
+    $routeProvider.when('/blog/post/:id', {
+        templateUrl: 'partials/single_post.html',
+        controller: 'PostCtrl'
+    });
     $routeProvider.otherwise({ redirectTo: '/' });
 }]);
 

@@ -21,23 +21,28 @@ angular.module('myApp.controllers', ['myApp.posts'])
 	$scope.header.title = "kjlubick@github.io";
 
 })
-.controller('PostCtrl', function($scope) {
+.controller('PostCtrl', function($scope, $routeParams, posts, $sce, $http) {
+	//console.log($routeParams);
 
+	$scope.post = _.find(posts, {id: $routeParams.id});
 
-})
-.directive('blogPost', function() {
-	return {
-		restrict: 'E',
-		scope: {
-			post: '=post'
-		},
-		templateUrl: 'partials/blog_post.html',
-		controller: function($scope, $sce) {
-			$scope.renderHtml = function(post) {
-				return $sce.trustAsHtml(post.html);
-			};
+	$scope.header.title = $scope.post.title + " kjlubick@github.io";
+	if (!$scope.post.loaded) {
+			$scope.post.loaded = true;
+			$http({method: 'GET', url: $scope.post.source}).
+			success(function(data) {
+			$scope.post.html = data;
+		}).
+			error(function(data, status) {
+				console.error("ERRROR with "+ $scope.post.source);
+				console.error(data);
+				console.log(status);
+				$scope.post.html = "<div>Sorry, could not load post body.</div>";
+			});
 		}
-		
+
+	$scope.renderHtml = function(post) {
+		return $sce.trustAsHtml(post.html);
 	};
 })
 .controller('BlogCtrl', function($scope, $http, posts) {
@@ -64,6 +69,19 @@ angular.module('myApp.controllers', ['myApp.posts'])
 			});
 		}
 	});
-
-
-});
+}).directive('blogPost', function() {
+	return {
+		restrict: 'E',
+		scope: {
+			post: '=post'
+		},
+		templateUrl: 'partials/blog_post.html',
+		controller: function($scope, $sce) {
+			$scope.renderHtml = function(post) {
+				return $sce.trustAsHtml(post.html);
+			};
+		}
+		
+	};
+})
+;
