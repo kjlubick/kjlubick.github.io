@@ -9,19 +9,19 @@ angular.module('myApp.controllers', [])
 	};
 
 	$scope.isActive = function (viewLocation) { 
-        return viewLocation === $location.path();
-    };
+		return viewLocation === $location.path();
+	};
 })
 
-  .controller('IndexCtrl', function($scope) {
-  	$scope.header.title = "kjlubick@github.io";
+.controller('IndexCtrl', function($scope) {
+	$scope.header.title = "kjlubick@github.io";
 
-  })
-  .controller('AboutCtrl', function($scope) {
-  	$scope.header.title = "kjlubick@github.io";
+})
+.controller('AboutCtrl', function($scope) {
+	$scope.header.title = "kjlubick@github.io";
 
-  })
-  .controller('BlogCtrl', function($scope, $http, $sce) {
+})
+.controller('BlogCtrl', function($scope, $http, $sce) {
 	$scope.header.title = "thoughts@kjlubick.github.io";
 
 	$scope.blogPosts = {
@@ -30,7 +30,7 @@ angular.module('myApp.controllers', [])
 			id: 'n',
 			title: "",
 			author: { name: "Kevin Lubick" },
-			date: new Date('4-28-2014 13:00:00'),
+			date: new Date('May 20, 2014 23:00:00'),
 			tags: ["",""],
 			excerpt: "",
 			bodyArr:[
@@ -40,11 +40,11 @@ angular.module('myApp.controllers', [])
 		} */
 		{
 			id: '1',
-	        title: "Building my First Findbugs Detector",
-	        author: { name: "Kevin Lubick" },
-	        pub_date: new Date('May 20, 2014 23:00:00'),
+			title: "Building my First Findbugs Detector",
+			author: { name: "Kevin Lubick" },
+			pub_date: new Date('May 20, 2014 23:00:00'),
 			tags: ["FindBugs", "fb-contrib", "tutorial", "verbose"],
-	        excerpt: "My less-than-legendary, yet successful story of building a <a href='http://findbugs.sourceforge.net/'>FindBugs</a> plugin to detect ExecutorServices that have not been properly shutdown.  <a href='https://github.com/mebigfatguy/fb-contrib/pull/14'>End result</a>.",
+			excerpt: "My less-than-legendary, yet successful story of building a <a href='http://findbugs.sourceforge.net/'>FindBugs</a> plugin to detect ExecutorServices that have not been properly shutdown.  <a href='https://github.com/mebigfatguy/fb-contrib/pull/14'>End result</a>.",
 			source : "blog_posts/fb-tutorial.html",
 			html : "<div>Loading...</div>"
 		}
@@ -71,4 +71,4 @@ angular.module('myApp.controllers', [])
 	$scope.renderHtml = function(post) {
 		return $sce.trustAsHtml(post.html);
 	};
-  });
+});
