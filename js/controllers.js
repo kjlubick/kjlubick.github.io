@@ -5,7 +5,7 @@
 angular.module('myApp.controllers', ['myApp.posts'])
 .controller('HeaderCtrl', function($scope, $location) {
 	$scope.header = {
-		title : "test+kjlubick@github.io"
+		title : "kjlubick@github.io"
 	};
 
 	$scope.isActive = function (viewLocation) { 
