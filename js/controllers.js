@@ -21,7 +21,26 @@ angular.module('myApp.controllers', [])
 	$scope.header.title = "kjlubick@github.io";
 
 })
-.controller('BlogCtrl', function($scope, $http, $sce) {
+.controller('PostCtrl', function($scope) {
+
+
+})
+.directive('blogPost', function() {
+	return {
+		restrict: 'E',
+		scope: {
+			post: '=post'
+		},
+		templateUrl: 'partials/blog_post.html',
+		controller: function($scope, $sce) {
+			$scope.renderHtml = function(post) {
+				return $sce.trustAsHtml(post.html);
+			};
+		}
+		
+	};
+})
+.controller('BlogCtrl', function($scope, $http) {
 	$scope.header.title = "thoughts@kjlubick.github.io";
 
 	$scope.blogPosts = {
@@ -68,7 +87,5 @@ angular.module('myApp.controllers', [])
 		});
 	});
 
-	$scope.renderHtml = function(post) {
-		return $sce.trustAsHtml(post.html);
-	};
+
 });

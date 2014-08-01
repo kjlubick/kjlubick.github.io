@@ -1,12 +1,7 @@
 <div id="main" class="container">
 
 	<div class="entry" ng-repeat="post in blogPosts.posts">
-
-		<h1>{{post.title}}</h1>
-		<span class="post-date" title="{{post.pub_date | date : 'medium'}}">{{post.pub_date | relative_date}}</span>
-		<div class="body">
-			<div ng-bind-html="renderHtml(post)"></div>
-		</div>
+	<blog-post post=post></blog-post>
 	</div>
 
 
