@@ -24,6 +24,12 @@ angular.module('myApp.posts', []).
 			source : "blog_posts/fb-tutorial.html",
 			loaded : false,
 			html : "<div>Loading...</div>"
+		},
+		{
+			id: '404',
+			title: "Post not found",
+			loaded : true,
+			html : "<div> Sorry, the post you were looking for doesn't exist... </div>"
 		}
 
 		]);

@@ -26,6 +26,10 @@ angular.module('myApp.controllers', ['myApp.posts'])
 
 	$scope.post = _.find(posts, {id: $routeParams.id});
 
+	if (!$scope.post) {
+		$scope.post = _.find(posts, {id: "404"});
+	}
+
 	$scope.header.title = $scope.post.title + " kjlubick@github.io";
 	if (!$scope.post.loaded) {
 			$scope.post.loaded = true;
@@ -49,7 +53,7 @@ angular.module('myApp.controllers', ['myApp.posts'])
 	$scope.header.title = "thoughts@kjlubick.github.io";
 
 	$scope.blogPosts = {
-		posts: posts
+		posts: _.reject(posts, {id : '404'})
 	};
 
 	//go fetch posts
