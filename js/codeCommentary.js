@@ -126,13 +126,10 @@ function adjustCodeCommentBoxForMousePosition(codeComment, y) {
 Prism.hooks.add('after-highlight', function (env) {
     var numbersToHighlight, lineNumbers, container, mouseComments;
 
-    console.log("call ");
     if (env.code == "Loading…") {
         return;
     }
     numbersToHighlight = [];
-    
-    console.log(env);
 
     container = $(env.element).closest(".codeContainer");
 
@@ -179,6 +176,10 @@ $(document).ready(function () {
 	if (isIE()) {
 		ie_correction = 1;
 	}
+
+    //In FireFox, The highlighting sometimes happens before our "plugin" is registered.
+    //This forces highlighting again.
+    Prism.highlightAll();
 	
     $(".codeContainer").on("mousemove", "pre", function (e) {
         var enclosingObject = $(this);

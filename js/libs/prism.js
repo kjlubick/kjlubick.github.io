@@ -623,7 +623,6 @@ Prism.hooks.add('after-highlight', function(env) {
 addEventListener('hashchange', applyHash);
 
 })();
-;
 Prism.hooks.add('after-highlight', function (env) {
 	// works only for <code> wrapped inside <pre data-line-numbers> (not inline)
 	var pre = env.element.parentNode;
@@ -647,7 +646,7 @@ Prism.hooks.add('after-highlight', function (env) {
 
 	env.element.appendChild(lineNumbersWrapper);
 
-});;
+});
 (function(){
 
 if (!self.Prism || !self.document || !document.querySelector) {
