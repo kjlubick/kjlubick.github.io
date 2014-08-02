@@ -125,12 +125,14 @@ function adjustCodeCommentBoxForMousePosition(codeComment, y) {
 
 Prism.hooks.add('after-highlight', function (env) {
     var numbersToHighlight, lineNumbers, container, mouseComments;
+
+    console.log("call ");
     if (env.code == "Loading…") {
         return;
     }
     numbersToHighlight = [];
-    //console.log("call ");
-    //console.log(env);
+    
+    console.log(env);
 
     container = $(env.element).closest(".codeContainer");
 
@@ -171,6 +173,9 @@ function isIE() {
 }
 
 $(document).ready(function () {
+
+    console.log("Ready");
+
 	if (isIE()) {
 		ie_correction = 1;
 	}
