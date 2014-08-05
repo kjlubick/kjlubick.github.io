@@ -53,7 +53,7 @@ angular.module('myApp.controllers', ['myApp.posts'])
 	$scope.header.title = "thoughts@kjlubick.github.io";
 
 	$scope.blogPosts = {
-		posts: _.reject(posts, {id : '404'})
+		posts: _(posts).reject({id : '404'}).sortBy("id").reverse().value()
 	};
 
 	//go fetch posts
