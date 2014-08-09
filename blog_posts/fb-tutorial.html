@@ -142,7 +142,7 @@
         <pre data-src="blog_posts/code/first_detector_modded_findbugs.html" class="line-numbers" data-line="1,3"></pre>
         <div class="codeComment">
             <span class="mouseComment" data-show="22">We need to add this entry to the XML.  Note that we have our class name and one or more detectors that the class can report.  We haven't made <span class="code">com.mebigfatguy.fbcontrib. detect.HangingExecutors</span> yet, but we will shortly.</span>
-            <span class="mouseComment" data-show="30">And now we need to register the existance of the BugPattern we are making.  Don't worry too much about the abbreviation part, just make something with three letters (to avoid conflicts with the two-letter FindBugs abbreviations.  It's good practice to set new detectors to be experimental.</span>
+            <span class="mouseComment" data-show="30">And now we need to register the existence of the BugPattern we are making.  Don't worry too much about the abbreviation part, just make something with three letters (to avoid conflicts with the two-letter FindBugs abbreviations.  It's good practice to set new detectors to be experimental.</span>
         </div>
     </div>
     <p>
@@ -177,10 +177,10 @@
         </div>
     </div>
     <h4>Finishing up</h4>
-    <p>Now, to compile the plugin, just run the <a href="https://github.com/mebigfatguy/fb-contrib/blob/master/build.xml">build script</a> that's a part of the fb-contrib source.  It's an <a href="http://en.wikipedia.org/wiki/Apache_Ant">ant script</a>, so it will take care of everything (compilation, dependencies, etc).  The only thing you may have to do is to download <a href="http://search.maven.org/remotecontent?filepath=com/mebigfatguy/yank/yank/1.0.0/yank-1.0.0.jar">yank.jar</a> from <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.mebigfatguy.yank%22">Maven</a> to act as the dependency manager and put it in your ant/lib folder, which for me was in [HomeDirectory]/.ant/lib/ .</p>
+    <p>Now, to compile the plugin, just run the <a href="https://github.com/mebigfatguy/fb-contrib/blob/master/build.xml">build script</a> that's a part of the fb-contrib source.  It's an <a href="http://en.wikipedia.org/wiki/Apache_Ant">ant script</a>, so it will take care of everything (compilation, dependencies, etc).  The only thing you may have to do is to download <a href="http://search.maven.org/remotecontent?filepath=com/mebigfatguy/yank/yank/1.2.0/yank-1.2.0.jar">yank.jar</a> from <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.mebigfatguy.yank%22">Maven</a> to act as the dependency manager and put it in your .ant/lib folder, which for me was in [HomeDirectory]/.ant/lib/ .</p>
     <p>Finally, put your newly built fb-contrib.jar into the findbugs/plugin dir (for me, it was [eclipse install dir]/plugins/edu.umd.cs.findbugs.plugin.eclipse_2.0.3.20131122-15027/plugin/).  Run Findbugs and marvel in your cleverness!</p>
     <h3>Epilogue</h3>
-    <p>Congratulations!  You've written your first FindBugs Detector.  From here, the door only opens wider.  Future posts will cover more advanced topics, like OpcodeStack gynamstics and looking at the bytecodes for inspiration to write a detector.  Check back soon!</p>
+    <p>Congratulations!  You've written your first FindBugs Detector.  From here, the door only opens wider.  Future posts will cover more advanced topics, like OpcodeStack gymnastics and looking at the bytecodes for inspiration to write a detector.  Check back soon!</p>
 </div>
 
 <script src="js/blog_js/fb-tutorial.js"></script>

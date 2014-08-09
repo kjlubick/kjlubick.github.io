@@ -15,6 +15,12 @@ angular.module('myApp.posts', []).
 			]
 		} */
 		{
+			id: '404',
+			title: "Post not found",
+			loaded : true,
+			html : "<div> Sorry, the post you were looking for doesn't exist... </div>"
+		},
+		{
 			id: '1',
 			title: "Building my First Findbugs Detector",
 			author: { name: "Kevin Lubick" },
@@ -26,10 +32,15 @@ angular.module('myApp.posts', []).
 			html : "<div>Loading...</div>"
 		},
 		{
-			id: '404',
-			title: "Post not found",
-			loaded : true,
-			html : "<div> Sorry, the post you were looking for doesn't exist... </div>"
-		}
+			id: '2',
+			title: "Upgraded the site to use Angular.js",
+			author: { name: "Kevin Lubick" },
+			pub_date: new Date('Aug 5, 2014 12:00:00'),
+			tags: ["website", "AngularJS"],
+			excerpt: "The site is now modernish, using AngularJS",
+			source : "blog_posts/angular-update.html",
+			loaded : false,
+			html : "<div>Loading...</div>"
+		},
 
 		]);
