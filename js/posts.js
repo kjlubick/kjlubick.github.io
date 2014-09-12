@@ -43,4 +43,16 @@ angular.module('myApp.posts', []).
 			html : "<div>Loading...</div>"
 		},
 
+		{
+			id: '3',
+			title: "Building your first Eclipse quick fix",
+			author: { name: "Kevin Lubick" },
+			pub_date: new Date(),
+			tags: ["fb-contrib", "tutorial", "verbose", "Eclipse", "quickfix" ],
+			excerpt: "How to make an Eclipse quick fix building off of the FindBugs architecture",
+			source : "blog_posts/quickfix-tutorial-1.html",
+			loaded : false,
+			html : "<div>Loading...</div>"
+		}
+
 		]);
