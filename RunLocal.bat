@@ -1,2 +1,2 @@
-python -m SimpleHTTPServer 1338
+python -m SimpleAsyncHTTPServer -r . -p 1338
 pause
