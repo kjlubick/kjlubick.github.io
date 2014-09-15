@@ -1,21 +1,44 @@
 <div class="body">
 	<p>
-	I recently started <a href="https://github.com/kjlubick/fb-contrib-eclipse-quick-fixes">a project called fb-contrib quickfixes</a> that focuses on creating quickfixes for FindBugs-detected bugs.  At first, it was a bit difficult, because, to my knowledge, there isn't a nice friendly "how to make a quickfix" tutorial, so I thought I'd make one.
+	I recently started <a href="https://github.com/kjlubick/fb-contrib-eclipse-quick-fixes">a project called fb-contrib quickfixes</a> that focuses on creating quickfixes for FindBugs-detected bugs.
+	At first, it was a bit difficult, because, to my knowledge, there isn't a nice friendly "how to make a quickfix" tutorial, so I thought I'd make one.
 
 	</p>
 
 	<p>
 	In this tutorial, we will make the following quickfix.
 	<img src="images/quickfix-demo.gif"/>
-	This is a good start if you want to contribute quickfixes yourself to the project or if you want to make your own Eclipse quickfix plugin.  It fixes a bug called LSC_LITERAL_STRING_COMPARISON which, as you can see, is easily fixed by swapping the argument (the string literal) and the string variable (which could be null).
+	This is a good start if you want to contribute quickfixes yourself to the project or if you want to make your own Eclipse quickfix plugin.
+	It fixes a bug called LSC_LITERAL_STRING_COMPARISON which, as you can see, is easily fixed by swapping the argument (the string literal) and the string variable (which could be null).
 	</p>
 
 	<p>
-	For this tutorial, I'm providing an already setup Eclipse workspace, downloadable <a href="https://docs.google.com/file/d/0B6dzef3D5CTBSjk3MTRPSHZ2SEk">here</a>.  As of writing, the 3.0.0 version of the FindBugs plugin does not support extension, but a dev version does.  <a href="https://drive.google.com/file/d/0B6dzef3D5CTBY0J1WTRVRXctVFE/edit">Here</a> is a compiled dev version (with fb-contrib bundled).  Uninstall FindBugs from Eclipse (if already installed) and then unzip the bundle and install it from Eclipse.  See http://stackoverflow.com/a/16074606/1447621 for more details. <br/>  If you want to do this in hard mode, follow the <a href="https://github.com/kjlubick/fb-contrib-eclipse-quick-fixes#setting-up-the-project-for-development">dev setup instructions</a> for fb-contrib quickfixes.
+	For this tutorial, I'm providing an already setup Eclipse workspace, downloadable <a href="https://docs.google.com/file/d/0B6dzef3D5CTBSjk3MTRPSHZ2SEk">here</a>.
+	As of writing, the 3.0.0 version of the FindBugs plugin does not support extension, but a dev version does.
+	<a href="https://drive.google.com/file/d/0B6dzef3D5CTBY0J1WTRVRXctVFE/edit">Here</a> is a compiled dev version (with fb-contrib bundled).
+	Uninstall FindBugs from Eclipse (if already installed) and then unzip the bundle and install it from Eclipse.
+	See http://stackoverflow.com/a/16074606/1447621 for more details.
+	<br/>  If you want to do this in hard mode, follow the <a href="https://github.com/kjlubick/fb-contrib-eclipse-quick-fixes#setting-up-the-project-for-development">dev setup instructions</a> for fb-contrib quickfixes - it will amount to basically the same thing.
 	</p>
 
 	<p>
+	First, a bit of preliminaries.
+	You will be writing software for Eclipse to perform the quickfixes, so I'll start discussing how Eclipes deals with Java source code - <a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree">Abstract Syntax Trees</a> (ASTs).
+	The Wikipedia article covers it well, but basically, ASTs are a semantic representation of the source code - Eclipse knows what each line is, whether it's an if statement, a variable initialization statement, etc.
+	Let's look at an example of some source code and its representative AST.
+	<pre data-src="blog_posts/code/quickfix-example.java" class="line-numbers"></pre>
+	</p>
 
+	<p>
+	The outer-most <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FASTNode.html">ASTNode</a> is a <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FTypeDeclaration.html">TypeDeclaration</a> for the class <code>ForQuickFixes</code>.
+	TypeDeclarations have some bookkeeping things like <span class="mouseOverMe" title="in our case, we just have one - 'public'">modifiers</span>, a <span class="mouseOverMe" title="ForQuickFixes">name</span>, whether it's <span class="mouseOverMe" title="it isn't">an interface or not</span>, but we mostly care about the stuff inside of it, lines 3-7, which are the <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FAbstractTypeDeclaration.html&anchor=bodyDeclarations()">BodyDeclarations</a>.
+	Remember, in a class, you can define fields, methods and other types, so that is what these are - an ordered list of all fields, methods and types defined in ForQuickFixes.  This happens to just be a single <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FMethodDeclaration.html">MethodDeclaration</a> that corresponds to our <code>main</code> method.
+	</p>
+
+	<p>
+	MethodDeclarations can also have bookeeping things, like a name, 
 	</p>
 
 </div>
+
+<script src="js/libs/prism.js"></script>
