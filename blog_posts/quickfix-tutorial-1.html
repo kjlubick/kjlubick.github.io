@@ -8,7 +8,7 @@
 	<p>
 	In this tutorial, we will make the following quickfix.
 	<img src="images/quickfix-demo.gif"/>
-	This is a good start if you want to contribute quickfixes yourself to the project or if you want to make your own Eclipse quickfix plugin.
+	This is a good start if you want to contribute quickfixes yourself to the project or if you are interested in a hands-on excercise with abstract syntax trees (ASTs, for short - see below).
 	It fixes a bug called LSC_LITERAL_STRING_COMPARISON which, as you can see, is easily fixed by swapping the argument (the string literal) and the string variable (which could be null).
 	</p>
 
@@ -21,8 +21,8 @@
 	<br/>  If you want to do this in hard mode, follow the <a href="https://github.com/kjlubick/fb-contrib-eclipse-quick-fixes#setting-up-the-project-for-development">dev setup instructions</a> for fb-contrib quickfixes - it will amount to basically the same thing.
 	</p>
 
+	<h2>Prerequisite: Abstract Syntax Trees</h2>
 	<p>
-	First, a bit of preliminaries.
 	You will be writing software for Eclipse to perform the quickfixes, so I'll start discussing how Eclipes deals with Java source code - <a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree">Abstract Syntax Trees</a> (ASTs).
 	The Wikipedia article covers it well, but basically, ASTs are a semantic representation of the source code - Eclipse knows what each line is, whether it's an if statement, a variable initialization statement, etc.
 	Let's look at an example of some source code and its representative AST.
@@ -37,6 +37,14 @@
 
 	<p>
 	MethodDeclarations can also have bookkeeping things, like a  <span class="mouseOverMe" title="main">name</span>,  <span class="mouseOverMe" title="two this time - 'public' and 'static'">modifiers</span>, a list of  <span class="mouseOverMe" title="for our String array called args">arguments</span> (of type <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FSingleVariableDeclaration.html">SingleVariableDeclaration</a>), but if we are looking to fix Literal String Comparisons, we only really care about what goes on inside the method - <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FMethodDeclaration.html&anchor=getBody()">the body</a>.
+	The body is a <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FBlock.html">Block</a>, which is basically a wrapper for a bunch of <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FStatement.html">Statement</a>s.
+	</p>
+
+	<p>
+	<a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FStatement.html">Statement</a>s
+	are basically executable lines of code, so we run into them pretty frequently.
+	In fact, our code snippet has two statements, an <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FIfStatement.htmlIfStatement">IfStatement</a> and an <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FIfStatement.html">ExpressionStatement</a> corresponding to <code>System.out.println("Test 1.0");</code>.
+	Statements generally have other Statements nested inside of them, as well as <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FExpression.html">Expressions</a>, the other key building block that you will encounter a lot.
 	</p>
 
 </div>
