@@ -53,9 +53,30 @@
 	</p>
 
 	<p>
-	The Expression we are interested in is <code class="language-java">args[0].equals("version")</code>, which happens to be a <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FMethodInvocation.html">MethodInvocation</a> and it is currently the rightOperand of an InfixExpression.
-	This MethodInvocation has a name, an expression (aka the object upon which the method is invoked), and a <code class="language-java">List&lt;Type&gt;</code> of arguments
+	The Expression we are interested in is <code class="language-java">args[0].equals("version")</code>, which happens to be a <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FMethodInvocation.html">MethodInvocation</a> and it is currently the rightOperand of an <a href="http://help.eclipse.org/kepler/topic/org.eclipse.jdt.doc.isv/reference/api/org/eclipse/jdt/core/dom/InfixExpression.html">InfixExpression</a>.
+	This MethodInvocation has a <span class="mouseOverMe" title="equals">name</span>, an <span class="mouseOverMe" title="args[0]">expression</span> (aka the object upon which the method is invoked), and a <code class="language-java">List&lt;Type&gt;</code> of arguments.
+	The one argument is a <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FStringLiteral.html">StringLiteral</a>.
 	</p>
+
+	<p>
+	Discovering, reasoning about, and navigating this AST is much easier (for me, at least) when I use a tool called <a href="http://www.eclipse.org/jdt/ui/astview/index.php">ASTView</a>, which is an Eclipse plugin.
+
+	<!-- Insert animated gif-->
+
+	</p>
+
+	<h2>Prerequisite: Visitor Pattern</h2>
+
+	<p>
+	An important tool for navigating the AST is the <a href="http://en.wikipedia.org/wiki/Visitor_pattern">Visitor pattern</a>.  Basically what we will do is create an object which will be given to the AST.  The AST will ping the object with notifications as it navigates the passed-in object through the entire the tree.
+	So, if we are interested in MethodInvocations, we will make the visiting object have a <code class="language-java">visit(MethodInvocation node)</code> method that will be called for every MethodInvocation in the AST, giving us a chance to poke around with all of the nodes.
+	</p>
+
+	<p>
+
+	</p>
+
+
 
 </div>
 
