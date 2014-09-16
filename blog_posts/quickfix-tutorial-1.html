@@ -8,7 +8,7 @@
 	<p>
 	In this tutorial, we will make the following quickfix.
 	<img src="images/quickfix-demo.gif"/>
-	This is a good start if you want to contribute quickfixes yourself to the project or if you are interested in a hands-on excercise with abstract syntax trees (ASTs, for short - see below).
+	This is a good start if you want to contribute quickfixes yourself to the project or if you are interested in a hands-on exercise with abstract syntax trees (ASTs, for short - see below).
 	It fixes a bug called LSC_LITERAL_STRING_COMPARISON which, as you can see, is easily fixed by swapping the argument (the string literal) and the string variable (which could be null).
 	</p>
 
@@ -23,16 +23,16 @@
 
 	<h2>Prerequisite: Abstract Syntax Trees</h2>
 	<p>
-	You will be writing software for Eclipse to perform the quickfixes, so I'll start discussing how Eclipes deals with Java source code - <a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree">Abstract Syntax Trees</a> (ASTs).
+	You will be writing software for Eclipse to perform the quickfixes, so I'll start discussing how Eclipse deals with Java source code - <a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree">Abstract Syntax Trees</a> (ASTs).
 	The Wikipedia article covers it well, but basically, ASTs are a semantic representation of the source code - Eclipse knows what each line is, whether it's an if statement, a variable initialization statement, etc.
 	Let's look at an example of some source code and its representative AST.
 	<pre data-src="blog_posts/code/quickfix-example.java" class="line-numbers"></pre>
 	</p>
 
 	<p>
-	The outer-most <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FASTNode.html">ASTNode</a> is a <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FTypeDeclaration.html">TypeDeclaration</a> for the class <code>ForQuickFixes</code>.
+	The outer-most <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FASTNode.html">ASTNode</a> is a <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FTypeDeclaration.html">TypeDeclaration</a> for the class <code class="language-java">ForQuickFixes</code>.
 	TypeDeclarations have some bookkeeping things like <span class="mouseOverMe" title="in our case, we just have one - 'public'">modifiers</span>, a <span class="mouseOverMe" title="ForQuickFixes">name</span>, whether it's <span class="mouseOverMe" title="it isn't">an interface or not</span>, but we mostly care about the stuff inside of it, lines 3-7, which are the <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FAbstractTypeDeclaration.html&anchor=bodyDeclarations()">BodyDeclarations</a>.
-	Remember, in a class, you can define fields, methods and other types, so that is what these are - an ordered list of all fields, methods and types defined in ForQuickFixes.  This happens to just be a single <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FMethodDeclaration.html">MethodDeclaration</a> that corresponds to our <code>main</code> method.
+	Remember, in a class, you can define fields, methods and other types, so that is what these are - an ordered list of all fields, methods and types defined in ForQuickFixes.  This happens to just be a single <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FMethodDeclaration.html">MethodDeclaration</a> that corresponds to our <code class="language-java">main</code> method.
 	</p>
 
 	<p>
@@ -43,8 +43,18 @@
 	<p>
 	<a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FStatement.html">Statement</a>s
 	are basically executable lines of code, so we run into them pretty frequently.
-	In fact, our code snippet has two statements, an <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FIfStatement.htmlIfStatement">IfStatement</a> and an <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FIfStatement.html">ExpressionStatement</a> corresponding to <code>System.out.println("Test 1.0");</code>.
-	Statements generally have other Statements nested inside of them, as well as <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FExpression.html">Expressions</a>, the other key building block that you will encounter a lot.
+	In fact, our code snippet has 
+	<span class="mouseOverMe" title="Technically the Blocks are Statements, but I tend to ignore them as actual Statements, reserving the term for actual lines of code.">two</span>
+	statements, an <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FIfStatement.htmlIfStatement">IfStatement</a> and an <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FIfStatement.html">ExpressionStatement</a> corresponding to <code class="language-java">System.out.println("Test 1.0");</code>.
+	Statements generally have other Statements nested inside of them, as well as <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FExpression.html">Expressions</a>, the other key building block that you will encounter a lot.  For example, the IfStatement is composed of other Statements and Expressions like this: 
+
+	<pre data-src="blog_posts/code/quickfix-ifstatement.java" class="line-numbers"></pre>
+
+	</p>
+
+	<p>
+	The Expression we are interested in is <code class="language-java">args[0].equals("version")</code>, which happens to be a <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FMethodInvocation.html">MethodInvocation</a> and it is currently the rightOperand of an InfixExpression.
+	This MethodInvocation has a name, an expression (aka the object upon which the method is invoked), and a <code class="language-java">List&lt;Type&gt;</code> of arguments
 	</p>
 
 </div>
