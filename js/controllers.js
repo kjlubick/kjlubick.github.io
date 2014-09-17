@@ -59,6 +59,21 @@ angular.module('myApp.controllers', ['myApp.posts'])
 		posts: _(posts).reject({id : '404'}).sortBy("id").reverse().value()
 	};
 
+	var truncatePost = function(post, postData) {
+		var breakpoint = postData.indexOf("<!--end_preview-->");
+		if (breakpoint == -1) {
+			post.html = postData;
+		} else {
+			post.html = postData.substring(0,breakpoint);
+			post.html += '<a href="#/blog/post/';
+			post.html += post.id;
+			post.html += "?"+post.title.replace(/\s/g,"-").toLowerCase();
+			post.html += '" class="btn btn-info" role="button">Read More</a>';
+			post.html += "</div>";
+				post.loaded = false;		//this forces a reload when we navigate to full
+			}
+		};
+
 	//go fetch posts
 	_.each($scope.blogPosts.posts, function(post)
 	{
@@ -66,20 +81,7 @@ angular.module('myApp.controllers', ['myApp.posts'])
 			post.loaded = true;
 			$http({method: 'GET', url: post.source}).
 			success(function(data) {
-
-			var breakpoint = data.indexOf("<!--end_preview-->");
-			if (breakpoint == -1) {
-				post.html = data;
-			} else {
-				post.html = data.substring(0,breakpoint);
-				post.html += '<a href="#/blog/post/';
-				post.html += post.id;
-				post.html += "?"+post.title.replace(/\s/g,"-").toLowerCase();
-				post.html += '" class="btn btn-info" role="button">Read More</a>';
-				post.html += "</div>";
-				post.loaded = false;		//this forces a reload when we navigate to full
-			}
-
+				truncatePost(post,data);
 			
 		}).
 			error(function(data, status) {
@@ -88,6 +90,9 @@ angular.module('myApp.controllers', ['myApp.posts'])
 				console.log(status);
 				post.html = "<div>Sorry, could not load post body.</div>";
 			});
+		}
+		else {		//if post is loaded, just see if we need to re-truncate post
+			truncatePost(post,post.html);
 		}
 	});
 }).directive('blogPost', function() {
@@ -104,5 +109,6 @@ angular.module('myApp.controllers', ['myApp.posts'])
 		}
 		
 	};
-})
-;
+});
+
+
