@@ -21,6 +21,7 @@ angular.module('myApp.controllers', ['myApp.posts'])
 	$scope.header.title = "kjlubick@github.io";
 
 })
+//controller for a single post - ignores <!--more--> tag
 .controller('PostCtrl', function($scope, $routeParams, posts, $sce, $http) {
 	//console.log($routeParams);
 
@@ -63,7 +64,17 @@ angular.module('myApp.controllers', ['myApp.posts'])
 			post.loaded = true;
 			$http({method: 'GET', url: post.source}).
 			success(function(data) {
-			post.html = data;
+
+			var breakpoint = data.indexOf("<!--more-->");
+			if (breakpoint == -1) {
+				post.html = data;
+			} else {
+				post.html = data.substring(0,breakpoint);
+				post.html += '<a href="#" class="btn btn-info" role="button">Read More</a>';
+				post.html += "</div>";
+			}
+
+			
 		}).
 			error(function(data, status) {
 				console.error("ERRROR with "+ post.source);
