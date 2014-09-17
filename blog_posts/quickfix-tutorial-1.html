@@ -12,16 +12,7 @@
 	It fixes a bug called LSC_LITERAL_STRING_COMPARISON which, as you can see, is easily fixed by swapping the argument (the string literal) and the string variable (which could be null).
 	</p>
 
-	<p>
-	For this tutorial, I'm providing an already setup Eclipse workspace, downloadable <a href="https://docs.google.com/file/d/0B6dzef3D5CTBSjk3MTRPSHZ2SEk">here</a>.
-	As of writing, the 3.0.0 version of the FindBugs plugin does not support extension, but a dev version does.
-	<a href="https://drive.google.com/file/d/0B6dzef3D5CTBY0J1WTRVRXctVFE/edit">Here</a> is a compiled dev version (with fb-contrib bundled).
-	Uninstall FindBugs from Eclipse (if already installed) and then unzip the bundle and install it from Eclipse.
-	See http://stackoverflow.com/a/16074606/1447621 for more details.
-	<br/>  If you want to do this in hard mode, follow the <a href="https://github.com/kjlubick/fb-contrib-eclipse-quick-fixes#setting-up-the-project-for-development">dev setup instructions</a> for fb-contrib quickfixes - it will amount to basically the same thing.
-	</p>
-
-	<h2>Prerequisite: Abstract Syntax Trees</h2>
+	<h3>Prerequisite: Abstract Syntax Trees</h3>
 	<p>
 	You will be writing software for Eclipse to perform the quickfixes, so I'll start discussing how Eclipse deals with Java source code - <a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree">Abstract Syntax Trees</a> (ASTs).
 	The Wikipedia article covers it well, but basically, ASTs are a semantic representation of the source code - Eclipse knows what each line is, whether it's an if statement, a variable initialization statement, etc.
@@ -65,15 +56,38 @@
 
 	</p>
 
-	<h2>Prerequisite: Visitor Pattern</h2>
+	<h3>Prerequisite: Visitor Pattern</h3>
 
 	<p>
 	An important tool for navigating the AST is the <a href="http://en.wikipedia.org/wiki/Visitor_pattern">Visitor pattern</a>.  Basically what we will do is create an object which will be given to the AST.  The AST will ping the object with notifications as it navigates the passed-in object through the entire the tree.
 	So, if we are interested in MethodInvocations, we will make the visiting object have a <code class="language-java">visit(MethodInvocation node)</code> method that will be called for every MethodInvocation in the AST, giving us a chance to poke around with all of the nodes.
 	</p>
 
+	<h2>An easy QuickFix Recipe</h2>
+    <div class="recipe">
+        <dl>
+            <dt>Preparation time</dt>
+            <dd>5m</dd>
+            <dt>Coding time</dt>
+            <dd>20m</dd>
+            <dt>Difficulty</dt>
+            <dd>Mildly spicy</dd>
+            <dt>Serves</dt>
+            <dd>a basic understanding of ASTs and Eclipses <span class="mouseOverMe" title='Big "Friendly" Hierarchy of Nodes '>BFHN</span></dd>
+        </dl>
+    </div>
 	<p>
+	For this tutorial, I'm providing an already setup Eclipse workspace, downloadable <a href="https://docs.google.com/file/d/0B6dzef3D5CTBSjk3MTRPSHZ2SEk">here</a>.
+	As of writing, the 3.0.0 version of the FindBugs plugin does not support extension, but a dev version does.
+	<a href="https://drive.google.com/file/d/0B6dzef3D5CTBY0J1WTRVRXctVFE/edit">Here</a> is a compiled dev version (with fb-contrib bundled).
+	Uninstall FindBugs from Eclipse (if already installed) and then unzip the bundle and install it from Eclipse.
+	See <a target="_blank">http://stackoverflow.com/a/16074606/1447621</a> for more details.
+	If you want to do this in hard mode, follow the <a href="https://github.com/kjlubick/fb-contrib-eclipse-quick-fixes#setting-up-the-project-for-development">dev setup instructions</a> for fb-contrib quickfixes - it will amount to basically the same thing.
+	</p>
 
+	<p>
+	Read the two prerequisite sections above if you haven't already.
+	You may also wish to install <a href="http://www.eclipse.org/jdt/ui/astview/index.php">ASTView</a> from above.
 	</p>
 
 

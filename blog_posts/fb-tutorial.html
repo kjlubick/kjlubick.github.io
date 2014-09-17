@@ -2,13 +2,13 @@
     <p class="log">Code log entry 084: After roughly 187 minutes of analyzing using the <a target="_blank" style="target-new: tab;" href="http://docs.oracle.com/javase/6/docs/technotes/tools/share/jvisualvm.html">Java Visual VM</a>, the cause of the non-terminating program was found.  A lone ExecutorService was found to have never been shutdown(), and the internal thread pool had been keeping the JVM from terminating.  A proper call to shutdown() was added to the offending class's stop() method, resolving the issue.</p>
     <p>The problem I ran into above was a painful one to track down, but my intuition said the problem would make for a great <a target="_blank" style="target-new: tab;" href="http://findbugs.sourceforge.net/">FindBugs</a> detector because it dealt with omission of code, which is easy for static analysis to detect and generally time-consuming for humans to detect.</p>
     <p>What follows is how I designed a detector to hopefully make the struggles detailed in entry 084 obsolete.  It is meant for readers who have not yet implemented a FindBugs detector, but are curious at what it entails and what a sample workflow might be.</p>
-    <h2>Recipe for FindBugs Detector</h2>
+    <h2>FindBugs Detector Recipe</h2>
     <div class="recipe">
         <dl>
             <dt>Preparation time</dt>
-            <dd>30m</dd>
+            <dd>15m</dd>
             <dt>Coding time</dt>
-            <dd>1h</dd>
+            <dd>45m</dd>
             <dt>Difficulty</dt>
             <dd>Derived from existing detector</dd>
             <dt>Serves</dt>
