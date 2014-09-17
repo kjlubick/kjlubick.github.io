@@ -72,8 +72,12 @@ angular.module('myApp.controllers', ['myApp.posts'])
 				post.html = data;
 			} else {
 				post.html = data.substring(0,breakpoint);
-				post.html += '<a href="#" class="btn btn-info" role="button">Read More</a>';
+				post.html += '<a href="#/blog/post/';
+				post.html += post.id;
+				post.html += "?"+post.title.replace(/\s/g,"-").toLowerCase();
+				post.html += '" class="btn btn-info" role="button">Read More</a>';
 				post.html += "</div>";
+				post.loaded = false;		//this forces a reload when we navigate to full
 			}
 
 			
