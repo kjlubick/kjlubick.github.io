@@ -21,7 +21,7 @@ angular.module('myApp.controllers', ['myApp.posts'])
 	$scope.header.title = "kjlubick@github.io";
 
 })
-//controller for a single post - ignores <!--more--> tag
+//controller for a single post - ignores <!--end_preview--> tag
 .controller('PostCtrl', function($scope, $routeParams, posts, $sce, $http) {
 	//console.log($routeParams);
 
@@ -50,6 +50,8 @@ angular.module('myApp.controllers', ['myApp.posts'])
 		return $sce.trustAsHtml(post.html);
 	};
 })
+//Fetches all blog posts, truncating them at the <!--end_preview--> location,
+// with a read-more button
 .controller('BlogCtrl', function($scope, $http, posts) {
 	$scope.header.title = "thoughts@kjlubick.github.io";
 
@@ -65,7 +67,7 @@ angular.module('myApp.controllers', ['myApp.posts'])
 			$http({method: 'GET', url: post.source}).
 			success(function(data) {
 
-			var breakpoint = data.indexOf("<!--more-->");
+			var breakpoint = data.indexOf("<!--end_preview-->");
 			if (breakpoint == -1) {
 				post.html = data;
 			} else {

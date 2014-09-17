@@ -23,7 +23,9 @@
         <li>You've read the <a target="_blank" style="target-new: tab;" href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Executors.html">JavaDoc</a> for Executors (the protagonist of our story) and perhaps browsed <a target="_blank" style="target-new: tab;" href="http://www.javacodegeeks.com/2013/01/java-thread-pool-example-using-executors-and-threadpoolexecutor.html">this sample code</a> to get a feel for things.</li>
         <li>You have a JDK installed, and a reference to it in your path.</li>
     </ul>
-    <p></p>
+    
+    <!--end_preview-->
+
     <h3>Setting up our TestBed</h3>
     <p>If you have ever done Test Driven Development, writing your test code first is not a new idea.  For building FindBugs detectors, it is even more important because we need the source code to generate the Java bytecode that FindBugs scans.  I haven't found a way to make FindBugs operate in a unit test scenario (i.e. run tests and watch a green bar as they pass), but I still write test cases with code that should and should not work.</p>
     <p>Let's make a file, called HES_Sample.java, that will contain some buggy code.  This will go in the <a href="https://github.com/mebigfatguy/fb-contrib/tree/master/samples">samples</a> folder when we are done with all the other test cases.  I immediately replicated (and simplified) the case that caused me 3 hours of debugging to track down, as well as the fixed version:</p>
