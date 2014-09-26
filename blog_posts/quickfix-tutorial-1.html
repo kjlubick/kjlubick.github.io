@@ -133,7 +133,7 @@
             </span>
             <span class="mouseComment" data-show="5-8">
             This method specifies whether we want access to the types (specifically, the <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FITypeBinding.html">ITypeBinding</a>s) of nodes.
-            We do need these types to make sure we find the right methods to fix.  
+            We do not need this for our visitor implementation (although the types could easily be included in the visitor logic). 
             In most cases, this should be <code class="language-java">true</code>, but, if you find yourself not needing to verify types, return <code class="language-java">false</code>, to improve performance.
             </span>
             <span class="mouseComment" data-show="11">
@@ -165,18 +165,21 @@
         <pre data-src="blog_posts/code/quickfix-visitor.java" class="line-numbers" data-line="1,3"></pre>
         <div class="codeComment">
             <span class="mouseComment" data-show="1">
+            Remember, this is a class inside LiteralStringComparisonResolution.
             </span>
-            <span class="mouseComment" data-show="5-8">
+            <span class="mouseComment" data-show="4-6">
+            We make a collection and initialize it via the static initializer with the three methods we are looking for.
+            </span>
+            <span class="mouseComment" data-show="9-11">
 
             </span>
-            <span class="mouseComment" data-show="11">
-
+            <span class="mouseComment" data-show="14">
+            The collections that ASTNodes return (such as <code class="language-java">arguments()</code>) are non-parameterized.  
+            When we cast them (e.g. to a <code class="language-java">List&lt;Expression&gt;)</code>, this makes a compiler warning.
+            This annotation silences said warning.
             </span>
-            <span class="mouseComment" data-show="12-14">
-
-            </span>
-            <span class="mouseComment" data-show="19-21">
-
+            <span class="mouseComment" data-show="17+28">
+            The return value indicates whether or not you want to traverse the subtree (true is the default value for all visit() calls).  We return false when we have found the MethodInvocation we are looking for, true otherwise.
             </span>
         </div>
     </div>

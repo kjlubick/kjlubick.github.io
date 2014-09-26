@@ -4,7 +4,7 @@ public class LiteralStringComparisonResolution extends BugResolution {
 
     @Override
     protected boolean resolveBindings() {
-        return true;
+        return false;
     }
 
     @Override
