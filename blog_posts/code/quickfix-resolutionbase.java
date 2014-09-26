@@ -1,3 +1,5 @@
+import static edu.umd.cs.findbugs.plugin.eclipse.quickfix.util.ASTUtil.getASTNode;
+
 public class LiteralStringComparisonResolution extends BugResolution {
 
     @Override
@@ -15,7 +17,7 @@ public class LiteralStringComparisonResolution extends BugResolution {
     }
 
     private static class LSCVisitor extends ASTVisitor {
-
+        //TODO flesh out
     }
 
 }
