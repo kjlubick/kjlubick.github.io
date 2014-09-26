@@ -168,10 +168,10 @@
             Remember, this is a class inside LiteralStringComparisonResolution.
             </span>
             <span class="mouseComment" data-show="4-6">
-            We make a collection and initialize it via the static initializer with the three methods we are looking for.
+            We make a collection and initialize it via the static initializer with the three method names we are looking for.
             </span>
             <span class="mouseComment" data-show="9-11">
-
+            These will be the three things we are looking for: the incorrect MethodInvocation,the String literal and the String variable.
             </span>
             <span class="mouseComment" data-show="14">
             The collections that ASTNodes return (such as <code class="language-java">arguments()</code>) are non-parameterized.  
@@ -180,6 +180,11 @@
             </span>
             <span class="mouseComment" data-show="17+28">
             The return value indicates whether or not you want to traverse the subtree (true is the default value for all visit() calls).  We return false when we have found the MethodInvocation we are looking for, true otherwise.
+            </span>
+            <span class="mouseComment" data-show="19-21">
+            To see if the MethodInvocation we are looking at is the one we want to fix, we check to see if the name matches something in our list and the first (and only) argument is a StringLiteral.
+            It is technically possible for this logic to find (and then fix) the wrong method.
+            For the purposes of this tutorial, finding the 0.001% edge case is not worth the extra complexity and I've decided to omit it.
             </span>
         </div>
     </div>
