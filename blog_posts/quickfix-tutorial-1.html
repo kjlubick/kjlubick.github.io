@@ -188,11 +188,32 @@
             </span>
         </div>
     </div>
+
+
 	</p>
 
 	<h3>Correcting the code</h3>
 
+	<h3>Reflecting Thoughts</h3>
+    <p>
+    While I'd like to say this was all easily created, it was a bit of a struggle.
+	ASTView helped some, but really what was useful was setting breakpoints, stepping through the various visitors and exploring the nodes with the Eclipse Debugging tools.
+	Hopefully, this guide has made it easier to get a feel for the Eclipse quickfix platform than I had.  
+	Along the way, I did run into some issues that others should not repeat:
+ 	
+    <h4>Common Missteps</h4>
+	<ul>
+		<li><b>Don't use toString() for important logic:</b>
+		As specified in the JavaDoc, the toString() methods are for debugging only!  Don't trust them to have real, accurate code
+		(although they frequently do).  There's almost certainly a way to get the actual, correct string you need.  E.g. use SimpleName's getIdentifier() instead of the toString() to get the name of a method.</li>
+
+		<li><b><code class="language-java">Foo f = new Foo()</code> is a <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FClassInstanceCreation.html">ClassInstanceCreation</a>, not a <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FConstructorInvocation.html">ConstructorInvocation</a>:</b>
+		ConstructorInvocations, as it turns out, refer to an invocation of constructor from a similar constructor like <code>this(someVar,otherVar)</code>.  This was annoying and confusing for me when I was trying to deal with fixing constructors.</li>
+	</ul>
+	</p>
+
 	<h3>What's next?</h3>
+
 
 	<p>
 	Stay tuned for the next iteration of this where we look to have a slightly more complicated example.  
