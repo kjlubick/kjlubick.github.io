@@ -216,14 +216,23 @@
 	Hopefully, this guide has made it easier to get a feel for the Eclipse quickfix platform than I had.  
 	Along the way, I did run into some issues that others should not repeat:
  	
-    <h4>Common Missteps</h4>
+    <h4>Advice</h4>
 	<ul>
 		<li><b>Don't use toString() for important logic:</b>
 		As specified in the JavaDoc, the toString() methods are for debugging only!  Don't trust them to have real, accurate code
-		(although they frequently do).  There's almost certainly a way to get the actual, correct string you need.  E.g. use SimpleName's getIdentifier() instead of the toString() to get the name of a method.</li>
+		(although they frequently do).  
+		There's almost certainly a way to get the actual, correct string you need.  
+		E.g. use SimpleName's getIdentifier() instead of the toString() to get the name of a method.</li>
 
 		<li><b><code class="language-java">Foo f = new Foo()</code> is a <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FClassInstanceCreation.html">ClassInstanceCreation</a>, not a <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FConstructorInvocation.html">ConstructorInvocation</a>:</b>
-		ConstructorInvocations, as it turns out, refer to an invocation of constructor from a similar constructor like <code>this(someVar,otherVar)</code>.  This was annoying and confusing for me when I was trying to deal with fixing constructors.</li>
+		ConstructorInvocations, as it turns out, refer to an invocation of constructor from a similar constructor like <code>this(someVar,otherVar)</code>.
+		This was annoying and confusing for me when I was trying to deal with fixing constructors.</li>
+		<li><b>Detail Formatters for easier debugging:</b> Eclipse has these things called Detail Formatters, which basically allow you to write your own toString() methods for classes you can't actually change.  
+		I've found it useful to notate what methods return so when I'm debugging, to simplify coding:
+		The following gif shows an example detail formatter I wrote for ITypeBindings:
+		<img src="images/quickfix-detail-formatter.gif"/>
+		The great thing about Detail Formatters is that you write them once and they apply always, for all debugging sessions.  
+		</li>
 	</ul>
 	</p>
 
