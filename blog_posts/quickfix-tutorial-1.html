@@ -192,7 +192,21 @@
 
 	<h3>Correcting the code</h3>
 	<p>
-		
+	Now that we've identified the problemmatic code, we'll need to make a fixed version and then replace it. 
+	<div class="codeContainer">
+        <pre data-src="blog_posts/code/quickfix-resolutionfixed.java" class="line-numbers" data-line="1,3"></pre>
+        <div class="codeComment">
+            <span class="mouseComment" data-show="9">
+            Intuitiviely, this replaces one expression with another, namely our fixed version with our unfixed version.
+            </span>
+            <span class="mouseComment" data-show="4-6">
+            We make a collection and initialize it via the static initializer with the three method names we are looking for.
+            </span>
+            <span class="mouseComment" data-show="9-11">
+            These will be the three things we are looking for: the incorrect MethodInvocation,the String literal and the String variable.
+            </span>
+        </div>
+    </div>
 	</p>
 
 	<h3>Reflecting Thoughts</h3>
