@@ -47,7 +47,7 @@ angular.module('myApp.posts', []).
 			id: '3',
 			title: "Building your first Eclipse quick fix",
 			author: { name: "Kevin Lubick" },
-			pub_date: new Date(),
+			pub_date: new Date('Sep 28, 2014 23:47:00'),
 			tags: ["fb-contrib", "tutorial", "verbose", "Eclipse", "quickfix" ],
 			excerpt: "How to make an Eclipse quick fix building off of the FindBugs architecture",
 			source : "blog_posts/quickfix-tutorial-1.html",
