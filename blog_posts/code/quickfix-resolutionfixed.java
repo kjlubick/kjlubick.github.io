@@ -16,9 +16,7 @@ private MethodInvocation createFixedMethodInvocation(ASTRewrite rewrite, LSCVisi
     MethodInvocation fixedMethodInvocation = ast.newMethodInvocation();
     String invokedMethodName = lscFinder.lscMethodInvocation.getName().getIdentifier();
     fixedMethodInvocation.setName(ast.newSimpleName(invokedMethodName));
-    // can't do setExpression(visitor.stringLiteralExpression) because an IllegalArgumentException
-    // will be thrown because the node belongs to another AST. So, we use a moveTarget to 
-    // correctly transfer the literal into the new expression
+    
     fixedMethodInvocation.setExpression((Expression) rewrite.createMoveTarget(lscFinder.stringLiteralExpression));
     fixedMethodInvocation.arguments().add((Expression) rewrite.createMoveTarget(lscFinder.stringVariableExpression));
     return fixedMethodInvocation;

@@ -171,8 +171,6 @@ function isIE() {
 
 $(document).ready(function () {
 
-    console.log("Ready");
-
 	if (isIE()) {
 		ie_correction = 1;
 	}

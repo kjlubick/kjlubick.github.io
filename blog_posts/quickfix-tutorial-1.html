@@ -196,17 +196,29 @@
 	<div class="codeContainer">
         <pre data-src="blog_posts/code/quickfix-resolutionfixed.java" class="line-numbers" data-line="1,3"></pre>
         <div class="codeComment">
-            <span class="mouseComment" data-show="9">
+            <span class="mouseComment" data-show="10">
             Intuitiviely, this replaces one expression with another, namely our fixed version with our unfixed version.
             </span>
-            <span class="mouseComment" data-show="4-6">
-            We make a collection and initialize it via the static initializer with the three method names we are looking for.
+            <span class="mouseComment" data-show="15-16">
+            This creates a fresh MethodInvocation attached to the AST we are fixing.
             </span>
-            <span class="mouseComment" data-show="9-11">
-            These will be the three things we are looking for: the incorrect MethodInvocation,the String literal and the String variable.
+            <span class="mouseComment" data-show="18">
+            We set the name of the MethodInvocation to be to a copy of what the old one was.
+            </span>
+            <span class="mouseComment" data-show="20">
+            The expression of the MethodInvocation (i.e. what the method is being called on) will be the StringLiteral, 
+            which we can simply reuse from the broken invocation.
+            </span>
+            <span class="mouseComment" data-show="21">
+            Again, we can move the old expression (our String variable) to the arguments of our fixed invocation.
             </span>
         </div>
     </div>
+
+    You'll notice I don't directly copy the values from the incorrect MethodInvocation to the new one.  
+    The reason is that if a node belongs to one AST, it can't be reassigned to another AST.  
+    Something like <code class="language-java">setExpression(visitor.stringLiteralExpression)</code> would throw an <code>IllegalArgumentException</code>.
+    The code example shows two ways to deal with that - making a brand new node (lines 17-18) or using rewrite.createMoveTarget (lines 20+21).  The third way I know of is with rewrite.createCopyTarget, but I don't know how this differs from the MoveTarget - they seem to do the same thing.
 	</p>
 
 	<h3>Reflecting Thoughts</h3>
@@ -229,8 +241,9 @@
 		This was annoying and confusing for me when I was trying to deal with fixing constructors.</li>
 		<li><b>Detail Formatters for easier debugging:</b> Eclipse has these things called Detail Formatters, which basically allow you to write your own toString() methods for classes you can't actually change.  
 		I've found it useful to notate what methods return so when I'm debugging, to simplify coding:
-		The following gif shows an example detail formatter I wrote for ITypeBindings:
+		The following gif shows an example detail formatter I wrote for <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FITypeBinding.html">ITypeBindings</a>:
 		<img src="images/quickfix-detail-formatter.gif"/>
+		<br/>
 		The great thing about Detail Formatters is that you write them once and they apply always, for all debugging sessions.  
 		</li>
 	</ul>
@@ -240,7 +253,11 @@
 
 
 	<p>
-	Stay tuned for the next iteration of this where we look to have a slightly more complicated example.  
+	Stay tuned for the next iteration of this tutorial where we look to have a slightly more complicated example.  
+
+	Here's a sneak preview:
+
+	<img src="images/quickfix-insecure-random.gif" />
 
 	<!--I think the next example can be the InsecureRandom one, as it has custom descriptions and more than one resolution -->
 	<!--The one after that can be EntrySetResolution, which has complex type manipulation and customized labels-->
