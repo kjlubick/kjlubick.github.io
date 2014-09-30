@@ -4,7 +4,8 @@
 angular.module('myApp', [
   'ngRoute',
   'myApp.controllers',
-  'myApp.filters'
+  'myApp.filters',
+  'exceptionOverride'
 ]).
 config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     $locationProvider.hashPrefix("!");
@@ -22,3 +23,15 @@ config(['$routeProvider', '$locationProvider', function ($routeProvider, $locati
 }]);
 
 
+angular.module('exceptionOverride', []).factory('$exceptionHandler', function ($log) {
+  return function (exception) {
+    if (exception.message.indexOf('missing hash prefix "#!"') != -1) {
+        var badURL = window.location.href;
+        badURL = badURL.substring(0, badURL.indexOf('#')) + "#!" + badURL.substring(badURL.indexOf('#')+1);
+        window.location.assign(badURL);
+        window.location.reload(true);
+        return true;
+    }
+    $log.error(exception.stack);
+  };
+});
