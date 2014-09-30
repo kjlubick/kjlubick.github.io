@@ -6,7 +6,8 @@ angular.module('myApp', [
   'myApp.controllers',
   'myApp.filters'
 ]).
-config(['$routeProvider', function ($routeProvider) {
+config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+    $locationProvider.html5Mode(true);
     $routeProvider.when('/', { templateUrl: 'partials/front_page.html', controller: 'IndexCtrl' });
     $routeProvider.when('/about', { templateUrl: 'partials/about.html', controller: 'AboutCtrl' });
     $routeProvider.when('/blog', {
