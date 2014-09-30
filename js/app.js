@@ -7,7 +7,7 @@ angular.module('myApp', [
   'myApp.filters'
 ]).
 config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
-    $locationProvider.html5Mode(true);
+    $locationProvider.hashPrefix("!");
     $routeProvider.when('/', { templateUrl: 'partials/front_page.html', controller: 'IndexCtrl' });
     $routeProvider.when('/about', { templateUrl: 'partials/about.html', controller: 'AboutCtrl' });
     $routeProvider.when('/blog', {
