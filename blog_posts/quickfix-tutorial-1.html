@@ -182,7 +182,7 @@
             The return value indicates whether or not you want to traverse the subtree (true is the default value for all visit() calls).  We return false when we have found the MethodInvocation we are looking for, true otherwise.
             </span>
             <span class="mouseComment" data-show="19-21">
-            To see if the MethodInvocation we are looking at is the one we want to fix, we check to see if the name matches something in our list and the first (and only) argument is a StringLiteral.
+            To see if the MethodInvocation we are looking at is the one we want to fix, we check to see if the name matches something in our list and the first (and only) argument has a literal value.
             It is technically possible for this logic to find (and then fix) the wrong method.
             For the purposes of this tutorial, I've decided to omit it, but if you want to see the type-checking version, see <a href="https://gist.github.com/kjlubick/2735ee7e640b407459ee">this gist</a>.
             </span>

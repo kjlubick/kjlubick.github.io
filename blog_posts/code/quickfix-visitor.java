@@ -18,7 +18,7 @@ private static class LSCVisitor extends ASTVisitor {
         }
         if (comparisonMethods.contains(node.getName().getIdentifier())) {
             List<Expression> arguments = (List<Expression>) node.arguments();
-            if (arguments.size() == 1 && arguments.get(0) instanceof StringLiteral) { 
+            if (arguments.size() == 1 && arguments.get(0).resolveConstantExpressionValue() != null) { 
                 this.lscMethodInvocation = node;
                 this.stringLiteralExpression = arguments.get(0);
                 this.stringVariableExpression = node.getExpression();
