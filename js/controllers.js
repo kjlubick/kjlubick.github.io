@@ -65,7 +65,7 @@ angular.module('myApp.controllers', ['myApp.posts'])
 			post.html = postData;
 		} else {
 			post.html = postData.substring(0,breakpoint);
-			post.html += '<a href="#/blog/post/';
+			post.html += '<a href="blog/post/';
 			post.html += post.id;
 			post.html += "?"+post.title.replace(/\s/g,"-").toLowerCase();
 			post.html += '" class="btn btn-info" role="button">Read More</a>';
