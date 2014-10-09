@@ -356,13 +356,7 @@ class RequestHandler(asynchat.async_chat, SimpleHTTPServer.SimpleHTTPRequestHand
                 return
         if os.path.isdir(path):
             if not self.path.endswith('/'):
-                self.send_response(302)
-                x = '<META HTTP-EQUIV="refresh" CONTENT="0;URL=%s/">'%self.path
-                self.send_header("Content-Location", self.path + '/')
-                self.send_header("Content-Length", len(x))
-                self.end_headers()
-                self.wfile.write(x)
-                return None
+                self.path = self.path + '/'
         return SimpleHTTPServer.SimpleHTTPRequestHandler.send_head(self)
     
     def send_response(self, code, message=None):
