@@ -53,6 +53,18 @@ angular.module('myApp.posts', []).
 			source : "blog_posts/quickfix-tutorial-1.html",
 			loaded : false,
 			html : "<div>Loading...</div>"
+		},
+
+		{
+			id: '4',
+			title: "Eclipse quick fixes with customized labels",
+			author: { name: "Kevin Lubick" },
+			pub_date: new Date(),
+			tags: ["fb-contrib", "tutorial", "verbose", "Eclipse", "quickfix" ],
+			excerpt: "How to make an Eclipse quick fix supplying dynamic messages and multiple fixes",
+			source : "blog_posts/quickfix-tutorial-2.html",
+			loaded : false,
+			html : "<div>Loading...</div>"
 		}
 
 		]);
