@@ -34,7 +34,9 @@
 
 	<h3>Registering two quickfixes for the BugPattern MDM_RANDOM_SEED</h3>
 	<p>
-	Just like last time, we'll start by modifying the plugin.xml file.
+	Just like last time, we'll start by modifying the plugin.xml file.  
+	The main difference you will notice is that we register two fixes for the same resolution.  
+	This will make both fix options pop up on the list of resolutions.
 
 	<div class="codeContainer">
         <pre data-src="blog_posts/code/quickfix-2-plugin.xml" class="line-numbers" data-line="1,3"></pre>
@@ -54,11 +56,42 @@
 	To make two separate fixes, we'll need to override <code>setOptions()</code> to distinguish between them and then code in the separate fixes.
 	</p>
 
-	<div class="codeContainer">
+	<div class="codeContainer" style="max-height:500px;">
         <pre data-src="blog_posts/code/quickfix-2-randomResolution1.java" class="line-numbers" data-line="1,3"></pre>
         <div class="codeComment">
             <span class="mouseComment" data-show="7">
             	We will need <code>TypeBinding</code>s for the visitor implementation below.
+            </span>
+            <span class="mouseComment" data-show="11-13">
+            	This method handles the parsing of any arguments you pass in. 
+            	The arguments will be parsed as comma-separated, if you need more than one.
+            </span>
+            <span class="mouseComment" data-show="23-28">
+            	And we simply use the parsed argument from above to determine the fix to apply.
+            </span>
+			<span class="mouseComment" data-show="31">
+            	This call is from the FindBugs plugin.eclipse.quickfix.util.ASTUtil class
+            	and will add, if it doesn't already exist, a reference to SecureRandom.
+            </span>
+
+			<span class="mouseComment" data-show="35-38">
+            	This is a simple way to create a constructor invocation of SecureRandom.
+            	One downside is that it won't deal with imports, potentially leaving a compilation error.  
+            	Line 31 corrects this oversight.
+            </span>
+
+            <span class="mouseComment" data-show="42-44">
+            	Makes a call to <code>new Random()</code>
+            </span>
+
+			<span class="mouseComment" data-show="46-49">
+            	Chains a newly created SecureRandom to a call of nextLong:
+            	 <code>new SecureRandom().</code><br/><code>nextLong()</code>
+            </span>
+
+            <span class="mouseComment" data-show="51">
+            	Takes the output of the long generated from the <code>SecureRandom</code>
+            	and uses that to initialize the <code>Random</code> object we made in 42-44.
             </span>
         </div>
     </div>

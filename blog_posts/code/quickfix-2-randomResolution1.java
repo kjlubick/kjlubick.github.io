@@ -19,7 +19,7 @@
         node.accept(visitor);
 
         AST ast = rewrite.getAST();
-        
+
 		ClassInstanceCreation fixedClassInstanceCreation;
         if (useSecureRandomObject) {
             fixedClassInstanceCreation = makeSecureRandom(ast);
@@ -28,7 +28,7 @@
         }
 
         rewrite.replace(visitor.randomToFix, fixedClassInstanceCreation, null);
-        addImports(rewrite, workingUnit, "java.security.SecureRandom");
+        ASTUtil.addImports(rewrite, workingUnit, "java.security.SecureRandom");
     }
 
     private ClassInstanceCreation makeSecureRandom(AST ast) {
@@ -44,7 +44,6 @@
         newRandom.setType(randomType);
 
         ClassInstanceCreation newSecureRandom = makeSecureRandom(ast);
-
         MethodInvocation getLong = ast.newMethodInvocation();
         getLong.setExpression(newSecureRandom);
         getLong.setName(ast.newSimpleName("nextLong"));
