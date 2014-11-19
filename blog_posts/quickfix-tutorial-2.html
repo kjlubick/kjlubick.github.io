@@ -32,8 +32,36 @@
 	If you want to do this in hard mode, follow the <a href="https://github.com/kjlubick/fb-contrib-eclipse-quick-fixes#setting-up-the-project-for-development">dev setup instructions</a> for fb-contrib quickfixes - it will amount to basically the same thing.
 	</p>
 
+	<h3>Registering two quickfixes for the BugPattern MDM_RANDOM_SEED</h3>
+	<p>
+	Just like last time, we'll start by modifying the plugin.xml file.
 
+	<div class="codeContainer">
+        <pre data-src="blog_posts/code/quickfix-2-plugin.xml" class="line-numbers" data-line="1,3"></pre>
+        <div class="codeComment">
+            <span class="mouseComment" data-show="8+15">These are the arguments that differentiate the two fixes.</span>
+        </div>
+    </div>
 
+    Everything should look similar to the first fix, with on addition, highlighted on lines 8 and 15.  
+    These arguments will allow our code to differentiate between which of the two fixes.
+    An alternative approach would be to make two classes for each fix, but that seems inelegant and prone to code duplication, especially for the visitor.
+
+	</p>
+
+	<h3>Making the two fixes</h3>
+	<p>
+	To make two separate fixes, we'll need to override <code>setOptions()</code> to distinguish between them and then code in the separate fixes.
+	</p>
+
+	<div class="codeContainer">
+        <pre data-src="blog_posts/code/quickfix-2-randomResolution1.java" class="line-numbers" data-line="1,3"></pre>
+        <div class="codeComment">
+            <span class="mouseComment" data-show="7">
+            	We will need <code>TypeBinding</code>s for the visitor implementation below.
+            </span>
+        </div>
+    </div>
 </div>
 
 
