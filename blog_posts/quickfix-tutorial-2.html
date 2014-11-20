@@ -111,7 +111,39 @@
 	<h3>Making the visitor</h3>
 	<p>
 	This visitor is very straight forward because we only have to look for when a Random is created.
+
+	<div class="codeContainer">
+        <pre data-src="blog_posts/code/quickfix-2-visitor.java" class="line-numbers" data-line="1,3"></pre>
+        <div class="codeComment">
+            <span class="mouseComment" data-show="10">
+            node.resolveTypeBinding() gets the type of the object.  We simply look for the java.lang.Random type.
+            </span>
+        </div>
+    </div>
 	</p>
+
+	<h3>Showing Custom Descriptions</h3>
+
+	<p>
+	The last piece is supplying custom descriptions, which simply involves overriding the aptly named getDescriptions method.
+
+	<div class="codeContainer">
+        <pre data-src="blog_posts/code/quickfix-2-descriptions.java" class="line-numbers" data-line="1,3"></pre>
+        <div class="codeComment">
+            <span class="mouseComment" data-show="3-6">
+            The only trick to the descriptions is that you should use &lt;br/&gt; for line breaks, as the message will be interpreted as html (or some subset of html).
+            </span>
+        </div>
+    </div>
+	</p>
+
+
+	<h3>Conclusion</h3>
+
+	<p>
+
+	</p>
+
 </div>
 
 
