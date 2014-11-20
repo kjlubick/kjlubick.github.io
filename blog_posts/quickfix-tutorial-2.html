@@ -5,7 +5,13 @@
 	In part two, this tutorial, we will be tackling a slightly more complicated bug that needs resolving:
 	<img src="images/quickfix-insecure-random.gif" />
 
-	Resolving this bug will demonstrate offering multiple fixes to users, as well as customizing the descriptions detailed.
+	<a href="https://docs.oracle.com/javase/7/docs/api/java/util/Random.html">Randoms</a> are <a href="http://franklinta.com/2014/08/31/predicting-the-next-math-random-in-java/">not super secure</a>.
+	In cases where they need to be less guessable, it is better to either use a SecureRandom (at the cost of speed), or simply initialize a Random with a long from SecureRandom (mitigates time-based attacks and faster, but still not super secure).
+	</p>
+	<p>
+	The user will have to decide which one of the two suggested fixes applies, so
+	we need to give them a choice.
+	This tutorial will show how to offer two quickfixes as well as customizing the descriptions to give more information.
 	</p>
 
 	<!--end_preview-->
@@ -95,6 +101,17 @@
             </span>
         </div>
     </div>
+
+	<p>
+	The only tricky part to this so far is the creation of the new ASTNodes.
+    Remember that <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FClassInstanceCreation.html">ClassInstanceCreation</a>s are when a constructor is called (i.e. a class instance is made).
+    Do not be tempted by the (more logically named) <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FConstructorInvocation.html">ConstructorInvocation</a>.
+	</p>
+
+	<h3>Making the visitor</h3>
+	<p>
+	This visitor is very straight forward because we only have to look for when a Random is created.
+	</p>
 </div>
 
 

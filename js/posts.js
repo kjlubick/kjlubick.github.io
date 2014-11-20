@@ -57,7 +57,7 @@ angular.module('myApp.posts', []).
 
 		{
 			id: '4',
-			title: "Eclipse quick fixes with customized labels",
+			title: "A slightly more advanced quickfix",
 			author: { name: "Kevin Lubick" },
 			pub_date: new Date(),
 			tags: ["fb-contrib", "tutorial", "verbose", "Eclipse", "quickfix" ],
