@@ -59,7 +59,7 @@ angular.module('myApp.posts', []).
 			id: '4',
 			title: "A slightly more advanced quickfix",
 			author: { name: "Kevin Lubick" },
-			pub_date: new Date(),
+			pub_date: new Date('Nov 24, 2014 23:25:00'),
 			tags: ["fb-contrib", "tutorial", "verbose", "Eclipse", "quickfix" ],
 			excerpt: "How to make an Eclipse quick fix supplying dynamic messages and multiple fixes",
 			source : "blog_posts/quickfix-tutorial-2.html",
