@@ -65,6 +65,18 @@ angular.module('myApp.posts', []).
 			source : "blog_posts/quickfix-tutorial-2.html",
 			loaded : false,
 			html : "<div>Loading...</div>"
+		},
+
+		{
+			id: '5',
+			title: "Transformers: (NP-Complete) Problems in disguise",
+			author: { name: "Kevin Lubick" },
+			pub_date: new Date(),
+			tags: ["algorithms", "np-complete"],
+			excerpt: "Two graphical reductions between NP problems.",
+			source : "blog_posts/np-reductions.html",
+			loaded : false,
+			html : "<div>Loading...</div>"
 		}
 
 		]);
