@@ -41,11 +41,53 @@
 
 	</div>
 
-	<p>
+	<div id="np-transform">
+		<h3>How to transform Vertex Cover into Subset Sum?</h3>
+		<p>
+		As a preface, let me make it clear that <b>coming up with these transformations takes divine inspiration</b> and an average person (like me) is not expected to do so.
+		</p>
 
-	</p>
+		<p>
+		In order to have a valid transformation, we have to be able to turn any form of one problem (VC) into a form of the other problem (SS).
+		Additionally, if we take the solution to the first problem (VC), we should be able to easily transform it into a solution of the second problem (SS).
+		Most importantly, if we solve the transformed problem (SS), it should <b>always</b> be able to be transformed into a valid solution to the first problem (VC).
+		An example of this done incorrectly is later in this post.
+		</p>
 
-	<p>
-	
-	</p>
+		<p>
+		Somehow we need to create a set of numbers (appetizers) and come up with a target number (target expenditures) from a bunch of vertexes (servers) and edges (connections).
+		More importantly, if we find a subset of those numbers that add up to the magic target number, we had better be able to turn the subset of numbers into a subset of vertexes that make sure each edge is covered at least once.
+		<br/>
+		That transformation is as follows: 
+		</p>
+
+		<p>
+		1. Give each vertex and edge a name.  
+		I've labeled each vertex with a letter and each edge is named by the two vertexes it touches.
+		</p>
+
+		TODO servers image and first grid side by side
+		<img style="height: 250px" src="/images/transform-empty.png"/>
+
+		<p>
+		2. Make a grid (above) with vertices on the y axis and edges on the x axis.  
+		Put a 1 in cells that match vertices and edges, that is if the vertex corresponding with the row touches the edge of the corresponding column.
+		</p>
+
+<img style="height: 250px" src="/images/transform-empty.png"/>
+		<p>
+		3. Add a column labeled % (or whatever) to be used to count the number of vertices we pick.  
+		These cells should all be 1s, as seen below.
+		</p>
+
+		<img style="height: 250px" src="/images/transform-with-sum.png"/>
+
+	</div>
+
+	<div id="np-why">
+		<h3>Why would we want to transform Vertex Cover into Subset Sum or any problems for that matter?</h3>
+		<p>
+		
+		</p>
+	</div>
 </div>
