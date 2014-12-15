@@ -79,15 +79,15 @@
 		I've labeled each vertex with a letter and each edge is named by the two vertexes it touches.
 		</p>
 
-		TODO servers image and first grid side by side
-		<img style="height: 250px" src="/images/transform-empty.png"/>
+		<img style="height: 300px" src="/images/Servers_labeled.png"/>
+		<img style="height: 300px" src="/images/transform-empty.png"/>
 
 		<p>
 		2. Make a grid (above) with vertices on the y axis and edges on the x axis.  
 		Put a 1 in cells that match vertices and edges, that is if the vertex corresponding with the row touches the edge of the corresponding column.
 		</p>
 
-<img style="height: 250px" src="/images/transform-empty.png"/>
+		<img style="height: 250px" src="/images/transform-empty.png"/>
 		<p>
 		3. Add a column labeled % (or whatever) to be used to count the number of vertices we pick.  
 		These cells should all be ones, as seen below.
@@ -102,6 +102,15 @@
 
 		<img style="height: 250px" src="/images/transform-with-sum.png"/>
 
+		<p>
+		4. 
+		At this point, we will just sum together rows that correspond with the vertices in our vertex covers.
+		In theory, valid VC solutions will correspond to some number.
+		However, if you transform two of the vertex cover solutions we saw earlier, you'll notice
+		they have different column sums.
+		This is not ideal because the subset sum problem requires that we have a specific sum in mind, not a range or a set.
+		</p>
+		
 	</div>
 
 	<div id="np-why">
