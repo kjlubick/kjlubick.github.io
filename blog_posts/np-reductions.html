@@ -1,10 +1,23 @@
 <div class="body">
 	<p>
-		Suppose an internet company wishes to install as few monitoring stations as possible to make sure their lines are clean.  Suppose also that a group of friends wishes to order <a href="http://xkcd.com/287/">exactly $15.05</a> worth of appetizers at a local restaurant.  What do these seemingly unrelated problems have in common?  As crazy as it seems, the first type of problem can be turned into problems of the second type - thanks to what is known as a <b>reduction</b>.
+		Suppose an internet company wishes to install software on as few servers as possible to make sure their lines are clean.  Suppose also that a group of friends wishes to order <a href="http://xkcd.com/287/">exactly $15.05</a> worth of appetizers at a local restaurant.  What do these seemingly unrelated problems have in common?  As crazy as it seems, the first type of problem can be turned into problems of the second type - thanks to what is known as a <b>reduction</b>.
 	</p>
 	
 	<p>
 		Background: this semester, I took Algorithms as my last required graduate course.  Even though I had taken an undergrad version of the course and had seen NP-complete problems before, the idea of reduction didn't really sink in until this semester. Now that I better understand them, I think they are pretty cool and wanted to share my understandings.
+	</p>
+	
+	<p>
+	Let's look at a more concrete example of each problem before we get to the magic transformation. 
+	Imagine an ISP that has the following 6 servers, with the listed connections.
+	<img style="height:300px" src="/images/servers.png"/>
+	They want to install monitoring software on some of the servers so that every connecting line is attached to at least one server with the software.
+	There are several ways to install the software on three machines to cover the entire network.
+	The following shows two possible ways and one incorrect way.
+	<img style="height:250px" src="/images/covered_servers.png"/>
+	This type of problem is known as a Vertex Cover (VC) problem.  
+	VC problems work with a mathematical <a href="http://en.wikipedia.org/wiki/Graph_(mathematics)">Graph</a>, which consists of vertices and edges.
+	In our problem, the servers are the vertices and the connections are the edges.
 	</p>
 	
 	<p>
