@@ -96,20 +96,20 @@
 		<img style="height: 250px" src="/images/transform-with-sum.png"/>
 
 		<p>
-		4. Now, if we add up rows corresponding to the vertices we pick, each edge column should sum to 1 (meaning the edge is in the vertex cover) and the % column should equal the number of vertices in the vertex cover, right?
-		Not quite.  As seen above, picking vertices C,D, and E 
-		</p>
-
-		<img style="height: 250px" src="/images/transform-with-sum.png"/>
-
-		<p>
 		4. 
 		At this point, we will just sum together rows that correspond with the vertices in our vertex covers.
-		In theory, valid VC solutions will correspond to some number.
-		However, if you transform two of the vertex cover solutions we saw earlier, you'll notice
-		they have different column sums.
+		For our transformation to work, valid VC solutions will correspond to some number.
+		However, if you transform two of the vertex cover solutions we saw earlier, you'll notice they have different column sums.
+		Why are they different?  
+		Because one VC solution covers some edges more than once (which is perfectly valid).
 		This is not ideal because the subset sum problem requires that we have a specific sum in mind, not a range or a set.
+		<br/>
+		All is not lost, as we can simply add another set of rows to account for
+		double counted vertices.
+		With this, any given edge will either be covered by two of the vertex rows (and sum to 2) or be covered by one vertex row and one dummy row (also summing to two).
 		</p>
+		
+		
 		
 	</div>
 
