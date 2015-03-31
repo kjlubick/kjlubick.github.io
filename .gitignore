@@ -1,2 +1,4 @@
 *.~vsdx
 !.gitkeep
+_cache
+_site
