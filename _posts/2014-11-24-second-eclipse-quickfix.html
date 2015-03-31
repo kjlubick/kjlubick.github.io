@@ -1,9 +1,16 @@
+---
+layout: post
+title: "A slightly more advanced quickfix"
+date: 2014-11-24 23:25:00 -0500
+comments: false
+---
+
 <div class="body">
 	<p>
-	In <a href="/blog/post/3/?building-your-first-eclipse-quick-fix">part one</a> of three, I covered the basics of making a quickfix pattern for a bug - 
+	In <a href="{{ site.baseurl}}/2014/09/first-eclipse-quickfix">part one</a> of three, I covered the basics of making a quickfix pattern for a bug - 
 	starting with parsing the Abstract Syntax Tree (AST) and ending with creating a new <code>ASTNode</code> to replace the broken code.
 	In part two, this tutorial, we will be tackling a slightly more complicated bug that needs resolving:
-	<img src="images/quickfix-insecure-random.gif" />
+	<img src="{{ site.baseurl}}/images/quickfix-insecure-random.gif" />
 
 	<a href="https://docs.oracle.com/javase/7/docs/api/java/util/Random.html">Randoms</a> are <a href="http://franklinta.com/2014/08/31/predicting-the-next-math-random-in-java/">not super secure</a>.
 	In cases where they need to be less guessable, it is better to either use a SecureRandom (at the cost of speed), or simply initialize a Random with a long from SecureRandom (mitigates time-based attacks and faster, but still not super secure).
@@ -31,7 +38,7 @@
     </div>
 
     <p>
-    If you've already done the <a href="/blog/post/3/?building-your-first-eclipse-quick-fix">first</a> part, you should have an Eclipse project
+    If you've already done the <a href="{{ site.baseurl}}/2014/09/first-eclipse-quickfix">first</a> part, you should have an Eclipse project
     setup already.  
     Otherwise, download <a href="https://docs.google.com/file/d/0B6dzef3D5CTBSjk3MTRPSHZ2SEk">this preconfigured Eclipse workspace</a> and then install the dev version of FindBugs from 
 	<a href="https://drive.google.com/file/d/0B6dzef3D5CTBY0J1WTRVRXctVFE/edit">here</a>. <br/>
@@ -45,7 +52,7 @@
 	This will make both fix options pop up on the list of resolutions.
 
 	<div class="codeContainer">
-        <pre data-src="blog_posts/code/quickfix-2-plugin.xml" class="line-numbers" data-line="1,3"></pre>
+        <pre data-src="{{ site.baseurl}}/code/quickfix-2-plugin.xml" class="line-numbers" data-line="1,3"></pre>
         <div class="codeComment">
             <span class="mouseComment" data-show="8+15">These are the arguments that differentiate the two fixes.</span>
         </div>
@@ -63,7 +70,7 @@
 	</p>
 
 	<div class="codeContainer" style="max-height:500px;">
-        <pre data-src="blog_posts/code/quickfix-2-randomResolution1.java" class="line-numbers" data-line="1,3"></pre>
+        <pre data-src="{{ site.baseurl}}/code/quickfix-2-randomResolution1.java" class="line-numbers" data-line="1,3"></pre>
         <div class="codeComment">
             <span class="mouseComment" data-show="7">
             	We will need <code>TypeBinding</code>s for the visitor implementation below.
@@ -113,7 +120,7 @@
 	This visitor is very straight forward because we only have to look for when a Random is created.
 
 	<div class="codeContainer">
-        <pre data-src="blog_posts/code/quickfix-2-visitor.java" class="line-numbers" data-line="1,3"></pre>
+        <pre data-src="{{ site.baseurl}}/code/quickfix-2-visitor.java" class="line-numbers" data-line="1,3"></pre>
         <div class="codeComment">
             <span class="mouseComment" data-show="10">
             node.resolveTypeBinding() gets the type of the object.  We simply look for the java.lang.Random type.
@@ -128,7 +135,7 @@
 	The last piece is supplying custom descriptions, which simply involves overriding the aptly named getDescriptions method.
 
 	<div class="codeContainer">
-        <pre data-src="blog_posts/code/quickfix-2-descriptions.java" class="line-numbers" data-line="1,3"></pre>
+        <pre data-src="{{ site.baseurl}}/code/quickfix-2-descriptions.java" class="line-numbers" data-line="1,3"></pre>
         <div class="codeComment">
             <span class="mouseComment" data-show="3-6">
             The only trick to the descriptions is that you should use &lt;br/&gt; for line breaks, as the message will be interpreted as html (or some subset of html).
@@ -149,5 +156,5 @@
 </div>
 
 
-<script src="js/libs/prism.js"></script>
-<script src="js/codeCommentary.js"></script>
+<script src="{{ site.baseurl}}/js/libs/prism.js"></script>
+<script src="{{ site.baseurl}}/js/codeCommentary.js"></script>
