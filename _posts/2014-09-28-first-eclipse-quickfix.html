@@ -1,3 +1,10 @@
+---
+layout: post
+title: "Building your first Eclipse quick fix"
+date: 2014-09-28 23:47:06 -0500
+comments: true
+---
+
 <div class="body">
 	<p>
 	I recently started <a href="https://github.com/kjlubick/fb-contrib-eclipse-quick-fixes">a project called fb-contrib quickfixes</a> that focuses on creating quickfixes for FindBugs-detected bugs.
@@ -7,7 +14,7 @@
 
 	<p>
 	In this tutorial, we will make the following quickfix.
-	<img src="images/quickfix-demo.gif"/>
+	<img src="{{ site.baseurl}}/images/quickfix-demo.gif"/>
 	This is a good start if you want to contribute quickfixes yourself to the project or if you are interested in a hands-on exercise with abstract syntax trees (ASTs, for short - see below).
 	It fixes a bug called LSC_LITERAL_STRING_COMPARISON which, as you can see, is easily fixed by swapping the argument (the <code class="language-java">String</code> literal) and the <code class="language-java">String</code> variable (which could be null).
 	</p>
@@ -19,7 +26,7 @@
 	You will be writing software for Eclipse to perform the quickfixes, so I'll start discussing how Eclipse deals with Java source code - <a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree">Abstract Syntax Trees</a> (ASTs).
 	The Wikipedia article covers it well, but basically, ASTs are a semantic representation of the source code - Eclipse knows what each line is, whether it's an if statement, a variable initialization statement, etc.
 	Let's look at an example of some source code and its representative AST.
-	<pre data-src="blog_posts/code/quickfix-example.java" class="line-numbers"></pre>
+	<pre data-src="{{ site.baseurl}}/code/quickfix-example.java" class="line-numbers"></pre>
 	</p>
 
 	<p>
@@ -41,7 +48,7 @@
 	statements, an <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FIfStatement.htmlIfStatement">IfStatement</a> and an <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FIfStatement.html">ExpressionStatement</a> corresponding to <code class="language-java">System.out.println("Test 1.0");</code>.
 	Statements generally have other Statements nested inside of them, as well as <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FExpression.html">Expressions</a>, the other key building block that you will encounter a lot.  For example, the IfStatement is composed of other Statements and Expressions like this: 
 
-	<pre data-src="blog_posts/code/quickfix-ifstatement.java" class="line-numbers"></pre>
+	<pre data-src="{{ site.baseurl}}/code/quickfix-ifstatement.java" class="line-numbers"></pre>
 
 	</p>
 
@@ -54,7 +61,7 @@
 	<p>
 	Discovering, reasoning about, and navigating this AST is much easier (for me, at least) when I use a tool called <a href="http://www.eclipse.org/jdt/ui/astview/index.php">ASTView</a>, which is an Eclipse plugin.
 
-	<img src="images/quickfix-astview.gif"/>
+	<img src="{{ site.baseurl}}/images/quickfix-astview.gif"/>
 
 	</p>
 
@@ -99,7 +106,7 @@
 	We do this by updating the plugin.xml file, which is responsible for declaring how we are extending other Eclipse plugins (among other things).
 	
 	<div class="codeContainer">
-        <pre data-src="blog_posts/code/quickfix-plugin.xml" class="line-numbers" data-line="1,3"></pre>
+        <pre data-src="{{ site.baseurl}}/code/quickfix-plugin.xml" class="line-numbers" data-line="1,3"></pre>
         <div class="codeComment">
             <span class="mouseComment" data-show="4-5">This tells Eclipse we are extending the quickfix plugin.
             We only need to specify this once, and nest 1 or more quickfix declarations inside. </span>
@@ -126,7 +133,7 @@
 	Moreover, we will 
 
 	<div class="codeContainer">
-        <pre data-src="blog_posts/code/quickfix-resolutionbase.java" class="line-numbers" data-line="1,3"></pre>
+        <pre data-src="{{ site.baseurl}}/code/quickfix-resolutionbase.java" class="line-numbers" data-line="1,3"></pre>
         <div class="codeComment">
             <span class="mouseComment" data-show="1">
             The ASTUtil class has a few great methods to avoid lots of boilerplate.
@@ -162,7 +169,7 @@
 	Since we are looking for a <code class="language-java">MethodInvocation</code> to fix, we will override <code class="language-java">visit(MethodInvocation)</code> as seen below:
 	
 	<div class="codeContainer">
-        <pre data-src="blog_posts/code/quickfix-visitor.java" class="line-numbers" data-line="1,3"></pre>
+        <pre data-src="{{ site.baseurl}}/code/quickfix-visitor.java" class="line-numbers" data-line="1,3"></pre>
         <div class="codeComment">
             <span class="mouseComment" data-show="1">
             Remember, this is a class inside LiteralStringComparisonResolution.
@@ -194,7 +201,7 @@
 	<p>
 	Now that we've identified the problemmatic code, we'll need to make a fixed version and then replace it. 
 	<div class="codeContainer">
-        <pre data-src="blog_posts/code/quickfix-resolutionfixed.java" class="line-numbers" data-line="1,3"></pre>
+        <pre data-src="{{ site.baseurl}}/code/quickfix-resolutionfixed.java" class="line-numbers" data-line="1,3"></pre>
         <div class="codeComment">
             <span class="mouseComment" data-show="10">
             Intuitiviely, this replaces one expression with another, namely our fixed version with our unfixed version.
@@ -242,7 +249,7 @@
 		<li><b>Detail Formatters for easier debugging:</b> Eclipse has these things called Detail Formatters, which basically allow you to write your own toString() methods for classes you can't actually change.  
 		I've found it useful to notate what methods return so when I'm debugging, to simplify coding:
 		The following gif shows an example detail formatter I wrote for <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FITypeBinding.html">ITypeBindings</a>:
-		<img src="images/quickfix-detail-formatter.gif"/>
+		<img src="{{ site.baseurl}}/images/quickfix-detail-formatter.gif"/>
 		<br/>
 		The great thing about Detail Formatters is that you write them once and they apply always, for all debugging sessions.  
 		</li>
@@ -257,7 +264,7 @@
 
 	Here's a sneak preview:
 
-	<img src="images/quickfix-insecure-random.gif" />
+	<img src="{{ site.baseurl}}/images/quickfix-insecure-random.gif" />
 
 	<!--I think the next example can be the InsecureRandom one, as it has custom descriptions and more than one resolution -->
 	<!--The one after that can be EntrySetResolution, which has complex type manipulation and customized labels-->
@@ -265,12 +272,12 @@
 
 </div>
 
-<script src="js/libs/prism.js"></script>
-<script src="js/codeCommentary.js"></script>
+<script src="{{ site.baseurl}}/js/libs/prism.js"></script>
+<script src="{{ site.baseurl}}/js/codeCommentary.js"></script>
 <script>
 $(document).ready(function () {
     $('#label-vs-description').tooltipster({ 
-        content: $('<img style="max-height:350px;" src="images/labelvsdescription.png" />') 
+        content: $('<img style="max-height:350px;" src="{{ site.baseurl}}/images/labelvsdescription.png" />') 
     }); 
 });
 </script>
