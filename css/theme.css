@@ -49,3 +49,7 @@ body {
 .author a {
     color: #ee4444;
 }
+
+img {
+    max-width:100%;
+}
