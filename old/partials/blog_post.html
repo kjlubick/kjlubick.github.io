@@ -1,5 +1,0 @@
-<h1><a ng-href="blog/post/{{post.id}}/?{{post.title | space_to_dash}}">{{post.title}}</a></h1>
-<span class="post-date" title="{{post.pub_date | date : 'medium'}}">{{post.pub_date | relative_date}}</span>
-<div class="body">
-	<div ng-bind-html="renderHtml(post)"></div>
-</div>
