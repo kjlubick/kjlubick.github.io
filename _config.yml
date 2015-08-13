@@ -1,7 +1,7 @@
 # Jekyll configuration
 
 name: Kevin Lubick
-description: <h1>Hello!</h1><p>My name is Kevin Lubick.  I am a PhD student at NCSU, working in <a href="http://research.csc.ncsu.edu/dlf/">The Developer Liberation Front</a>, which focuses on Software Engineering.</p>
+description: <h1>Hello!</h1><p>My name is Kevin Lubick.  I am completing my masters degree at NCSU.  I have done research in <a href="http://research.csc.ncsu.edu/dlf/">The Developer Liberation Front</a>, which focuses on Software Engineering.</p>
 
 # url is currently only used only for the RSS feed in feed.xml
 url: http://kjlubick.github.io
