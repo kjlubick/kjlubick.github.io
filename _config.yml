@@ -1,10 +1,10 @@
 # Jekyll configuration
 
 name: Kevin Lubick
-description: <h1>Hello!</h1><p>My name is Kevin Lubick.  I am completing my masters degree at NCSU.  I have done research in <a href="http://research.csc.ncsu.edu/dlf/">The Developer Liberation Front</a>, which focuses on Software Engineering.</p>
+description: <h1>Hello!</h1><p>My name is Kevin Lubick.  I work at Google on <a href="https://skia.org">Skia</a>.  I have done research in <a href="http://research.csc.ncsu.edu/dlf/">The Developer Liberation Front</a>, and done zero-G research aboard NASA's G-Force one with <a href="https://www.carthage.edu/physics/opportunities/space-sciences/">Carthage College Space Sciences</a>.</p>
 
 # url is currently only used only for the RSS feed in feed.xml
-url: http://kjlubick.github.io
+url: http://kevinlubick.com
 
 # baseurl will often be '', but for a project page on gh-pages, it needs to
 # be the project name.
