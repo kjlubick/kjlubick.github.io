@@ -4,8 +4,14 @@ layout: default
 
 <link rel="stylesheet" href="css/about.css"/>
 
-
-<img src="images/Large_profile.jpg" class="profile"/>
+<picture class="profile">
+  <source
+    media="(min-width: 650px)"
+    srcset="images/Large_profile.jpg">
+  <img
+    src="images/medium_profile.jpg"
+    alt="A headshot of Kevin Lubick">
+</picture>
 <p>
   <a href="https://github.com/kjlubick">GitHub profile</a>
   <br/>
