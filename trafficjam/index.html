@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="A programming teaching aid built around a puzzle, cars, and navigating through traffic, similar to the classic game Rush Hour">
+    <title>Traffic Jam Programming Puzzles</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body lang="en-US">
+    <h1>Traffic Jam Puzzle</h1>
+    <div id=topbar>
+      <button id=switch type=button>Switch to Programming mode.</button>
+      <span>Change the level:</span>
+      <select name="level_select" id="level_select" label="Choose the level of the game to play">
+      </select>
+    </div>
+
+    <div id=gamearea>
+      <div id=board_box>
+        <canvas id=board width=1084 height=1084></canvas>
+      </div>
+      <div id=rules>
+        <button id=execute class=hidden>Reset board and execute</button>
+        <div id=editor class=hidden>
+          <textarea id=input_code spellcheck=false>#code goes here</textarea>
+          <div class="numbers"></div>
+          <div id="error_output"></div>
+        </div>
+        <p>
+          Objective: Help the red car (labeled with X) get out of traffic.
+          <a href="https://drive.google.com/file/d/18eHXJSicyB-Fr8uwKHXBSS83vMMZcDRK/view">Strategy Guide</a>
+        </p>
+        <p id=manual_controls>
+          Controls: Click or tap on the tip or tail of a car or truck to move it in that direction one space.
+        </p>
+        <p id=program_controls class=hidden>
+          Controls: Type commands in the above box. Click the button to execute the commands, moving the vehicles.
+        </p>
+        <p>
+          Rules: Cars and trucks can't go through each other. Cars and trucks cannot turn.
+        </p>
+        <p id=valid_commands class=hidden>
+          Valid commands (label is a string, num_spaces is an integer): <br>
+          <code>move_right(label, num_spaces)</code> <br>
+          <code>move_left(label, num_spaces)</code>
+          <br>
+          <code>move_up(label, num_spaces)</code>
+          <br>
+          <code>move_down(label, num_spaces)</code>
+        </p>
+      </div>
+    </div>
+    <script src="levels.js"></script>
+    <script src="ui.js"></script>
+    <script src="game.js"></script>
+    <script src="https://unpkg.com/acorn@8.0.4/dist/acorn.js"></script>
+    <script src="programming.js"></script>
+  </body>
+</html>

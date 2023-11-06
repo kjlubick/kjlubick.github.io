@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Tracing Code Practice</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Tracing Exercises</h1>
+    <select id=levels></select>
+    <p>
+      Fill in the top row with the variables used in the code snippet.
+      Then, fill in the cells beneath them with the values of the variables at each step in the program's execution.
+      Use dash - to mean "variable does not exist".
+    </p>
+    <p id=assumption></p>
+    <div class=tracing>
+      <div id=code_box class=code></div>
+      <table id=trace_box spellcheck=false></table>
+    </div>
+
+    <ul id=feedback_box></ul>
+    <button id=reset_btn title="clear out all typed in answers">Reset</button>
+
+
+    <script src="questions.js"></script>
+    <script src="ui.js"></script>
+    <script src="feedback.js"></script>
+    <script src="load.js"></script>
+  </body>
+</html>
