@@ -1,0 +1,69 @@
+.code {
+  font-family: monospace;
+  user-select: none;
+  font-size: 1.5em;
+  padding: .5em;
+}
+
+table#trace_box {
+  border-collapse: collapse;
+  border: 2px solid black;
+}
+
+td,th {
+  border: 1px solid black;
+  min-width: 4em;
+  height: 1.5em;
+  padding: 0 .2em;
+  text-align: center;
+  background-color:#eee;
+}
+
+td[contenteditable], th[contenteditable] {
+  background-color:#fff;
+  font-family: monospace;
+  font-size: 1.25em;
+}
+
+td[contenteditable]:focus, th[contenteditable]:focus {
+  background-color:#ffd;
+}
+
+pre.code_line {
+  display:inline;
+}
+
+.line_num {
+  border-right: 2px solid #ddd;
+  padding-right: 0.2em;
+}
+
+.fixed_header {
+  text-transform: capitalize;
+}
+
+td.wrong, th.wrong {
+  background-color: #FDD;
+  border-bottom: 4px solid rgb(216, 27, 96);
+}
+
+td.correct, th.correct {
+  background-color: #DFD;
+}
+
+.tracing {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#reset_btn {
+  display:none;
+}
+
+#reset_btn.show {
+  display:block;
+}
+
+#assumption {
+  font-size: 1.5em;
+}
