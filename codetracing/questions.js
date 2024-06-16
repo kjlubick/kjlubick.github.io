@@ -83,7 +83,7 @@ b = 3`,
     a: ['10.5', '10.5', '8.0', '8.0'],
     b: ['-', '6.0', '6.0', '3'],
   },
-  solved_code: "6GYBN2Q",
+  solved_code: "R7TF9MK",
 },
 {
   name: "Operators Tutorial 2",
@@ -98,7 +98,7 @@ my_var *= 2`,
   answer: {
     my_var: ['3', '4', '4', '4', '4', '8'],
   },
-  solved_code: "X6FCGCN",
+  solved_code: "WDHP6RV",
 },
 {
   name: "Operators Tutorial 3",
@@ -115,7 +115,7 @@ cupcake -= 3`,
     n: ['-', '7'],
     cupcake: ['-', '-', '6', '128', '125']
   },
-  solved_code: "CNDW2WN",
+  solved_code: "N47Q56D",
 },
 {
   name: "Operators Practice 1",
