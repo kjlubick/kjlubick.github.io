@@ -470,7 +470,7 @@ result += "..."`,
     '"perGGrep..."'],
     stepper: ['-','-','"G"','"G"','"G"','"r"','"r"','"r"','"e"','"e"','"e"','"p"'],
   },
-  solved_code: "GT7MAKT",
+  solved_code: "PSF9YS7",
 },{
   assumption: 'Assume the user types in "47"',
   name: "For Loop Tutorial 2",
@@ -494,7 +494,7 @@ else:
     i: ['-','0','0','0','1','1','1','2','2','2',
     '3','3','3','4','4','4','5','5','5'],
   },
-  solved_code: "FMZ9SCVJ",
+  solved_code: "D7NV3HR",
 },
 {
   name: "For Loop Practice 1",
