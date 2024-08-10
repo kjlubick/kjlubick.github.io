@@ -1,4 +1,4 @@
-const CURRENT_VERSION = 4;
+const CURRENT_VERSION = 5;
 const version = localStorage.getItem("levelVersion");
 if (!version || (+version) < CURRENT_VERSION) {
   localStorage.clear();

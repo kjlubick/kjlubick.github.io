@@ -633,7 +633,7 @@ print("food time!")`,
     '14', '1', '2', '3',
     '15', '1', '2', '3', '16'],
   },
-  solved_code: "S753UD4P",
+  solved_code: "VA2R3TSE",
 },{
   name: "Function Tutorial 2",
   code: `def alpha():
@@ -658,7 +658,7 @@ print("zucchini")`,
     '13', '8', '9', '10',
     '4', '5', '1', '2', '6', '14'],
   },
-  solved_code: "WANRQYD3",
+  solved_code: "E4HANUPW",
 },{
   name: "Function Tutorial 3",
   assumption: "Assume the user types in 250",
