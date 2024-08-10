@@ -39,7 +39,7 @@ name = profession`,
     name: ['-', '"Tom Hanks"', '"Tom Hanks"', '"Tom Hanks"', '"Actor"'],
     profession: ['-', '-', '"Actor"'],
   },
-  solved_code: 'IHPAG84',
+  solved_code: 'RE2ENP7',
 },
 {
   name: "Variables Practice 1",
