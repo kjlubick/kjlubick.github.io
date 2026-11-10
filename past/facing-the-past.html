@@ -1,0 +1,1195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#241c2e">
+  <title>Facing the Past</title>
+  <!--https://www.flagcolorcodes.com/transgender-->
+  <style>
+    :root {
+      color-scheme: dark;
+      --screen: #17131c;
+      --bars: #241c2e;
+      --text: #f0eaf4;
+      --muted: #b4a8bf;
+      --accent: #d5b8fa;
+      --sent: #803eb8;
+      --received-start: #5BCEFA;
+      --received-middle: #FFFFFF;
+      --received-end: #F5A9B8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 40px 24px;
+      background: #0e0b12;
+      color: var(--text);
+      font: 16px/1.45 Roboto, "Segoe UI", Arial, sans-serif;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 4px;
+    }
+    svg { display: block; }
+    [hidden] { display: none !important; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .phone {
+      position: relative;
+      width: 390px;
+      max-width: 100%;
+      height: min(780px, calc(100vh - 80px));
+      height: min(780px, calc(100dvh - 80px));
+    }
+
+    .phone-outline {
+      position: absolute;
+      inset: -14px;
+      width: calc(100% + 28px);
+      height: calc(100% + 28px);
+      overflow: visible;
+      pointer-events: none;
+      filter: drop-shadow(0 24px 38px rgb(0 0 0 / 50%));
+    }
+
+    .screen {
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: 32px;
+      background: var(--bars);
+      border: 1px solid #3c3247;
+    }
+
+    .status-bar {
+      position: relative;
+      height: calc(38px + env(safe-area-inset-top));
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 25px;
+      padding-top: env(safe-area-inset-top);
+      background: var(--bars);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .camera {
+      position: absolute;
+      left: 50%;
+      width: 11px;
+      height: 11px;
+      transform: translateX(-50%);
+      border: 1px solid #40344d;
+      border-radius: 50%;
+      background: #09070c;
+      box-shadow: 0 0 0 3px #1b1522;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 12px 18px 16px;
+      background: var(--bars);
+      border-bottom: 1px solid #35293f;
+    }
+
+    .avatar {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--received-start);
+      color: #3b205b;
+      font-size: 21px;
+      font-weight: 500;
+    }
+
+    .contact { flex: 1; min-width: 0; }
+
+    h1 {
+      margin: 0;
+      font-size: 19px;
+      font-weight: 500;
+      overflow-wrap: anywhere;
+    }
+
+    .sound-button {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      padding: 10px;
+      border: 0;
+      border-radius: 50%;
+      background: #30253b;
+      color: var(--accent);
+    }
+
+    .sound-button:hover { background: #3b2c49; }
+    .sound-button[aria-pressed="true"] { background: #43314f; }
+    .sound-button:disabled { cursor: default; opacity: 0.5; }
+    .sound-button svg { width: 24px; height: 24px; }
+
+    .conversation {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 22px 16px 24px;
+      background: var(--screen);
+      scrollbar-width: thin;
+      scrollbar-color: #4d3b5b transparent;
+    }
+
+    .date {
+      margin: 0 0 26px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .messages {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .message { max-width: 84%; align-self: flex-start; }
+    .message.sent { align-self: flex-end; }
+    .sent + .sent, .received + .received { margin-top: -10px; }
+
+    .bubble {
+      margin: 0;
+      padding: 11px 15px;
+      border-radius: 20px 20px 20px 6px;
+      background: var(--received-start);
+      color: #292333;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .sent .bubble {
+      border-radius: 20px 20px 6px 20px;
+      background: var(--sent);
+      color: #fcf3ff;
+    }
+
+    .time {
+      display: block;
+      margin: 6px 7px 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .sent .time { text-align: right; }
+
+    footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px 14px;
+      padding-bottom: calc(14px + env(safe-area-inset-bottom));
+      background: var(--bars);
+      border-top: 1px solid #35293f;
+    }
+
+    .progress {
+      min-width: 38px;
+      color: var(--muted);
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .next-button {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 56px;
+      padding: 7px 7px 7px 18px;
+      border: 1px solid #4c3a5d;
+      border-radius: 28px;
+      background: #30253b;
+      color: var(--text);
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .next-button svg {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      padding: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #352044;
+    }
+
+    .next-button:hover { background: #3b2c49; }
+    .next-button:active { background: #453254; }
+    .next-button:disabled,
+    .next-button[aria-disabled="true"] { cursor: default; opacity: 0.5; }
+    .next-button.restart .next-arrow,
+    .next-button:not(.restart) .restart-arrow { display: none; }
+
+    .gesture-bar {
+      height: 4px;
+      width: 110px;
+      margin: 0 auto 9px;
+      border-radius: 4px;
+      background: #ded5e8;
+    }
+
+    noscript { display: block; padding: 16px; }
+
+    @media (max-width: 600px) {
+      body { padding: 0; background: var(--screen); }
+      .phone { width: 100%; height: 100vh; height: 100dvh; }
+      .screen { border: 0; border-radius: 0; }
+      .phone-outline, .camera, .gesture-bar { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <script id="story" type="application/json">
+    {
+      "title": "Facing the Past",
+      "contact": "Colin",
+      "avatar": "C",
+      "clock": "09:41",
+      "messages": [
+        {
+          "side": "sent",
+          "text": "Hey Colin. I'm you from the future. I know it's a tough sell, but I'm texting you from June 1st 2025. I've got a question for you; it's important",
+          "sender": "Time Traveler",
+          "time": "June 1 2025 · 9:41 AM"
+        },
+        {
+          "side": "received",
+          "text": "That's impossible. Implausible by today's understanding of physics. If you were me, you should be able to tell me something only I would know",
+          "sender": "Colin",
+          "time": "July 15 2017 · 4:31 PM"
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "In 8th grade English, you wrote a time travel fanfic called Code Delorean. You lost the blue notebook it was in while at engineering camp that summer"
+        },
+        {
+          "side": "received",
+          "text": "Nah, for all I know, you could be Brian, sending me a text from a spoofed number. He was in that classroom when I read the story out loud. You could be him, getting back at me for the graphing calculator prank"
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "Fine. For you, it's July 15th 2017. You are in a hotel room in Virginia, teaching programming for the summer away from home. It's the fourth of five weeks and since it's Saturday, you have either purple or teal colored finger nails. You've been secretly painting them over the last few weekends. You haven't told anybody, especially not Megan because you are afraid of what she will think. Afraid of being judged for painting fingernails and liking it"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "Are you texting me about the nail color? Does that somehow cause a runaway doomsday scenario that you are trying to prevent? Is Megan in danger? I can take off the polish right now!"
+        },
+        {
+          "side": "sent",
+          "text": "Well, things do happen to you and Megan. Right now she's your fiancee and soon she'll be your wife and, about a year ago from where I am, she becomes your ex-wife"
+        },
+        {
+          "side": "received",
+          "text": "Is this a cautionary tale? Can I save my timeline? Why does she leave me!?"
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "The break up is mutual, actually. I wrote the break up letter at 4am one morning. I've never cried harder.\nWe broke up because Megan is not a lesbian. Or pansexual like you and I"
+        },
+        {
+          "side": "received",
+          "text": "Why does that matter?"
+        },
+        {
+          "side": "sent",
+          "text": "Because I am a woman. It took me a while to figure it out though"
+        },
+        {
+          "side": "received",
+          "text": "So I become trans?"
+        },
+        {
+          "side": "sent",
+          "text": "You *are* trans. You just haven't figured it out yet"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "So I am trans... And you became a woman at some point?"
+        },
+        {
+          "side": "sent",
+          "text": "I first admitted (to myself) I was not a man on December 22, 2023, about 18 months ago. I then began the process of changing my body to align with some of society's gender expectations for women"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "Why did you transition? It seems like a pretty big deal to suddenly show up to work in a dress with tits"
+        },
+        {
+          "side": "sent",
+          "text": "I want to flip that back on you for a moment. Why do you have painted nails right now? What caused you to walk over to CVS and buy the polish and put it on the first time? Why do it three more times since?"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "I'm not entirely sure. I was hoping nobody would ask and just let me be this way"
+        },
+        {
+          "side": "sent",
+          "text": "Do you feel good or bad with painted nails?"
+        },
+        {
+          "side": "received",
+          "text": "I feel good. Kind of bright and warm, I guess? I hardly ever feel good like this. Is this a kink or something? I'm not really sure how to classify this feeling"
+        },
+        {
+          "side": "sent",
+          "text": "It is *not* a kink. I've figured out a lot about my kinks recently, but presenting as a woman is not one of them"
+        },
+        {
+          "side": "received",
+          "text": "What is it, then?"
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "It's called euphoria. Gender euphoria. When my students call me Ms. Lubick and I see a beautiful woman looking back at me from the mirror in a cute purple dress with long curly hair, I feel a sense of belonging and harmony. It just feels right. That's gender euphoria"
+        },
+        {
+          "side": "sent",
+          "text": "You asked me why I transitioned and it's because things just feel better this way"
+        },
+        {
+          "side": "sent",
+          "delta": 2,
+          "text": "I know it's a lot to take in. I'm open to answering your questions before we get to mine"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "What have you done to transition?"
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "I socially transitioned in April 2024. I asked my friends, coworkers, and some of my family to call me Kaylee and use she/her pronouns when talking about me. I started Hormone Replacement Therapy or HRT in May 2024 and legally transitioned, updating my name and ids later that year"
+        },
+        {
+          "side": "received",
+          "text": "Kaylee… I suppose there aren't too many girls named Colin"
+        },
+        {
+          "side": "sent",
+          "text": "Please don't use my old name",
+          "sender": "Kaylee"
+        },
+        {
+          "side": "received",
+          "text": "Why not?"
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "It feels… weird, ok? Kaylee feels like such a good fit. My old name has a bunch of memories and emotional baggage"
+        },
+        {
+          "side": "received",
+          "text": "Ok. Sorry Kaylee"
+        },
+        {
+          "side": "sent",
+          "text": "It's fine 🫶"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "Did you have any surgeries? I've heard of \"the big one\" and I imagine it's a lot"
+        },
+        {
+          "side": "sent",
+          "text": "Ok. I'm giving you a pass because 1) you don't know better and 2) you are someone I care about and the question came from a good place.\nDo *not* ask a trans person about surgeries"
+        },
+        {
+          "side": "received",
+          "text": "Even though I *am* a trans person?"
+        },
+        {
+          "side": "sent",
+          "text": "Right"
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "Some people have immense discomfort about certain aspects of themselves and they'd really rather not be reminded of them. Especially if they don't have access to a corrective procedure or intervention"
+        },
+        {
+          "side": "received",
+          "text": "Sorry"
+        },
+        {
+          "side": "sent",
+          "text": "It's fine. I actually *did* want to talk to you about a surgery I'm having next week. It's my face; well, our face. Facial Harmonization Surgery"
+        },
+        {
+          "side": "received",
+          "text": "What about *our* face needs harmonizing?"
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "During testosterone puberty, some bones grew thicker and larger - like the brow ridge, chin and jaw.\nWith HRT, the fat has redistributed a bit, to the cheeks and such. That and the softer skin have made my face look pretty feminine. Surprisingly, I \"pass\" a lot in public, especially with the vocal training I've been doing to speak about an octave higher.\nYet, something still feels off when I see myself in a mirror or in a picture"
+        },
+        {
+          "side": "received",
+          "text": "What does the surgery do?"
+        },
+        {
+          "side": "sent",
+          "text": "It focuses on making those thicker bony structures less prominent. That involves shaving off bones from some places and reshaping my sinus cavity.\nIt will harmonize how I see myself with how I feel about myself"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "That sounds really intense"
+        },
+        {
+          "side": "sent",
+          "text": "Recovery *is* intense for two weeks, and then swelling will continue to go down for several months"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "That seems rather extreme for cosmetic surgery. Why are you doing it?"
+        },
+        {
+          "side": "sent",
+          "text": "It is *not* cosmetic. This is gender affirming surgery"
+        },
+        {
+          "side": "received",
+          "text": "I don't get the difference"
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "Cosmetic surgery is about making one prettier - more aesthetically pleasing. Gender affirming surgery is about fixing something that feels wrong. I'm not getting this surgery so I can be a model; I'm doing it because... well, actually this is where you come in"
+        },
+        {
+          "side": "sent",
+          "text": "Can I ask you to do an experiment with me?\nGo find a mirror. Stare at yourself and count to ten. Really notice what you feel"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "Done. That was kind of uncomfortable"
+        },
+        {
+          "side": "sent",
+          "text": "Do you like how your face looks?"
+        },
+        {
+          "side": "received",
+          "text": "You already know the answer"
+        },
+        {
+          "side": "sent",
+          "text": "Say it. I want to read your words."
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "No. I can't stand it. I hate seeing my face. Some feeling inside makes me want to look away. And so I do"
+        },
+        {
+          "side": "sent",
+          "text": "Grab a shirt or handkerchief or whatever and cover the lower part of your face like you are in the old west and going to rob a bank. Repeat the ten second staredown"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "Done. Wow, like woah"
+        },
+        {
+          "side": "sent",
+          "text": "What's different?"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "It didn't feel as uncomfortable. Not great, but not as much... I don't know... self loathing? No... something else.."
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "Dysphoria. The emotion you feel without the handkerchief is called dysphoria. Dysphoria is why you brush your teeth with your eyes shut. Dysphoria is that detached fuzzy brain feeling you get when looking at photos of you"
+        },
+        {
+          "side": "sent",
+          "text": "Think about the beard you had from 2014 to early 2017. Why did you grow it? Why did you keep it so long?"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "I... grew it to fit in with the other dudes during a no-shave November. Megan said I looked attractive with it and I didn't hate seeing that bearded face in the mirror. So I kept it"
+        },
+        {
+          "side": "sent",
+          "text": "And why did you shave it earlier this year? Don't give me the bullshit answer you rehearsed for your co-workers and friends. Tell me what you thought to yourself before you picked up the razor in April"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "My face with a beard felt too masculine"
+        },
+        {
+          "side": "received",
+          "text": "When I saw myself clean shaven for the first time in years I felt a sense of relief. Not perfect relief, but it felt better to be less masculine"
+        },
+        {
+          "side": "received",
+          "text": "And now that I see it written down, that's what you wanted me to figure out with the handkerchief, right? That I kept the beard because it masked my dysphoria, at least for a while?"
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "Exactly. I wanted you to experience and understand the dysphoria that I hope to alleviate with facial harmonization surgery. \nMy face felt less and less wrong as I've zapped off the beard and the E fairy has softened my features. But my jaw still feels off. It's like it jumps off the mirror to loom before me, a spectre of a path I was forced to walk"
+        },
+        {
+          "side": "received",
+          "text": "The thought of someone trimming my skull down gives me the heebie jeebies"
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "I'm also a bit nervous. That's why I wanted to text you. To re-affirm that this will be worth it"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "*Is* it going to be worth it? It's not like you stare at yourself in the mirror all day. Other people are the ones who see your face. You aren't doing all this just to look better for them, right?"
+        },
+        {
+          "side": "sent",
+          "text": "No! I'm doing this for me, so I feel joy. I have lived your life, and it pains me what a shell of real life it is. You are doing your best, but I know you have never felt true joy. The fog of dysphoria is too strong and I hope this surgery clears the last wisps of it. I want to feel gender euphoria and harmony"
+        },
+        {
+          "side": "received",
+          "text": "Not liking how you look is normal though. Only narcissists find themselves attractive, right?"
+        },
+        {
+          "side": "sent",
+          "text": "No! Most people like what they see in the mirror. You and I deserve to like, or even love how we look"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "Aren't you scared? Scared you won't recognize the face you get?"
+        },
+        {
+          "side": "sent",
+          "text": "The surgeon won't make me look like someone else. The goal is to look like me. The me I feel on the inside. The me who didn't go through a testosterone puberty. That's it"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "How did you figure it out? How did you figure out we are trans? I'm still on a timeline where I haven't accepted that as truth"
+        },
+        {
+          "side": "sent",
+          "text": "After learning about dysphoria, I thought back through a lifetime of memories and made a list of 25 or so prominent life moments that were probably dysphoria"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "Like that one time I got depressed for a week after realizing I'd never be able to give birth? That I'd never get to feel a special connection with a little human growing in me?"
+        },
+        {
+          "side": "sent",
+          "text": "Yeah, that one especially stood out"
+        },
+        {
+          "side": "received",
+          "text": "How do you feel about all this? About being trans and transitioning?"
+        },
+        {
+          "side": "sent",
+          "text": "2024 was the best year of my adult life, despite the breakup. I feel pretty good in 2025 too, despite the political bullshit"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "What, exactly, feels better? What's the difference?"
+        },
+        {
+          "side": "sent",
+          "text": "Harmony. How I *feel* about myself feels more aligned with how I *see* myself and how others see and treat me. People generally treat me like a woman, which is exactly what I want. That's harmonious. When people don't, like with an accidental misgendering, it feels like missing a few notes in a piano concert. I want more harmony in my life"
+        },
+        {
+          "side": "received",
+          "text": "Harmony. That's why you call it facial harmonization surgery, isn't it?"
+        },
+        {
+          "side": "sent",
+          "text": "Exactly! 🙂"
+        },
+        {
+          "side": "received",
+          "delta": 1,
+          "text": "Do you have any regrets about transitioning?"
+        },
+        {
+          "side": "sent",
+          "text": "I vaguely wish I would have figured it out sooner. And been braver sooner to take actions on those feelings. But it's unreasonable to blame myself for that. It was a deeply personal and introspective journey. And honestly, I didn't have any other trans people in my life or even trans role models until 2023 or so.\nWithout others being bravely visible and open to sharing their feelings, I would probably still be clueless or in denial."
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "Maybe your timeline can be different."
+        },
+        {
+          "side": "received",
+          "text": "Are you resentful with your pre-transition self? Like, with me?"
+        },
+        {
+          "side": "sent",
+          "text": "No! I'm grateful for you piloting me through the first 31 years of my life. You had great experiences and I treasure them. I tell lots of your stories to people. You lived a good life and I honor that"
+        },
+        {
+          "side": "received",
+          "text": "I'm glad to hear that. 🤗\nDo you still feel lonely? Isolated? Carefully closed off?"
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "I feel way more connected to people. As my authentic self, I discovered I'm an extrovert. I don't have to do this whole transition thing alone and I'm grateful for the support I have found in the queer community"
+        },
+        {
+          "side": "received",
+          "text": "Despite the fact I've known I'm pansexual for almost a decade, I never thought I... deserved the LGBT+ community. I was in a straight passing relationship and... well, you know"
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "I get it. But hey, I got to be the first woman one of my partners brought home to meet her family!"
+        },
+        {
+          "side": "received",
+          "text": "What? Double what??"
+        },
+        {
+          "side": "sent",
+          "text": "Whoops, didn't mean to mention that. Forget I said anything\n😉"
+        },
+        {
+          "side": "sent",
+          "delta": 1,
+          "text": "Shit, our connection has gotten unstable. I think your timeline is branching from mine. If this is my last message to you, I want it to be a paraphrase of Brené Brown.\nYou cannot love someone else more than you love yourself\nLoving yourself is the most important thing you can do"
+        }
+      ]
+    }
+  </script>
+
+  <main class="phone" aria-label="Text message story">
+    <svg class="phone-outline" viewBox="0 0 418 808" preserveAspectRatio="none" aria-hidden="true">
+      <rect x="2" y="2" width="414" height="804" rx="45" fill="#0c0a10" stroke="#695974" stroke-width="2"/>
+      <rect x="7" y="7" width="404" height="794" rx="40" fill="none" stroke="#302637"/>
+      <path d="M418 144v48m0 32v72M0 182v68" fill="none" stroke="#695974" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+
+    <div class="screen">
+      <div class="status-bar">
+        <span>
+          <span class="sr-only">Phone time: </span>
+          <time id="clock"></time>
+          <span class="sr-only" id="clock-period"></span>
+        </span>
+        <span class="camera" aria-hidden="true"></span>
+        <svg width="49" height="14" viewBox="0 0 49 14" fill="currentColor" aria-hidden="true">
+          <path d="M0 12h3V9H0zm5 0h3V6H5zm5 0h3V3h-3zM18 4q7-7 14 0l-7 8z"/>
+          <rect x="38" y="2" width="9" height="11" rx="1"/>
+          <path d="M41 0h3v2h-3z"/>
+        </svg>
+      </div>
+
+      <header>
+        <div class="avatar" id="avatar" aria-hidden="true"></div>
+        <div class="contact">
+          <h1 id="contact"></h1>
+        </div>
+        <button class="sound-button" id="sound" type="button" aria-label="Mute sent and received message sounds" aria-pressed="false" title="Mute sent and received message sounds">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 4 6 8H3v8h3l5 4z"/>
+            <g id="sound-waves"><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></g>
+            <path id="sound-slash" d="m16 9 5 6m0-6-5 6" hidden/>
+          </svg>
+        </button>
+      </header>
+
+      <section class="conversation" id="conversation" aria-label="Conversation" tabindex="0">
+        <p class="date" id="date">Today</p>
+        <div role="log" aria-label="Messages" aria-live="polite" aria-relevant="additions">
+          <ol class="messages" id="messages" role="list"></ol>
+        </div>
+      </section>
+
+      <p class="sr-only" id="restart-status" role="status" aria-atomic="true"></p>
+      <footer>
+        <span class="progress" id="progress"></span>
+        <button class="next-button" id="next" type="button">
+          <span id="next-label">Next message</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path class="next-arrow" d="M4 12h16m-6-6 6 6-6 6"/>
+            <path class="restart-arrow" d="M20 7v5h-5m5 0a8 8 0 1 0-2 6M20 7v5"/>
+          </svg>
+        </button>
+      </footer>
+      <div class="gesture-bar" aria-hidden="true"></div>
+      <noscript>Enable JavaScript to read this story.</noscript>
+    </div>
+  </main>
+
+  <script>
+    const messages = document.getElementById('messages');
+    const conversation = document.getElementById('conversation');
+    const nextButton = document.getElementById('next');
+    const nextLabel = document.getElementById('next-label');
+    const soundButton = document.getElementById('sound');
+    const progress = document.getElementById('progress');
+    const avatar = document.getElementById('avatar');
+    const clockLabel = document.getElementById('clock');
+    const clockPeriod = document.getElementById('clock-period');
+    const restartStatus = document.getElementById('restart-status');
+
+    let story;
+    try {
+      story = JSON.parse(document.getElementById('story').textContent);
+      if (!Array.isArray(story.messages)) {
+        throw new Error('The story must contain a messages array.');
+      }
+      if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(story.clock ?? '09:41')) {
+        throw new Error('The clock must use 24-hour HH:MM format.');
+      }
+      for (const message of story.messages) {
+        if (message.delta !== undefined && (!Number.isSafeInteger(message.delta) || message.delta < 0)) {
+          throw new Error('Message delta must be a nonnegative whole number of minutes.');
+        }
+      }
+    } catch (error) {
+      conversation.textContent = 'Could not load the story. Check the embedded JSON.';
+      nextButton.disabled = true;
+      soundButton.disabled = true;
+      throw error;
+    }
+
+    const sounds = {
+      sent: new Audio('message_sent.wav'),
+      received: new Audio('message_inc_thread.wav')
+    };
+    const receivedCount = story.messages.filter(message => message.side === 'received').length;
+    const [startHour, startMinute] = (story.clock ?? '09:41').split(':').map(Number);
+    const startMinutes = startHour * 60 + startMinute;
+    const seenSides = new Set();
+    let clockMinutes = startMinutes;
+    let senderNames = { sent: 'Time Traveler', received: story.contact };
+    let shown = 0;
+    let receivedShown = 0;
+    let muted = false;
+
+    document.title = story.title;
+    document.getElementById('contact').textContent = story.contact;
+    avatar.textContent = story.avatar;
+
+    function advanceClock(minutes) {
+      clockMinutes = (clockMinutes + minutes) % (24 * 60);
+      const hour = Math.floor(clockMinutes / 60);
+      const minute = String(clockMinutes % 60).padStart(2, '0');
+      clockLabel.textContent = `${hour % 12 || 12}:${minute}`;
+      clockLabel.dateTime = `${String(hour).padStart(2, '0')}:${minute}`;
+      clockPeriod.textContent = hour < 12 ? ' AM' : ' PM';
+    }
+
+    function stopSounds() {
+      for (const sound of Object.values(sounds)) {
+        sound.pause();
+        sound.currentTime = 0;
+      }
+    }
+
+    function showNext(playSound) {
+      const message = story.messages[shown];
+      if (!message) {
+        advanceClock(0);
+        progress.textContent = 'No messages yet';
+        nextButton.disabled = true;
+        return;
+      }
+
+      advanceClock(message.delta ?? 0);
+      const firstFromSide = !seenSides.has(message.side);
+      seenSides.add(message.side);
+      if (message.sender) senderNames[message.side] = message.sender;
+
+      const item = document.createElement('li');
+      item.className = 'message ' + message.side;
+      const bubble = document.createElement('p');
+      bubble.className = 'bubble';
+      const sender = document.createElement('span');
+      sender.className = 'sr-only';
+      sender.textContent = `${senderNames[message.side] || 'Unknown sender'}: `;
+      bubble.append(sender, document.createTextNode(message.text));
+
+      // Each received bubble keeps its color, from blue through white to pink.
+      if (message.side === 'received') {
+        const position = receivedShown / Math.max(1, receivedCount - 1);
+        const firstHalf = position <= 0.5;
+        const from = firstHalf ? '--received-start' : '--received-middle';
+        const to = firstHalf ? '--received-middle' : '--received-end';
+        const percent = (firstHalf ? position * 2 : position * 2 - 1) * 100;
+        bubble.style.backgroundColor = `color-mix(in srgb, var(${from}), var(${to}) ${percent}%)`;
+        avatar.style.backgroundColor = bubble.style.backgroundColor;
+        receivedShown += 1;
+      }
+
+      item.append(bubble);
+
+      if (firstFromSide && message.time) {
+        const time = document.createElement('span');
+        time.className = 'time';
+        time.textContent = message.time;
+        item.append(time);
+      }
+
+      messages.append(item);
+      shown += 1;
+
+      const finished = shown === story.messages.length;
+      progress.textContent = shown + ' / ' + story.messages.length;
+      nextLabel.textContent = finished ? 'Restart' : 'Next message';
+      nextButton.classList.toggle('restart', finished);
+      conversation.scrollTop = conversation.scrollHeight;
+
+      if (finished) {
+        nextButton.setAttribute('aria-disabled', 'true');
+        restartStatus.textContent = 'End of conversation. Restart will be available in five seconds.';
+        setTimeout(() => {
+          nextButton.removeAttribute('aria-disabled');
+          restartStatus.textContent = 'Restart available.';
+        }, 5000);
+      }
+
+      const sound = sounds[message.side];
+      if (playSound && !muted && sound) {
+        stopSounds();
+        // Browsers can block audio. A missing sound should never stop the story.
+        sound.play().catch(() => {});
+      }
+    }
+
+    nextButton.addEventListener('click', () => {
+      if (nextButton.getAttribute('aria-disabled') === 'true') return;
+
+      if (shown === story.messages.length) {
+        stopSounds();
+        messages.replaceChildren();
+        avatar.style.removeProperty('background-color');
+        restartStatus.textContent = '';
+        clockMinutes = startMinutes;
+        senderNames = { sent: 'Time Traveler', received: story.contact };
+        seenSides.clear();
+        shown = 0;
+        receivedShown = 0;
+        showNext(false);
+      } else {
+        showNext(true);
+      }
+    });
+
+    soundButton.addEventListener('click', () => {
+      muted = !muted;
+      if (muted) stopSounds();
+      soundButton.setAttribute('aria-pressed', String(muted));
+      document.getElementById('sound-waves').toggleAttribute('hidden', muted);
+      document.getElementById('sound-slash').toggleAttribute('hidden', !muted);
+    });
+
+    // Show the opening text silently, before the reader interacts with the page.
+    showNext(false);
+  </script>
+
+<!--
+ANDROID SOUND ATTRIBUTION
+
+The sounds are from the Android Open Source Project Messaging
+app, Android 7.1.2 release, under the Apache License, Version 2.0.
+Copyright (C) 2015 The Android Open Source Project.
+The complete license follows below.
+
+Sending messages:
+curl -s "https://android.googlesource.com/platform/packages/apps/Messaging/+/android-7.1.2_r11/res/raw/message_sent.wav?format=TEXT" | base64 --decode > message_sent.wav
+
+Recieving messages:
+curl -s "https://android.googlesource.com/platform/packages/apps/Messaging/+/android-7.1.2_r11/res/raw/message_inc_thread.wav?format=TEXT" | base64 --decode > message_inc_thread.wav
+
+Project license header:
+https://android.googlesource.com/platform/packages/apps/Messaging/+/android-7.1.2_r11/Android.mk
+
+Android Open Source Project Messaging sounds
+Copyright (C) 2015 The Android Open Source Project
+
+Source:
+https://android.googlesource.com/platform/packages/apps/Messaging/+/android-7.1.2_r11/res/raw/
+
+
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution"
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+</body>
+</html>
+
