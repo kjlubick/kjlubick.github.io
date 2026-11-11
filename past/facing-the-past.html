@@ -498,16 +498,7 @@
         {
           "side": "received",
           "delta": 1,
-          "text": "That sounds really intense"
-        },
-        {
-          "side": "sent",
-          "text": "Recovery *is* intense for two weeks, and then swelling will continue to go down for several months"
-        },
-        {
-          "side": "received",
-          "delta": 1,
-          "text": "That seems rather extreme for cosmetic surgery. Why are you doing it?"
+          "text": "Jeez! That seems rather extreme for cosmetic surgery. Why are you doing it?"
         },
         {
           "side": "sent",
@@ -756,7 +747,7 @@
       <footer>
         <span class="progress" id="progress"></span>
         <button class="next-button" id="next" type="button">
-          <span id="next-label">Next message</span>
+          <span id="next-label">Begin Conversation</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path class="next-arrow" d="M4 12h16m-6-6 6 6-6 6"/>
             <path class="restart-arrow" d="M20 7v5h-5m5 0a8 8 0 1 0-2 6M20 7v5"/>
@@ -931,9 +922,6 @@
       document.getElementById('sound-waves').toggleAttribute('hidden', muted);
       document.getElementById('sound-slash').toggleAttribute('hidden', !muted);
     });
-
-    // Show the opening text silently, before the reader interacts with the page.
-    showNext(false);
   </script>
 
 <!--
